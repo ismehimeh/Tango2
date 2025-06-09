@@ -15,8 +15,8 @@ final class GameFieldViewModel {
     var game: Game
     var mistakeValidationID: UUID?
     
-    init(_ level: Level) {
-        self.game = .init(level)
+    init(game: Game) {
+        self.game = game
     }
         
     func tapCell(_ i: Int, _ j: Int) {
@@ -48,5 +48,15 @@ final class GameFieldViewModel {
     func validateMistake(_ id: UUID) {
         guard id == mistakeValidationID else { return }
         isMistake = !game.isFieldValid()
+    }
+    
+    func clearField() {
+        game.gameCells = game.gameCells.map { row in
+            row.map { cell in
+                GameCell(predefinedValue: cell.predefinedValue)
+            }
+        }
+        isMistake = !game.isFieldValid()
+        isSolved = game.isSolved()
     }
 }

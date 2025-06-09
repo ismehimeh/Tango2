@@ -11,10 +11,10 @@ import Combine
 @Observable
 class GameViewModel {
     
-    var game: Game
+    var gameFieldViewModel: GameFieldViewModel
     
     init(_ game: Game) {
-        self.game = game
+        gameFieldViewModel =  GameFieldViewModel(game: game)
     }
     
     var isClockVisible: Bool = true
@@ -43,7 +43,6 @@ class GameViewModel {
     }
     
     func startTimer() {
-        // just make a timer and start  it
         timerCancellable = Timer.publish(every: 1, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
@@ -56,12 +55,6 @@ class GameViewModel {
     }
     
     func confirmClear() {
-        game.gameCells = game.gameCells.map { row in
-            row.map { cell in
-                GameCell(predefinedValue: cell.predefinedValue)
-            }
-        }
-        isMistake = game.isFieldValid()
-        isSolved = game.isSolved()
+        gameFieldViewModel.clearField()
     }
 }

@@ -10,19 +10,13 @@ import SwiftUI
 struct GameView: View {
     
     @State var viewModel: GameViewModel
-    @State var gameFieldViewModel: GameFieldViewModel
-    
-    init(viewModel: GameViewModel) {
-        self.viewModel = viewModel
-        self.gameFieldViewModel = .init(viewModel.game.level)
-    }
 
     // MARK: - Views
     var body: some View {
         ScrollView {
             VStack {
                 topView
-                GameFieldView(viewModel: gameFieldViewModel)
+                GameFieldView(viewModel: viewModel.gameFieldViewModel)
                 undoAndHintView
                 HowToPlayView()
                     .frame(width: 300)
@@ -53,7 +47,7 @@ struct GameView: View {
             }
             Button("No", role: .cancel) { }
         }
-        .onChange(of: gameFieldViewModel.isSolved, initial: false) { _, newValue in
+        .onChange(of: viewModel.gameFieldViewModel.isSolved, initial: false) { _, newValue in
             viewModel.showingResult = newValue
         }
     }
