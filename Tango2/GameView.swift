@@ -39,11 +39,12 @@ struct GameView: View {
         .onAppear {
             viewModel.startTimer()
         }
-//        .sheet(item: $store.scope(state: \.settings, action: \.settings)){ settingsStore in
-//            SettingsView(store: settingsStore)
-//                .presentationDetents([.medium])
-//                .presentationDragIndicator(.visible)
-//        }
+        .sheet(isPresented: $viewModel.showingSettings) {
+            SettingsView(viewModel: .init())
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
+        }
+        
         .alert("You sure?", isPresented: $viewModel.showingClearAlert) {
             Button("Yes", role: .destructive) {
                 viewModel.confirmClear()

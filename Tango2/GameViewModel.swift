@@ -23,9 +23,10 @@ class GameViewModel {
     var mistakeValidationID: UUID?
     
     var showingClearAlert = false
+    var showingSettings = false
     
     func tapSettings() {
-        // show settings via GameView navigation link
+        showingSettings = true
     }
     
     func startTimer() {
