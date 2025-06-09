@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GameCellCondition: Identifiable {
+struct GameCellCondition: Identifiable, Hashable {
     enum Condition {
         case equal
         case opposite
@@ -19,7 +19,7 @@ struct GameCellCondition: Identifiable {
     let cellB: CellPosition
 }
 
-struct CellPosition {
+struct CellPosition: Equatable, Hashable {
     let row: Int
     let column: Int
 }

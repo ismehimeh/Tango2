@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Level: Identifiable {
+struct Level: Identifiable, Hashable {
     let id = UUID()
     let title: String // TODO: I am not planning to use it, just need it to distinguish cell for now
     let gameCells: [[GameCell]]

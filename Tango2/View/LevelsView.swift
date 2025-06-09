@@ -10,6 +10,7 @@ import SwiftUI
 struct LevelsView: View {
 
     @State var viewModel: LevelsViewModel
+    @State private var levels = [level1, level2, level3]
 
     let columns = [
         GridItem(.adaptive(minimum: 80))
@@ -19,10 +20,8 @@ struct LevelsView: View {
         NavigationStack {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 20) {
-                    ForEach(viewModel.levels) { level in
-                        NavigationLink {
-                            GameView(viewModel: .init(.init(level)))
-                        } label: {
+                    ForEach(levels) { level in
+                        NavigationLink(value: level) {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 10)
                                     .fill(Color.blue)
@@ -33,6 +32,9 @@ struct LevelsView: View {
                         }
                     }
                 }
+            }
+            .navigationDestination(for: Level.self) { level in
+                GameView(viewModel: .init(.init(level)))
             }
         }
     }
