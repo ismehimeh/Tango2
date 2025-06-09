@@ -10,9 +10,8 @@ import SwiftUI
 @main
 struct Tango2App: App {
     var body: some Scene {
-        @State var levelsViewModel = LevelsViewModel(levels: [level1, level2])
         WindowGroup {
-            LevelsView(viewModel: levelsViewModel)
+            LevelsView(viewModel: LevelsViewModel(levels: [level1, level2]))
         }
     }
 }
