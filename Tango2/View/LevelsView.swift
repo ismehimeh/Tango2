@@ -38,15 +38,6 @@ struct LevelsView: View {
     }
 }
 
-@Observable
-class LevelsViewModel {
-    var levels: [Level]
-    
-    init(levels: [Level]) {
-        self.levels = levels
-    }
-}
-
 #Preview {
     let levels = (1...100).map { Level(title: "\($0)",
                                        gameCells: level1Cells,

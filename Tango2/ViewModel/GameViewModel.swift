@@ -19,13 +19,7 @@ class GameViewModel {
     var timeString = "00:00:00"
     var isMistakeVisible: Bool = true
     var isMistake: Bool = false
-    var isSolved: Bool = false {
-        didSet {
-            if isSolved {
-                showingResult = true
-            }
-        }
-    }
+    var isSolved: Bool = false
     var mistakeValidationID: UUID?
     
     var showingClearAlert = false
@@ -52,36 +46,5 @@ class GameViewModel {
         }
         isMistake = game.isFieldValid()
         isSolved = game.isSolved()
-    }
-    
-    func tapCell(_ i: Int, _ j: Int) {
-        let cell = game.gameCells[i][j]
-        guard cell.predefinedValue == nil else { return }
-
-        if cell.value == nil {
-            game.gameCells[i][j].value = 0
-        }
-        else if cell.value == 0 {
-            game.gameCells[i][j].value = 1
-        }
-        else {
-            game.gameCells[i][j].value = nil
-        }
-        
-        let mistakeId = UUID()
-        mistakeValidationID = mistakeId
-        isMistake = false
-        isSolved = game.isSolved()
-        
-        Task {
-            try await Task.sleep(for: .seconds(1))
-            await validateMistake(mistakeId)
-        }
-    }
-    
-    @MainActor
-    func validateMistake(_ id: UUID) {
-        guard id == mistakeValidationID else { return }
-        isMistake = !game.isFieldValid()
     }
 }

@@ -34,18 +34,3 @@ struct ResultView: View {
         .navigationBarBackButtonHidden()
     }
 }
-
-@Observable
-final class ResultViewModel {
-    func tapNextLevel() {
-
-    }
-    
-    func tapGoToLevels() {
-        
-    }
-    
-    func tapPop() {
-        
-    }
-}

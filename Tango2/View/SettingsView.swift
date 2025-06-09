@@ -34,9 +34,3 @@ struct SettingsView: View {
 #Preview {
     SettingsView(viewModel: .init())
 }
-
-@Observable
-class SettingsViewModel {
-    var isShowClockIsOn: Bool = false
-    var isAutoCheckInOn: Bool = false
-}

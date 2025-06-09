@@ -56,3 +56,30 @@ let level2Conditions: [GameCellCondition] = [
 ]
 
 let level2 = Level(title: "2", gameCells: level2Cells, gameConditions: level2Conditions)
+
+
+// MARK: - Level 3
+//basically, it is almost solved level 1
+let level3Cells: [[GameCell]] = [
+    // 1
+    [GameCell(predefinedValue: 1), GameCell(), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0)],
+    // 2
+    [GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1)],
+    // 3
+    [GameCell(predefinedValue: 1), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0), GameCell(predefinedValue: 0)],
+    // 4
+    [GameCell(predefinedValue: 1), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0)],
+    // 5
+    [GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1)],
+    // 6
+    [GameCell(predefinedValue: 0), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell(predefinedValue: 1)],
+]
+
+let level3Conditions: [GameCellCondition] = [
+    .init(condition: .opposite, cellA: (0, 4), cellB: (0, 5)),
+    .init(condition: .opposite, cellA: (0, 5), cellB: (1, 5)),
+    .init(condition: .equal, cellA: (4, 0), cellB: (5, 0)),
+    .init(condition: .equal, cellA: (5, 0), cellB: (5, 1)),
+]
+
+let level3 = Level(title: "3", gameCells: level3Cells, gameConditions: level3Conditions)
