@@ -44,6 +44,12 @@ struct GameView: View {
 //                .presentationDetents([.medium])
 //                .presentationDragIndicator(.visible)
 //        }
+        .alert("You sure?", isPresented: $viewModel.showingClearAlert) {
+            Button("Yes", role: .destructive) {
+                viewModel.confirmClear()
+            }
+            Button("No", role: .cancel) { }
+        }
     }
 
     var topView: some View {
