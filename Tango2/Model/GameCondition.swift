@@ -15,6 +15,11 @@ struct GameCellCondition: Identifiable {
 
     let id = UUID()
     let condition: Condition
-    let cellA: (Int, Int)
-    let cellB: (Int, Int)
+    let cellA: CellPosition
+    let cellB: CellPosition
+}
+
+struct CellPosition {
+    let row: Int
+    let column: Int
 }

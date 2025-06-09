@@ -22,10 +22,10 @@ let level1Cells: [[GameCell]] = [
 ]
 
 let level1Conditions: [GameCellCondition] = [
-    .init(condition: .opposite, cellA: (0, 4), cellB: (0, 5)),
-    .init(condition: .opposite, cellA: (0, 5), cellB: (1, 5)),
-    .init(condition: .equal, cellA: (4, 0), cellB: (5, 0)),
-    .init(condition: .equal, cellA: (5, 0), cellB: (5, 1)),
+    .init(condition: .opposite, cellA: CellPosition(row: 0, column: 4), cellB: CellPosition(row: 0, column: 5)),
+    .init(condition: .opposite, cellA: CellPosition(row: 0, column: 5), cellB: CellPosition(row: 1, column: 5)),
+    .init(condition: .equal, cellA: CellPosition(row: 4, column: 0), cellB: CellPosition(row: 5, column: 0)),
+    .init(condition: .equal, cellA: CellPosition(row: 5, column: 0), cellB: CellPosition(row: 5, column: 1)),
 ]
 
 let level1 = Level(title: "1", gameCells: level1Cells, gameConditions: level1Conditions)
@@ -47,12 +47,12 @@ let level2Cells: [[GameCell]] = [
 ]
 
 let level2Conditions: [GameCellCondition] = [
-    .init(condition: .equal, cellA: (0, 2), cellB: (0, 3)),
-    .init(condition: .opposite, cellA: (0, 4), cellB: (0, 5)),
-    .init(condition: .opposite, cellA: (1, 0), cellB: (2, 0)),
-    .init(condition: .equal, cellA: (3, 5), cellB: (4, 5)),
-    .init(condition: .equal, cellA: (5, 0), cellB: (5, 1)),
-    .init(condition: .opposite, cellA: (5, 2), cellB: (5, 3)),
+    .init(condition: .equal, cellA: CellPosition(row: 0, column: 2), cellB: CellPosition(row: 0, column: 3)),
+    .init(condition: .opposite, cellA: CellPosition(row: 0, column: 4), cellB: CellPosition(row: 0, column: 5)),
+    .init(condition: .opposite, cellA: CellPosition(row: 1, column: 0), cellB: CellPosition(row: 2, column: 0)),
+    .init(condition: .equal, cellA: CellPosition(row: 3, column: 5), cellB: CellPosition(row: 4, column: 5)),
+    .init(condition: .equal, cellA: CellPosition(row: 5, column: 0), cellB: CellPosition(row: 5, column: 1)),
+    .init(condition: .opposite, cellA: CellPosition(row: 5, column: 2), cellB: CellPosition(row: 5, column: 3)),
 ]
 
 let level2 = Level(title: "2", gameCells: level2Cells, gameConditions: level2Conditions)
@@ -76,10 +76,10 @@ let level3Cells: [[GameCell]] = [
 ]
 
 let level3Conditions: [GameCellCondition] = [
-    .init(condition: .opposite, cellA: (0, 4), cellB: (0, 5)),
-    .init(condition: .opposite, cellA: (0, 5), cellB: (1, 5)),
-    .init(condition: .equal, cellA: (4, 0), cellB: (5, 0)),
-    .init(condition: .equal, cellA: (5, 0), cellB: (5, 1)),
+    .init(condition: .opposite, cellA: CellPosition(row: 0, column: 4), cellB: CellPosition(row: 0, column: 5)),
+    .init(condition: .opposite, cellA: CellPosition(row: 0, column: 5), cellB: CellPosition(row: 1, column: 5)),
+    .init(condition: .equal, cellA: CellPosition(row: 4, column: 0), cellB: CellPosition(row: 5, column: 0)),
+    .init(condition: .equal, cellA: CellPosition(row: 5, column: 0), cellB: CellPosition(row: 5, column: 1)),
 ]
 
 let level3 = Level(title: "3", gameCells: level3Cells, gameConditions: level3Conditions)

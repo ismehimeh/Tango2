@@ -20,15 +20,15 @@ struct Game {
 
     func isRowValid(_ row: Int) -> Bool {
         let rowArray = gameCells[row]
-        let conditions = gameConditions.filter { $0.cellA.0 == row && $0.cellB.0 == row}
+        let conditions = gameConditions.filter { $0.cellA.row == row && $0.cellB.row == row}
         return isCellsArrayValid(rowArray, conditions)
     }
 
     func isColumnValid(_ column: Int) -> Bool {
         let columnArray = gameCells.map { $0[column] }
         let conditions = gameConditions
-            .filter { $0.cellA.1 == column && $0.cellB.1 == column}
-            .map { GameCellCondition(condition: $0.condition, cellA: ($0.cellA.1, $0.cellA.0), cellB: ($0.cellB.1, $0.cellB.0)) }
+            .filter { $0.cellA.column == column && $0.cellB.column == column}
+            .map { GameCellCondition(condition: $0.condition, cellA: CellPosition(row: $0.cellA.column, column: $0.cellA.row), cellB: CellPosition(row: $0.cellB.column, column: $0.cellB.row)) }
         return isCellsArrayValid(columnArray, conditions)
     }
 
@@ -76,8 +76,8 @@ struct Game {
 
         // check conditions
         for condition in conditions {
-            let cellA = cells[condition.cellA.1]
-            let cellB = cells[condition.cellB.1]
+            let cellA = cells[condition.cellA.column]
+            let cellB = cells[condition.cellB.column]
             guard cellA.value != nil && cellB.value != nil else { continue }
 
             if condition.condition == .equal && cellA.value != cellB.value {

@@ -48,8 +48,8 @@ struct GameFieldView: View {
 
             ZStack {
                 ForEach(viewModel.game.gameConditions) { condition in
-                    let cellA = cellEntries.last(where: { $0.row == condition.cellA.0 && $0.column == condition.cellA.1})
-                    let cellB = cellEntries.last(where: { $0.row == condition.cellB.0 && $0.column == condition.cellB.1})
+                    let cellA = cellEntries.last(where: { $0.row == condition.cellA.row && $0.column == condition.cellA.column})
+                    let cellB = cellEntries.last(where: { $0.row == condition.cellB.row && $0.column == condition.cellB.column})
                     if let cellA = cellA, let cellB = cellB {
                         let midPoint = CGPoint(x: (cellA.rect.midX + cellB.rect.midX) / 2,
                                                y: (cellA.rect.midY + cellB.rect.midY) / 2)
