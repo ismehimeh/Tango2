@@ -9,8 +9,7 @@ import SwiftUI
 
 struct LevelsView: View {
 
-    @State var viewModel: LevelsViewModel
-    @State private var levels = [level1, level2, level3]
+    @Binding var levels: [Level]
 
     let columns = [
         GridItem(.adaptive(minimum: 80))
@@ -41,8 +40,8 @@ struct LevelsView: View {
 }
 
 #Preview {
-    let levels = (1...100).map { Level(title: "\($0)",
+    @Previewable @State var levels = (1...100).map { Level(title: "\($0)",
                                        gameCells: level1Cells,
                                        gameConditions: level1Conditions) }
-    return LevelsView(viewModel: .init(levels: levels))
+    return LevelsView(levels: $levels)
 }
