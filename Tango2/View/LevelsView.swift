@@ -33,7 +33,7 @@ struct LevelsView: View {
                 }
             }
             .navigationDestination(for: Level.self) { level in
-                GameView(viewModel: .init(.init(level)))
+                GameView(level: level)
             }
         }
     }

@@ -9,14 +9,20 @@ import SwiftUI
 
 struct GameView: View {
     
-    @State var viewModel: GameViewModel
-
+    let level: Level
+    
+    @State private var showingSettings = false
+    @State private var showingResult = false
+    @State private var showingClearAlert = false
+    @State private var isClockVisible = true
+    @State private var viewModel = GameViewModel()
+    
     // MARK: - Views
     var body: some View {
         ScrollView {
             VStack {
                 topView
-                GameFieldView(viewModel: viewModel.gameFieldViewModel)
+//                GameFieldView(viewModel: viewModel.gameFieldViewModel)
                 undoAndHintView
                 HowToPlayView()
                     .frame(width: 300)
@@ -25,7 +31,7 @@ struct GameView: View {
         }
         .toolbar {
             Button {
-                viewModel.tapSettings()
+                showingSettings = true
             } label: {
                 Image(systemName: "gearshape.fill")
             }
@@ -33,34 +39,34 @@ struct GameView: View {
         .onAppear {
             viewModel.startTimer()
         }
-        .sheet(isPresented: $viewModel.showingSettings) {
-            SettingsView(viewModel: .init())
-                .presentationDetents([.medium])
-                .presentationDragIndicator(.visible)
-        }
-        .sheet(isPresented: $viewModel.showingResult) {
-            ResultView(viewModel: .init())
-        }
-        .alert("You sure?", isPresented: $viewModel.showingClearAlert) {
+//        .sheet(isPresented: $showingSettings) {
+//            SettingsView(viewModel: .init())
+//                .presentationDetents([.medium])
+//                .presentationDragIndicator(.visible)
+//        }
+//        .sheet(isPresented: $showingResult) {
+//            ResultView(viewModel: .init())
+//        }
+        .alert("You sure?", isPresented: $showingClearAlert) {
             Button("Yes", role: .destructive) {
-                viewModel.confirmClear()
+//                viewModel.confirmClear()
             }
             Button("No", role: .cancel) { }
         }
-        .onChange(of: viewModel.gameFieldViewModel.isSolved, initial: false) { _, newValue in
-            viewModel.showingResult = newValue
-        }
+//        .onChange(of: viewModel.gameFieldViewModel.isSolved, initial: false) { _, newValue in
+//            viewModel.showingResult = newValue
+//        }
     }
 
     var topView: some View {
         HStack {
-            if viewModel.isClockVisible {
+            if isClockVisible {
                 Image(systemName: "clock")
                 Text(viewModel.timeString)
             }
             Spacer()
             Button {
-                viewModel.tapClear()
+                showingClearAlert = true
             } label: {
                 Text("Clear")
                     .padding(.horizontal, 5)
@@ -94,5 +100,5 @@ struct GameView: View {
 }
 
 #Preview {
-    GameView(viewModel: .init(.init(level1)))
+    GameView(level: level1)
 }
