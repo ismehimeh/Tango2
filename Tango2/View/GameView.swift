@@ -39,11 +39,11 @@ struct GameView: View {
         .onAppear {
             viewModel.startTimer()
         }
-//        .sheet(isPresented: $showingSettings) {
-//            SettingsView(viewModel: .init())
-//                .presentationDetents([.medium])
-//                .presentationDragIndicator(.visible)
-//        }
+        .sheet(isPresented: $showingSettings) {
+            SettingsView()
+                .presentationDetents([.medium])
+                .presentationDragIndicator(.visible)
+        }
 //        .sheet(isPresented: $showingResult) {
 //            ResultView(viewModel: .init())
 //        }
