@@ -44,7 +44,9 @@ struct GameView: View {
                 .presentationDetents([.medium])
                 .presentationDragIndicator(.visible)
         }
-        
+        .sheet(isPresented: $viewModel.showingResult) {
+            ResultView(viewModel: .init())
+        }
         .alert("You sure?", isPresented: $viewModel.showingClearAlert) {
             Button("Yes", role: .destructive) {
                 viewModel.confirmClear()
@@ -69,7 +71,6 @@ struct GameView: View {
             .buttonStyle(.bordered)
             .buttonBorderShape(.capsule)
         }
-//        .alert($store.scope(state: \.alert, action: \.alert))
     }
 
     var gameFieldView: some View {

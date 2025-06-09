@@ -19,11 +19,18 @@ class GameViewModel {
     var timeString = "00:00:00"
     var isMistakeVisible: Bool = true
     var isMistake: Bool = false
-    var isSolved: Bool = false
+    var isSolved: Bool = false {
+        didSet {
+            if isSolved {
+                showingResult = true
+            }
+        }
+    }
     var mistakeValidationID: UUID?
     
     var showingClearAlert = false
     var showingSettings = false
+    var showingResult = false
     
     func tapSettings() {
         showingSettings = true
