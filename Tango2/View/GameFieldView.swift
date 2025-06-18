@@ -9,6 +9,8 @@ import SwiftUI
 
 struct GameFieldView: View {
     
+    // As I remember, idea behind all of this
+    // is to get frames of cells to properly position ConditionViews
     @State var cellEntries: [CellFramePreferenceKeyEntry] = [] // what the fuck is that?
     @Binding var game: Game
     @Binding var showMistake: Bool
