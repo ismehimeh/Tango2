@@ -47,9 +47,9 @@ struct GameView: View {
                 .presentationDetents([.medium])
                 .presentationDragIndicator(.visible)
         }
-//        .sheet(isPresented: $showingResult) {
-//            ResultView(viewModel: .init())
-//        }
+        .sheet(isPresented: $showingResult) {
+            ResultView()
+        }
         .alert("You sure?", isPresented: $showingClearAlert) {
             Button("Yes", role: .destructive) {
                 game.clearField()

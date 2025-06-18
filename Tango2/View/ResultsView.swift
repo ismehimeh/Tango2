@@ -8,29 +8,41 @@
 import SwiftUI
 
 struct ResultView: View {
-
-    @State var viewModel = ResultViewModel()
+    
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         VStack {
             Button {
-                viewModel.tapNextLevel()
+                tapNextLevel()
             } label: {
                 Text("Play next levels")
             }
 
             Button {
-                viewModel.tapGoToLevels()
+                tapGoToLevels()
             } label: {
                 Text("Main Page")
             }
 
             Button {
-                viewModel.tapPop()
+                tapPop()
             } label: {
                 Text("TEMP: Just pop it")
             }
         }
         .navigationBarBackButtonHidden()
+    }
+    
+    private func tapNextLevel() {
+        // TODO: implement
+    }
+    
+    private func tapGoToLevels() {
+        // TODO: implement
+    }
+    
+    private func tapPop() {
+        dismiss()
     }
 }
