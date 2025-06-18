@@ -14,6 +14,7 @@ struct Game {
     var gameConditions: [GameCellCondition] {
         level.gameConditions
     }
+    var isSolved = false
 
     init(_ level: Level) {
         self.level = level
@@ -40,7 +41,7 @@ struct Game {
         return isRowsValid && isColumnsValid
     }
 
-    func isSolved() -> Bool {
+    func checkIsSolved() -> Bool {
         let isAllCellsFilled = gameCells.flatMap { $0 }.allSatisfy { $0.value != nil || $0.predefinedValue != nil}
         return isAllCellsFilled && isFieldValid()
     }
@@ -107,6 +108,8 @@ struct Game {
         else {
             gameCells[i][j].value = nil
         }
+        
+        isSolved = checkIsSolved()
         
 //        let mistakeId = UUID()
 //        mistakeValidationID = mistakeId

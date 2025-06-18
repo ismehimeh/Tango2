@@ -52,9 +52,9 @@ struct GameView: View {
             }
             Button("No", role: .cancel) { }
         }
-//        .onChange(of: viewModel.gameFieldViewModel.isSolved, initial: false) { _, newValue in
-//            viewModel.showingResult = newValue
-//        }
+        .onChange(of: game.isSolved, initial: false) { _, newValue in
+            showingResult = newValue
+        }
     }
 
     var topView: some View {

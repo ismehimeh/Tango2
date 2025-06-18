@@ -66,7 +66,7 @@ struct GameFieldView: View {
                 Color.red.opacity(0.2)
                     .allowsHitTesting(false)
             }
-            if game.isSolved() {
+            if game.isSolved {
                 Color.green.opacity(0.2)
                     .allowsHitTesting(false)
             }
