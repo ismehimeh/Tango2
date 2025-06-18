@@ -11,13 +11,14 @@ struct LevelsView: View {
 
     @Binding var levels: [Level]
     @State private var games: [Level.ID: Game] = [:]
+    @State private var router = Router(path: NavigationPath())
 
     let columns = [
         GridItem(.adaptive(minimum: 80))
     ]
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $router.path) {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 20) {
                     ForEach(levels) { level in
@@ -39,6 +40,7 @@ struct LevelsView: View {
                 GameView(game: binding)
             }
         }
+        .environment(router)
     }
 }
 
@@ -47,4 +49,13 @@ struct LevelsView: View {
                                        gameCells: level1Cells,
                                        gameConditions: level1Conditions) }
     return LevelsView(levels: $levels)
+}
+
+@Observable
+class Router {
+    var path: NavigationPath
+    
+    init(path: NavigationPath) {
+        self.path = path
+    }
 }

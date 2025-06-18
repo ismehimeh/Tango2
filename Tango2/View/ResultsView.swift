@@ -10,6 +10,7 @@ import SwiftUI
 struct ResultView: View {
     
     @Environment(\.dismiss) var dismiss
+    @Environment(Router.self) var router
     
     var body: some View {
         VStack {
@@ -39,7 +40,8 @@ struct ResultView: View {
     }
     
     private func tapGoToLevels() {
-        // TODO: implement
+        dismiss()
+        router.path.removeLast()
     }
     
     private func tapPop() {
