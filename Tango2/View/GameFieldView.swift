@@ -12,7 +12,8 @@ struct GameFieldView: View {
     @State var cellEntries: [CellFramePreferenceKeyEntry] = [] // what the fuck is that?
     @Binding var game: Game
     
-    @State private var isMistakeVisible = true
+    @Binding var showMistake: Bool
+    @Binding var showSolved: Bool
     
     enum Constants {
         static let cellPrefilledBackgroundColor = Color.init(red: 238 / 255.0, green: 234 / 255.0, blue: 232 / 255.0)
@@ -62,11 +63,11 @@ struct GameFieldView: View {
             }
         }
         .overlay {
-            if !game.isFieldValid() && isMistakeVisible {
+            if showMistake {
                 Color.red.opacity(0.2)
                     .allowsHitTesting(false)
             }
-            if game.isSolved {
+            if showSolved {
                 Color.green.opacity(0.2)
                     .allowsHitTesting(false)
             }
@@ -103,7 +104,7 @@ struct GameFieldView: View {
 }
 
 #Preview {
-    GameFieldView(game: .constant(.init(level1)))
+    GameFieldView(game: .constant(.init(level1)), showMistake: .constant(false), showSolved: .constant(false))
         .aspectRatio(1, contentMode: .fit)
         .padding()
 }

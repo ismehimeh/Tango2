@@ -15,13 +15,15 @@ struct GameView: View {
     @State private var isClockVisible = true
     @State private var viewModel = GameViewModel()
     @Binding var game: Game
+    @State private var isMistakeVisible = true
+    @State private var showMistake = false
     
     // MARK: - Views
     var body: some View {
         ScrollView {
             VStack {
                 topView
-                GameFieldView(game: $game)
+                GameFieldView(game: $game, showMistake: $showMistake, showSolved: $showingResult)
                 undoAndHintView
                 HowToPlayView()
                     .frame(width: 300)
@@ -54,6 +56,9 @@ struct GameView: View {
         }
         .onChange(of: game.isSolved, initial: false) { _, newValue in
             showingResult = newValue
+        }
+        .onChange(of: game.isMistake, initial: false) { _, newValue in
+            showMistake = newValue && isMistakeVisible
         }
     }
 

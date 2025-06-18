@@ -15,6 +15,7 @@ struct Game {
         level.gameConditions
     }
     var isSolved = false
+    var isMistake = false
 
     init(_ level: Level) {
         self.level = level
@@ -110,6 +111,7 @@ struct Game {
         }
         
         isSolved = checkIsSolved()
+        isMistake = !isFieldValid()
         
 //        let mistakeId = UUID()
 //        mistakeValidationID = mistakeId
