@@ -117,4 +117,12 @@ struct Game {
 //            await validateMistake(mistakeId)
 //        }
     }
+    
+    mutating func clearField() {
+        gameCells = gameCells.map { row in
+            row.map { cell in
+                GameCell(predefinedValue: cell.predefinedValue)
+            }
+        }
+    }
 }

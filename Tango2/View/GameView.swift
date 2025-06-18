@@ -22,7 +22,6 @@ struct GameView: View {
             VStack {
                 topView
                 GameFieldView(game: $game)
-//                GameFieldView(viewModel: viewModel.gameFieldViewModel)
                 undoAndHintView
                 HowToPlayView()
                     .frame(width: 300)
@@ -49,7 +48,7 @@ struct GameView: View {
 //        }
         .alert("You sure?", isPresented: $showingClearAlert) {
             Button("Yes", role: .destructive) {
-//                viewModel.confirmClear()
+                game.clearField()
             }
             Button("No", role: .cancel) { }
         }
