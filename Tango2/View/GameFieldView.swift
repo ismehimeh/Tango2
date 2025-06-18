@@ -11,7 +11,6 @@ struct GameFieldView: View {
     
     @State var cellEntries: [CellFramePreferenceKeyEntry] = [] // what the fuck is that?
     @Binding var game: Game
-    
     @Binding var showMistake: Bool
     @Binding var showSolved: Bool
     
@@ -104,7 +103,9 @@ struct GameFieldView: View {
 }
 
 #Preview {
-    GameFieldView(game: .constant(.init(level1)), showMistake: .constant(false), showSolved: .constant(false))
+    GameFieldView(game: .constant(.init(level1)),
+                  showMistake: .constant(false),
+                  showSolved: .constant(false))
         .aspectRatio(1, contentMode: .fit)
         .padding()
 }

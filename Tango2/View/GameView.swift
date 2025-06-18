@@ -14,9 +14,11 @@ struct GameView: View {
     @State private var showingClearAlert = false
     @State private var isClockVisible = true
     @State private var viewModel = GameViewModel()
-    @Binding var game: Game
     @State private var isMistakeVisible = true
     @State private var showMistake = false
+    @State var mistakeValidationID: UUID?
+    
+    @Binding var game: Game
     
     // MARK: - Views
     var body: some View {
@@ -58,7 +60,7 @@ struct GameView: View {
             showingResult = newValue
         }
         .onChange(of: game.isMistake, initial: false) { _, newValue in
-            showMistake = newValue && isMistakeVisible
+            processMistake(newValue)
         }
     }
 
@@ -100,6 +102,26 @@ struct GameView: View {
             .buttonStyle(.bordered)
             .buttonBorderShape(.capsule)
         }
+    }
+    
+    private func processMistake(_ newValue: Bool) {
+        if newValue {
+            let mistakeId = UUID()
+            mistakeValidationID = mistakeId
+            Task {
+                try await Task.sleep(for: .milliseconds(300))
+                validateMistake(mistakeId)
+            }
+        }
+        else {
+            showMistake = false
+        }
+    }
+    
+    @MainActor
+    private func validateMistake(_ id: UUID) {
+        guard id == mistakeValidationID else { return }
+        showMistake = game.isMistake && isMistakeVisible
     }
 }
 
