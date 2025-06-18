@@ -5,6 +5,8 @@
 //  Created by Sergei Vasilenko on 11.03.2025.
 //
 
+import Foundation
+
 struct Game {
 
     let level: Level
@@ -90,5 +92,29 @@ struct Game {
         }
 
         return true
+    }
+    
+    mutating func toogleCell(_ i: Int, _ j: Int) {
+        let cell = gameCells[i][j]
+        guard cell.predefinedValue == nil else { return }
+
+        if cell.value == nil {
+            gameCells[i][j].value = 0
+        }
+        else if cell.value == 0 {
+            gameCells[i][j].value = 1
+        }
+        else {
+            gameCells[i][j].value = nil
+        }
+        
+//        let mistakeId = UUID()
+//        mistakeValidationID = mistakeId
+//        isMistake = false
+        
+//        Task {
+//            try await Task.sleep(for: .seconds(1))
+//            await validateMistake(mistakeId)
+//        }
     }
 }
