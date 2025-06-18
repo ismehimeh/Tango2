@@ -21,6 +21,7 @@ struct GameView: View {
         ScrollView {
             VStack {
                 topView
+                GameFieldView(game: $game)
 //                GameFieldView(viewModel: viewModel.gameFieldViewModel)
                 undoAndHintView
                 HowToPlayView()
