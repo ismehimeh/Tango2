@@ -10,6 +10,7 @@ import SwiftUI
 struct LevelsView: View {
 
     @Binding var levels: [Level]
+    @State private var games: [Level.ID: Game] = [:]
 
     let columns = [
         GridItem(.adaptive(minimum: 80))
@@ -33,7 +34,9 @@ struct LevelsView: View {
                 }
             }
             .navigationDestination(for: Level.self) { level in
-                GameView(level: level)
+                let binding = Binding(get: { games[level.id] ?? Game(level) },
+                                      set: { games[level.id] = $0 })
+                GameView(game: binding)
             }
         }
     }

@@ -8,14 +8,13 @@
 import SwiftUI
 
 struct GameView: View {
-    
-    let level: Level
-    
+        
     @State private var showingSettings = false
     @State private var showingResult = false
     @State private var showingClearAlert = false
     @State private var isClockVisible = true
     @State private var viewModel = GameViewModel()
+    @Binding var game: Game
     
     // MARK: - Views
     var body: some View {
@@ -100,5 +99,6 @@ struct GameView: View {
 }
 
 #Preview {
-    GameView(level: level1)
+    @Previewable @State var game = Game(level1)
+    GameView(game: $game)
 }
