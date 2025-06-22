@@ -5,7 +5,10 @@
 //  Created by Sergei Vasilenko on 11.03.2025.
 //
 
-struct GameCell: Hashable {
+import Foundation
+
+struct GameCell: Hashable, Identifiable {
+    let id = UUID()
     let predefinedValue: Int?
     private var _value: Int?
 

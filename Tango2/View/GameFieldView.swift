@@ -100,7 +100,7 @@ struct GameFieldView: View {
     }
     
     func tapCell(_ i: Int, _ j: Int) {
-        $game.wrappedValue.toogleCell(i, j)
+//        game.toogleCell(i, j)
     }
 }
 

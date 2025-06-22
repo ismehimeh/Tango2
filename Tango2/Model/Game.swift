@@ -7,7 +7,8 @@
 
 import Foundation
 
-struct Game {
+@Observable
+class Game {
 
     let level: Level
     var gameCells: [[GameCell]]
@@ -97,18 +98,18 @@ struct Game {
         return true
     }
     
-    mutating func toogleCell(_ i: Int, _ j: Int) {
-        let cell = gameCells[i][j]
+    func toogleCell(_ cell: GameCell) {
+        var cellCopy = cell
         guard cell.predefinedValue == nil else { return }
 
         if cell.value == nil {
-            gameCells[i][j].value = 0
+            cellCopy.value = 0
         }
         else if cell.value == 0 {
-            gameCells[i][j].value = 1
+            cellCopy.value = 1
         }
         else {
-            gameCells[i][j].value = nil
+            cellCopy.value = nil
         }
         
         isSolved = checkIsSolved()
@@ -124,7 +125,7 @@ struct Game {
 //        }
     }
     
-    mutating func clearField() {
+    func clearField() {
         gameCells = gameCells.map { row in
             row.map { cell in
                 GameCell(predefinedValue: cell.predefinedValue)
