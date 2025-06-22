@@ -16,6 +16,7 @@ struct Game {
     }
     var isSolved = false
     var isMistake = false
+    var secondsSpent = 0
 
     init(_ level: Level) {
         self.level = level

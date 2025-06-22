@@ -40,6 +40,11 @@ struct GameView: View {
             }
         }
         .onAppear {
+            viewModel.secondsPassed = game.secondsSpent
+            viewModel.startTimer()
+        }
+        .onDisappear {
+            game.secondsSpent = viewModel.secondsPassed
             viewModel.startTimer()
         }
         .sheet(isPresented: $showingSettings) {

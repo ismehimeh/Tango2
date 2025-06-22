@@ -13,7 +13,7 @@ class GameViewModel {
     
     var timeString = "0:00"
     
-    private var secondsPassed = 0 {
+    var secondsPassed = 0 {
         didSet {
             timeString = String(format: "%01d:%02d", secondsPassed / 60, secondsPassed % 60)
         }
@@ -28,5 +28,9 @@ class GameViewModel {
             .sink { [weak self] _ in
                 self?.secondsPassed += 1
             }
+    }
+    
+    func stopStimer() {
+        timerCancellable = nil
     }
 }
