@@ -9,13 +9,14 @@ import SwiftUI
 
 struct SettingsView: View {
     
-    @State var viewModel = SettingsViewModel()
+    @State private var isShowClockIsOn: Bool = false
+    @State private var isAutoCheckInOn: Bool = false
     
     var body: some View {
         HStack {
             Label("Show clock", systemImage: "clock")
             Spacer()
-            Toggle("", isOn: $viewModel.isShowClockIsOn)
+            Toggle("", isOn: $isShowClockIsOn)
         }
         .padding(.horizontal, 20)
         .padding(.top, 40)
@@ -23,7 +24,7 @@ struct SettingsView: View {
         HStack {
             Label("Auto-check", systemImage: "checkmark.seal.fill")
             Spacer()
-            Toggle("", isOn: $viewModel.isAutoCheckInOn)
+            Toggle("", isOn: $isAutoCheckInOn)
         }
         .padding(.horizontal, 20)
         
@@ -32,5 +33,5 @@ struct SettingsView: View {
 }
 
 #Preview {
-    SettingsView(viewModel: .init())
+    SettingsView()
 }

@@ -5,7 +5,7 @@
 //  Created by Sergei Vasilenko on 11.03.2025.
 //
 
-struct GameCell {
+struct GameCell: Hashable {
     let predefinedValue: Int?
     private var _value: Int?
 

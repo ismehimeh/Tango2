@@ -9,8 +9,12 @@ import SwiftUI
 
 struct GameFieldView: View {
     
-    @State var cellEntries: [CellFramePreferenceKeyEntry] = []
-    @State var viewModel: GameFieldViewModel
+    // As I remember, idea behind all of this
+    // is to get frames of cells to properly position ConditionViews
+    @State var cellEntries: [CellFramePreferenceKeyEntry] = [] // what the fuck is that?
+    @Binding var game: Game
+    @Binding var showMistake: Bool
+    @Binding var showSolved: Bool
     
     enum Constants {
         static let cellPrefilledBackgroundColor = Color.init(red: 238 / 255.0, green: 234 / 255.0, blue: 232 / 255.0)
@@ -34,7 +38,7 @@ struct GameFieldView: View {
                                          cellContent: cellValue(i, j))
                             }
                             .onTapGesture {
-                                viewModel.tapCell(i, j)
+                                tapCell(i, j)
                             }
                         }
                     }
@@ -47,9 +51,9 @@ struct GameFieldView: View {
             .coordinateSpace(name: "grid")
 
             ZStack {
-                ForEach(viewModel.game.gameConditions) { condition in
-                    let cellA = cellEntries.last(where: { $0.row == condition.cellA.0 && $0.column == condition.cellA.1})
-                    let cellB = cellEntries.last(where: { $0.row == condition.cellB.0 && $0.column == condition.cellB.1})
+                ForEach(game.gameConditions) { condition in
+                    let cellA = cellEntries.last(where: { $0.row == condition.cellA.row && $0.column == condition.cellA.column})
+                    let cellB = cellEntries.last(where: { $0.row == condition.cellB.row && $0.column == condition.cellB.column})
                     if let cellA = cellA, let cellB = cellB {
                         let midPoint = CGPoint(x: (cellA.rect.midX + cellB.rect.midX) / 2,
                                                y: (cellA.rect.midY + cellB.rect.midY) / 2)
@@ -60,11 +64,11 @@ struct GameFieldView: View {
             }
         }
         .overlay {
-            if viewModel.isMistake && viewModel.isMistakeVisible {
+            if showMistake {
                 Color.red.opacity(0.2)
                     .allowsHitTesting(false)
             }
-            if viewModel.isSolved {
+            if showSolved {
                 Color.green.opacity(0.2)
                     .allowsHitTesting(false)
             }
@@ -73,7 +77,7 @@ struct GameFieldView: View {
     
     // MARK: - Functions
     func cellBackgroundColor(_ i: Int, _ j: Int) -> Color {
-        let cell = viewModel.game.gameCells[i][j]
+        let cell = game.gameCells[i][j]
         if let _ = cell.predefinedValue {
             return Constants.cellPrefilledBackgroundColor
         } else {
@@ -82,7 +86,7 @@ struct GameFieldView: View {
     }
 
     func cellValue(_ i: Int, _ j: Int) -> String? {
-        let cell = viewModel.game.gameCells[i][j]
+        let cell = game.gameCells[i][j]
 
         if let value = cell.predefinedValue {
             return value == 0 ? "🌞" : "🌚"
@@ -94,4 +98,16 @@ struct GameFieldView: View {
 
         return nil
     }
+    
+    func tapCell(_ i: Int, _ j: Int) {
+        $game.wrappedValue.toogleCell(i, j)
+    }
+}
+
+#Preview {
+    GameFieldView(game: .constant(.init(level1)),
+                  showMistake: .constant(false),
+                  showSolved: .constant(false))
+        .aspectRatio(1, contentMode: .fit)
+        .padding()
 }

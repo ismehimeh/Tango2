@@ -8,15 +8,24 @@
 import SwiftUI
 
 struct GameView: View {
+        
+    @State private var showingSettings = false
+    @State private var showingResult = false
+    @State private var showingClearAlert = false
+    @State private var isClockVisible = true
+    @State private var viewModel = GameViewModel()
+    @State private var isMistakeVisible = true
+    @State private var showMistake = false
+    @State var mistakeValidationID: UUID?
     
-    @State var viewModel: GameViewModel
-
+    @Binding var game: Game
+    
     // MARK: - Views
     var body: some View {
         ScrollView {
             VStack {
                 topView
-                GameFieldView(viewModel: viewModel.gameFieldViewModel)
+                GameFieldView(game: $game, showMistake: $showMistake, showSolved: $showingResult)
                 undoAndHintView
                 HowToPlayView()
                     .frame(width: 300)
@@ -25,7 +34,7 @@ struct GameView: View {
         }
         .toolbar {
             Button {
-                viewModel.tapSettings()
+                showingSettings = true
             } label: {
                 Image(systemName: "gearshape.fill")
             }
@@ -33,34 +42,37 @@ struct GameView: View {
         .onAppear {
             viewModel.startTimer()
         }
-        .sheet(isPresented: $viewModel.showingSettings) {
-            SettingsView(viewModel: .init())
+        .sheet(isPresented: $showingSettings) {
+            SettingsView()
                 .presentationDetents([.medium])
                 .presentationDragIndicator(.visible)
         }
-        .sheet(isPresented: $viewModel.showingResult) {
-            ResultView(viewModel: .init())
+        .sheet(isPresented: $showingResult) {
+            ResultView()
         }
-        .alert("You sure?", isPresented: $viewModel.showingClearAlert) {
+        .alert("You sure?", isPresented: $showingClearAlert) {
             Button("Yes", role: .destructive) {
-                viewModel.confirmClear()
+                game.clearField()
             }
             Button("No", role: .cancel) { }
         }
-        .onChange(of: viewModel.gameFieldViewModel.isSolved, initial: false) { _, newValue in
-            viewModel.showingResult = newValue
+        .onChange(of: game.isSolved, initial: false) { _, newValue in
+            showingResult = newValue
+        }
+        .onChange(of: game.isMistake, initial: false) { _, newValue in
+            processMistake(newValue)
         }
     }
 
     var topView: some View {
         HStack {
-            if viewModel.isClockVisible {
+            if isClockVisible {
                 Image(systemName: "clock")
                 Text(viewModel.timeString)
             }
             Spacer()
             Button {
-                viewModel.tapClear()
+                showingClearAlert = true
             } label: {
                 Text("Clear")
                     .padding(.horizontal, 5)
@@ -91,8 +103,29 @@ struct GameView: View {
             .buttonBorderShape(.capsule)
         }
     }
+    
+    private func processMistake(_ newValue: Bool) {
+        if newValue {
+            let mistakeId = UUID()
+            mistakeValidationID = mistakeId
+            Task {
+                try await Task.sleep(for: .milliseconds(300))
+                validateMistake(mistakeId)
+            }
+        }
+        else {
+            showMistake = false
+        }
+    }
+    
+    @MainActor
+    private func validateMistake(_ id: UUID) {
+        guard id == mistakeValidationID else { return }
+        showMistake = game.isMistake && isMistakeVisible
+    }
 }
 
 #Preview {
-    GameView(viewModel: .init(.init(level1)))
+    @Previewable @State var game = Game(level1)
+    GameView(game: $game)
 }

@@ -9,20 +9,20 @@ import SwiftUI
 
 struct LevelsView: View {
 
-    @State var viewModel: LevelsViewModel
+    @Binding var levels: [Level]
+    @State private var games: [Level.ID: Game] = [:]
+    @State private var router = Router(path: NavigationPath())
 
     let columns = [
         GridItem(.adaptive(minimum: 80))
     ]
 
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $router.path) {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 20) {
-                    ForEach(viewModel.levels) { level in
-                        NavigationLink {
-                            GameView(viewModel: .init(.init(level)))
-                        } label: {
+                    ForEach(levels) { level in
+                        NavigationLink(value: level) {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 10)
                                     .fill(Color.blue)
@@ -34,13 +34,28 @@ struct LevelsView: View {
                     }
                 }
             }
+            .navigationDestination(for: Level.self) { level in
+                let binding = Binding(get: { games[level.id] ?? Game(level) },
+                                      set: { games[level.id] = $0 })
+                GameView(game: binding)
+            }
         }
+        .environment(router)
     }
 }
 
 #Preview {
-    let levels = (1...100).map { Level(title: "\($0)",
+    @Previewable @State var levels = (1...100).map { Level(title: "\($0)",
                                        gameCells: level1Cells,
                                        gameConditions: level1Conditions) }
-    return LevelsView(viewModel: .init(levels: levels))
+    return LevelsView(levels: $levels)
+}
+
+@Observable
+class Router {
+    var path: NavigationPath
+    
+    init(path: NavigationPath) {
+        self.path = path
+    }
 }

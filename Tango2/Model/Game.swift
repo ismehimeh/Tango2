@@ -5,6 +5,8 @@
 //  Created by Sergei Vasilenko on 11.03.2025.
 //
 
+import Foundation
+
 struct Game {
 
     let level: Level
@@ -12,6 +14,8 @@ struct Game {
     var gameConditions: [GameCellCondition] {
         level.gameConditions
     }
+    var isSolved = false
+    var isMistake = false
 
     init(_ level: Level) {
         self.level = level
@@ -20,15 +24,15 @@ struct Game {
 
     func isRowValid(_ row: Int) -> Bool {
         let rowArray = gameCells[row]
-        let conditions = gameConditions.filter { $0.cellA.0 == row && $0.cellB.0 == row}
+        let conditions = gameConditions.filter { $0.cellA.row == row && $0.cellB.row == row}
         return isCellsArrayValid(rowArray, conditions)
     }
 
     func isColumnValid(_ column: Int) -> Bool {
         let columnArray = gameCells.map { $0[column] }
         let conditions = gameConditions
-            .filter { $0.cellA.1 == column && $0.cellB.1 == column}
-            .map { GameCellCondition(condition: $0.condition, cellA: ($0.cellA.1, $0.cellA.0), cellB: ($0.cellB.1, $0.cellB.0)) }
+            .filter { $0.cellA.column == column && $0.cellB.column == column}
+            .map { GameCellCondition(condition: $0.condition, cellA: CellPosition(row: $0.cellA.column, column: $0.cellA.row), cellB: CellPosition(row: $0.cellB.column, column: $0.cellB.row)) }
         return isCellsArrayValid(columnArray, conditions)
     }
 
@@ -38,7 +42,7 @@ struct Game {
         return isRowsValid && isColumnsValid
     }
 
-    func isSolved() -> Bool {
+    func checkIsSolved() -> Bool {
         let isAllCellsFilled = gameCells.flatMap { $0 }.allSatisfy { $0.value != nil || $0.predefinedValue != nil}
         return isAllCellsFilled && isFieldValid()
     }
@@ -76,8 +80,8 @@ struct Game {
 
         // check conditions
         for condition in conditions {
-            let cellA = cells[condition.cellA.1]
-            let cellB = cells[condition.cellB.1]
+            let cellA = cells[condition.cellA.column]
+            let cellB = cells[condition.cellB.column]
             guard cellA.value != nil && cellB.value != nil else { continue }
 
             if condition.condition == .equal && cellA.value != cellB.value {
@@ -90,5 +94,40 @@ struct Game {
         }
 
         return true
+    }
+    
+    mutating func toogleCell(_ i: Int, _ j: Int) {
+        let cell = gameCells[i][j]
+        guard cell.predefinedValue == nil else { return }
+
+        if cell.value == nil {
+            gameCells[i][j].value = 0
+        }
+        else if cell.value == 0 {
+            gameCells[i][j].value = 1
+        }
+        else {
+            gameCells[i][j].value = nil
+        }
+        
+        isSolved = checkIsSolved()
+        isMistake = !isFieldValid()
+        
+//        let mistakeId = UUID()
+//        mistakeValidationID = mistakeId
+//        isMistake = false
+        
+//        Task {
+//            try await Task.sleep(for: .seconds(1))
+//            await validateMistake(mistakeId)
+//        }
+    }
+    
+    mutating func clearField() {
+        gameCells = gameCells.map { row in
+            row.map { cell in
+                GameCell(predefinedValue: cell.predefinedValue)
+            }
+        }
     }
 }
