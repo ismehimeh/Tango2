@@ -12,9 +12,9 @@ struct GameView: View {
     @State private var showingSettings = false
     @State private var showingResult = false
     @State private var showingClearAlert = false
-    @State private var isClockVisible = true
+    @AppStorage(GameSettings.clockVisibleKey) private var isClockVisible = GameSettings.defaultClockVisible
     @State private var viewModel = GameViewModel()
-    @State private var isMistakeVisible = true
+    @AppStorage(GameSettings.mistakeHighlightKey) private var isMistakeVisible = GameSettings.defaultMistakeHighlight
     @State private var showMistake = false
     @State var mistakeValidationID: UUID?
     

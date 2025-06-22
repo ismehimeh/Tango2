@@ -9,22 +9,22 @@ import SwiftUI
 
 struct SettingsView: View {
     
-    @State private var isShowClockIsOn: Bool = false
-    @State private var isAutoCheckInOn: Bool = false
+    @AppStorage(GameSettings.clockVisibleKey) private var isClockVisible = GameSettings.defaultClockVisible
+    @AppStorage(GameSettings.mistakeHighlightKey) private var isMistakeHighlightEnabled = GameSettings.defaultMistakeHighlight
     
     var body: some View {
         HStack {
             Label("Show clock", systemImage: "clock")
             Spacer()
-            Toggle("", isOn: $isShowClockIsOn)
+            Toggle("", isOn: $isClockVisible)
         }
         .padding(.horizontal, 20)
         .padding(.top, 40)
         
         HStack {
-            Label("Auto-check", systemImage: "checkmark.seal.fill")
+            Label("Highlight mistakes", systemImage: "exclamationmark.triangle.fill")
             Spacer()
-            Toggle("", isOn: $isAutoCheckInOn)
+            Toggle("", isOn: $isMistakeHighlightEnabled)
         }
         .padding(.horizontal, 20)
         
