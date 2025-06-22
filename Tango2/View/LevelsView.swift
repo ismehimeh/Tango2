@@ -10,8 +10,9 @@ import SwiftUI
 struct LevelsView: View {
 
     @Binding var levels: [Level]
-    @State private var games: [Level.ID: Game] = [:]
+    @Environment(AppState.self) private var state
     @State private var router = Router(path: NavigationPath())
+    @State private var showingDebugMenu = false
 
     let columns = [
         GridItem(.adaptive(minimum: 80))
@@ -20,6 +21,11 @@ struct LevelsView: View {
     var body: some View {
         NavigationStack(path: $router.path) {
             ScrollView {
+                #if DEBUG
+                Button("Debug Menu") {
+                    showingDebugMenu.toggle()
+                }
+                #endif
                 LazyVGrid(columns: columns, spacing: 20) {
                     ForEach(levels) { level in
                         NavigationLink(value: level) {
@@ -35,12 +41,15 @@ struct LevelsView: View {
                 }
             }
             .navigationDestination(for: Level.self) { level in
-                let binding = Binding(get: { games[level.id] ?? Game(level) },
-                                      set: { games[level.id] = $0 })
+                let binding = Binding(get: { state.games[level.id] ?? Game(level) },
+                                      set: { state.games[level.id] = $0 })
                 GameView(game: binding)
             }
         }
         .environment(router)
+        .sheet(isPresented: $showingDebugMenu) {
+            DebugMenuView()
+        }
     }
 }
 
