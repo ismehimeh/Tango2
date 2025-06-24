@@ -28,9 +28,9 @@ struct GameFieldView: View {
                 .foregroundStyle(Constants.fieldBackgroundColor)
                 .aspectRatio(1, contentMode: .fit)
             Grid(horizontalSpacing: 2, verticalSpacing: 2) {
-                ForEach(0..<6) { i in
+                ForEach(0..<game.lineLength) { i in
                     GridRow {
-                        ForEach(0..<6) { j in
+                        ForEach(0..<game.lineLength) { j in
                             ZStack {
                                 CellView(row: i,
                                          column: j,
@@ -77,7 +77,7 @@ struct GameFieldView: View {
     
     // MARK: - Functions
     func cellBackgroundColor(_ i: Int, _ j: Int) -> Color {
-        let cell = game.gameCells[i][j]
+        let cell = game.cell(at: i, column: j)
         if let _ = cell.predefinedValue {
             return Constants.cellPrefilledBackgroundColor
         } else {
@@ -86,7 +86,7 @@ struct GameFieldView: View {
     }
 
     func cellValue(_ i: Int, _ j: Int) -> String? {
-        let cell = game.gameCells[i][j]
+        let cell = game.cell(at: i, column: j)
 
         if let value = cell.predefinedValue {
             return value == .zero ? "🌞" : "🌚"
