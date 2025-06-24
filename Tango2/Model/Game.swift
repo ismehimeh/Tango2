@@ -49,8 +49,8 @@ struct Game {
     }
 
     private func isCellsArrayValid(_ cells: [GameCell], _ conditions: [GameCellCondition]) -> Bool {
-        let zeroes = cells.count { $0.value == 0 }
-        let ones = cells.count { $0.value == 1 }
+        let zeroes = cells.count { $0.value == .zero }
+        let ones = cells.count { $0.value == .one }
 
         // count of 0 and 1
         guard
@@ -64,11 +64,11 @@ struct Game {
         var zeroesCount = 0
         var onesCount = 0
         for cell in cells {
-            if cell.value == 0 {
+            if cell.value == .zero {
                 zeroesCount += 1
                 onesCount = 0
             }
-            if cell.value == 1 {
+            if cell.value == .one {
                 zeroesCount = 0
                 onesCount += 1
             }
@@ -102,10 +102,10 @@ struct Game {
         guard cell.predefinedValue == nil else { return }
 
         if cell.value == nil {
-            gameCells[i][j].value = 0
+            gameCells[i][j].value = .zero
         }
-        else if cell.value == 0 {
-            gameCells[i][j].value = 1
+        else if cell.value == .zero {
+            gameCells[i][j].value = .one
         }
         else {
             gameCells[i][j].value = nil

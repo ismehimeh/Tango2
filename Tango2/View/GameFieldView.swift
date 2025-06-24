@@ -89,11 +89,11 @@ struct GameFieldView: View {
         let cell = game.gameCells[i][j]
 
         if let value = cell.predefinedValue {
-            return value == 0 ? "🌞" : "🌚"
+            return value == .zero ? "🌞" : "🌚"
         }
 
         if let value = cell.value {
-            return value == 0 ? "🌞" : "🌚"
+            return value == .zero ? "🌞" : "🌚"
         }
 
         return nil

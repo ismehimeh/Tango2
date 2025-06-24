@@ -8,17 +8,17 @@
 // MARK: - Level 1
 let level1Cells: [[GameCell]] = [
     // 1
-    [GameCell(), GameCell(), GameCell(predefinedValue: 0), GameCell(), GameCell(), GameCell()],
+    [GameCell(), GameCell(), GameCell(predefinedValue: .zero), GameCell(), GameCell(), GameCell()],
     // 2
-    [GameCell(), GameCell(predefinedValue: 1), GameCell(predefinedValue: 1), GameCell(), GameCell(), GameCell()],
+    [GameCell(), GameCell(predefinedValue: .one), GameCell(predefinedValue: .one), GameCell(), GameCell(), GameCell()],
     // 3
-    [GameCell(predefinedValue: 1), GameCell(predefinedValue: 1), GameCell(), GameCell(), GameCell(), GameCell()],
+    [GameCell(predefinedValue: .one), GameCell(predefinedValue: .one), GameCell(), GameCell(), GameCell(), GameCell()],
     // 4
-    [GameCell(), GameCell(), GameCell(), GameCell(), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0)],
+    [GameCell(), GameCell(), GameCell(), GameCell(), GameCell(predefinedValue: .one), GameCell(predefinedValue: .zero)],
     // 5
-    [GameCell(), GameCell(), GameCell(), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0), GameCell()],
+    [GameCell(), GameCell(), GameCell(), GameCell(predefinedValue: .one), GameCell(predefinedValue: .zero), GameCell()],
     // 6
-    [GameCell(), GameCell(), GameCell(), GameCell(predefinedValue: 0), GameCell(), GameCell()],
+    [GameCell(), GameCell(), GameCell(), GameCell(predefinedValue: .zero), GameCell(), GameCell()],
 ]
 
 let level1Conditions: [GameCellCondition] = [
@@ -35,13 +35,13 @@ let level2Cells: [[GameCell]] = [
     // 1
     [GameCell(), GameCell(), GameCell(), GameCell(), GameCell(), GameCell()],
     // 2
-    [GameCell(), GameCell(predefinedValue: 1), GameCell(), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell()],
+    [GameCell(), GameCell(predefinedValue: .one), GameCell(), GameCell(predefinedValue: .zero), GameCell(predefinedValue: .one), GameCell()],
     // 3
-    [GameCell(), GameCell(predefinedValue: 0), GameCell(), GameCell(), GameCell(), GameCell()],
+    [GameCell(), GameCell(predefinedValue: .zero), GameCell(), GameCell(), GameCell(), GameCell()],
     // 4
-    [GameCell(), GameCell(), GameCell(), GameCell(), GameCell(predefinedValue: 0), GameCell()],
+    [GameCell(), GameCell(), GameCell(), GameCell(), GameCell(predefinedValue: .zero), GameCell()],
     // 5
-    [GameCell(), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0), GameCell(), GameCell(predefinedValue: 0), GameCell()],
+    [GameCell(), GameCell(predefinedValue: .one), GameCell(predefinedValue: .zero), GameCell(), GameCell(predefinedValue: .zero), GameCell()],
     // 6
     [GameCell(), GameCell(), GameCell(), GameCell(), GameCell(), GameCell()],
 ]
@@ -62,17 +62,17 @@ let level2 = Level(title: "2", gameCells: level2Cells, gameConditions: level2Con
 //basically, it is almost solved level 1
 let level3Cells: [[GameCell]] = [
     // 1
-    [GameCell(predefinedValue: 1), GameCell(), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0)],
+    [GameCell(predefinedValue: .one), GameCell(), GameCell(predefinedValue: .zero), GameCell(predefinedValue: .one), GameCell(predefinedValue: .one), GameCell(predefinedValue: .zero)],
     // 2
-    [GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1)],
+    [GameCell(predefinedValue: .zero), GameCell(predefinedValue: .one), GameCell(predefinedValue: .one), GameCell(predefinedValue: .zero), GameCell(predefinedValue: .zero), GameCell(predefinedValue: .one)],
     // 3
-    [GameCell(predefinedValue: 1), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0), GameCell(predefinedValue: 0)],
+    [GameCell(predefinedValue: .one), GameCell(predefinedValue: .one), GameCell(predefinedValue: .zero), GameCell(predefinedValue: .one), GameCell(predefinedValue: .zero), GameCell(predefinedValue: .zero)],
     // 4
-    [GameCell(predefinedValue: 1), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0)],
+    [GameCell(predefinedValue: .one), GameCell(predefinedValue: .zero), GameCell(predefinedValue: .one), GameCell(predefinedValue: .zero), GameCell(predefinedValue: .one), GameCell(predefinedValue: .zero)],
     // 5
-    [GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1)],
+    [GameCell(predefinedValue: .zero), GameCell(predefinedValue: .one), GameCell(predefinedValue: .zero), GameCell(predefinedValue: .one), GameCell(predefinedValue: .zero), GameCell(predefinedValue: .one)],
     // 6
-    [GameCell(predefinedValue: 0), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell(predefinedValue: 0), GameCell(predefinedValue: 1), GameCell(predefinedValue: 1)],
+    [GameCell(predefinedValue: .zero), GameCell(predefinedValue: .zero), GameCell(predefinedValue: .one), GameCell(predefinedValue: .zero), GameCell(predefinedValue: .one), GameCell(predefinedValue: .one)],
 ]
 
 let level3Conditions: [GameCellCondition] = [
