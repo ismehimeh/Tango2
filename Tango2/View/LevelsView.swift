@@ -41,9 +41,15 @@ struct LevelsView: View {
                 }
             }
             .navigationDestination(for: Level.self) { level in
-                let binding = Binding(get: { state.games[level.id] ?? Game(level) },
-                                      set: { state.games[level.id] = $0 })
-                GameView(game: binding)
+                GameView(game: {
+                    if let existingGame = state.games[level.id] {
+                        return existingGame
+                    } else {
+                        let newGame = Game(level)
+                        state.games[level.id] = newGame
+                        return newGame
+                    }
+                }())
             }
         }
         .environment(router)

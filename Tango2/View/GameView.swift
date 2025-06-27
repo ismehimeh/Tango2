@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct GameView: View {
+    @Environment(\.undoManager) var undoManager
         
     @State private var showingSettings = false
     @State private var showingResult = false
@@ -15,17 +16,18 @@ struct GameView: View {
     @AppStorage(GameSettings.clockVisibleKey) private var isClockVisible = GameSettings.defaultClockVisible
     @State private var viewModel = GameViewModel()
     @AppStorage(GameSettings.mistakeHighlightKey) private var isMistakeVisible = GameSettings.defaultMistakeHighlight
+    @AppStorage(GameSettings.redoVisibilityKey) private var isRedoVisible = GameSettings.defaultRedoVisibility
     @State private var showMistake = false
     @State var mistakeValidationID: UUID?
     
-    @Binding var game: Game
+    var game: Game
     
     // MARK: - Views
     var body: some View {
         ScrollView {
             VStack {
                 topView
-                GameFieldView(game: $game, showMistake: $showMistake, showSolved: $showingResult)
+                GameFieldView(game: game, showMistake: $showMistake, showSolved: $showingResult)
                 undoAndHintView
                 HowToPlayView()
                     .frame(width: 300)
@@ -40,6 +42,7 @@ struct GameView: View {
             }
         }
         .onAppear {
+            game.setUndoManager(undoManager)
             viewModel.secondsPassed = game.secondsSpent
             viewModel.startTimer()
         }
@@ -89,11 +92,25 @@ struct GameView: View {
 
     var undoAndHintView: some View {
         HStack {
-            Button {
-                print("Undo!")
-            } label: {
-                Text("Undo")
-                    .frame(maxWidth: .infinity)
+            
+            VStack {
+                Button {
+                    undoManager?.undo()
+                } label: {
+                    Text("Undo")
+                        .frame(maxWidth: .infinity)
+                }
+                .disabled(!(undoManager?.canUndo ?? false))
+                
+                if isRedoVisible {
+                    Button {
+                        undoManager?.redo()
+                    } label: {
+                        Text("Redo")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .disabled(!(undoManager?.canRedo ?? false))
+                }
             }
             .buttonStyle(.bordered)
             .buttonBorderShape(.capsule)
@@ -132,5 +149,5 @@ struct GameView: View {
 
 #Preview {
     @Previewable @State var game = Game(level1)
-    GameView(game: $game)
+    GameView(game: game)
 }

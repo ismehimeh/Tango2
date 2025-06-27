@@ -12,7 +12,7 @@ struct GameFieldView: View {
     // As I remember, idea behind all of this
     // is to get frames of cells to properly position ConditionViews
     @State var cellEntries: [CellFramePreferenceKeyEntry] = [] // what the fuck is that?
-    @Binding var game: Game
+    var game: Game
     @Binding var showMistake: Bool
     @Binding var showSolved: Bool
     
@@ -28,9 +28,9 @@ struct GameFieldView: View {
                 .foregroundStyle(Constants.fieldBackgroundColor)
                 .aspectRatio(1, contentMode: .fit)
             Grid(horizontalSpacing: 2, verticalSpacing: 2) {
-                ForEach(0..<6) { i in
+                ForEach(0..<game.lineLength) { i in
                     GridRow {
-                        ForEach(0..<6) { j in
+                        ForEach(0..<game.lineLength) { j in
                             ZStack {
                                 CellView(row: i,
                                          column: j,
@@ -77,7 +77,7 @@ struct GameFieldView: View {
     
     // MARK: - Functions
     func cellBackgroundColor(_ i: Int, _ j: Int) -> Color {
-        let cell = game.gameCells[i][j]
+        let cell = game.cell(at: i, column: j)
         if let _ = cell.predefinedValue {
             return Constants.cellPrefilledBackgroundColor
         } else {
@@ -86,26 +86,26 @@ struct GameFieldView: View {
     }
 
     func cellValue(_ i: Int, _ j: Int) -> String? {
-        let cell = game.gameCells[i][j]
+        let cell = game.cell(at: i, column: j)
 
         if let value = cell.predefinedValue {
-            return value == 0 ? "🌞" : "🌚"
+            return value == .zero ? "🌞" : "🌚"
         }
 
         if let value = cell.value {
-            return value == 0 ? "🌞" : "🌚"
+            return value == .zero ? "🌞" : "🌚"
         }
 
         return nil
     }
     
     func tapCell(_ i: Int, _ j: Int) {
-        $game.wrappedValue.toogleCell(i, j)
+        game.toggleCell(i, j)
     }
 }
 
 #Preview {
-    GameFieldView(game: .constant(.init(level1)),
+    GameFieldView(game: .init(level1),
                   showMistake: .constant(false),
                   showSolved: .constant(false))
         .aspectRatio(1, contentMode: .fit)

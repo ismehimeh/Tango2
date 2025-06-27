@@ -12,4 +12,9 @@ struct Level: Identifiable, Hashable {
     let title: String // TODO: I am not planning to use it, just need it to distinguish cell for now
     let gameCells: [[GameCell]]
     let gameConditions: [GameCellCondition]
+    
+    // Standard game board size (6x6)
+    var lineLength: Int {
+        return gameCells.first?.count ?? 6
+    }
 }
