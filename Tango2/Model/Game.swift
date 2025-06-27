@@ -7,12 +7,13 @@
 
 import Foundation
 
-struct Game {
+@Observable
+class Game {
 
     let level: Level
     private(set) var lineLength = 6 // Standard game board size
     
-    private var gameCells: [GameCell]
+    var gameCells: [GameCell]
     
     var gameConditions: [GameCellCondition] {
         level.gameConditions
@@ -120,7 +121,7 @@ struct Game {
         return true
     }
     
-    mutating func toogleCell(_ i: Int, _ j: Int) {
+    func toogleCell(_ i: Int, _ j: Int) {
         let index = cellIndex(row: i, column: j)
         let cell = gameCells[index]
         guard cell.predefinedValue == nil else { return }
@@ -148,7 +149,7 @@ struct Game {
 //        }
     }
     
-    mutating func clearField() {
+    func clearField() {
         gameCells = gameCells.map { cell in
             GameCell(predefinedValue: cell.predefinedValue)
         }

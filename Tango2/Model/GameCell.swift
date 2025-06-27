@@ -5,6 +5,8 @@
 //  Created by Sergei Vasilenko on 11.03.2025.
 //
 
+import SwiftUI
+
 enum CellValue: Int, Hashable {
     case zero = 0
     case one = 1
@@ -18,7 +20,8 @@ enum CellValue: Int, Hashable {
     }
 }
 
-struct GameCell: Hashable {
+@Observable
+class GameCell: Hashable {
     let predefinedValue: CellValue?
     private var _value: CellValue?
 
@@ -35,5 +38,18 @@ struct GameCell: Hashable {
     init(predefinedValue: CellValue? = nil, value: CellValue? = nil) {
         self.predefinedValue = predefinedValue
         self._value = value
+    }
+}
+
+extension GameCell: Equatable {
+    static func == (lhs: GameCell, rhs: GameCell) -> Bool {
+        lhs.predefinedValue == rhs.predefinedValue && lhs._value == rhs._value
+    }
+}
+
+extension GameCell {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(predefinedValue)
+        hasher.combine(_value)
     }
 }

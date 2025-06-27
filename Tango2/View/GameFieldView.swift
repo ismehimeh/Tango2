@@ -12,7 +12,7 @@ struct GameFieldView: View {
     // As I remember, idea behind all of this
     // is to get frames of cells to properly position ConditionViews
     @State var cellEntries: [CellFramePreferenceKeyEntry] = [] // what the fuck is that?
-    @Binding var game: Game
+    var game: Game
     @Binding var showMistake: Bool
     @Binding var showSolved: Bool
     
@@ -100,12 +100,12 @@ struct GameFieldView: View {
     }
     
     func tapCell(_ i: Int, _ j: Int) {
-        $game.wrappedValue.toogleCell(i, j)
+        game.toogleCell(i, j)
     }
 }
 
 #Preview {
-    GameFieldView(game: .constant(.init(level1)),
+    GameFieldView(game: .init(level1),
                   showMistake: .constant(false),
                   showSolved: .constant(false))
         .aspectRatio(1, contentMode: .fit)

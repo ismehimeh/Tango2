@@ -18,14 +18,14 @@ struct GameView: View {
     @State private var showMistake = false
     @State var mistakeValidationID: UUID?
     
-    @Binding var game: Game
+    var game: Game
     
     // MARK: - Views
     var body: some View {
         ScrollView {
             VStack {
                 topView
-                GameFieldView(game: $game, showMistake: $showMistake, showSolved: $showingResult)
+                GameFieldView(game: game, showMistake: $showMistake, showSolved: $showingResult)
                 undoAndHintView
                 HowToPlayView()
                     .frame(width: 300)
@@ -132,5 +132,5 @@ struct GameView: View {
 
 #Preview {
     @Previewable @State var game = Game(level1)
-    GameView(game: $game)
+    GameView(game: game)
 }
