@@ -10,15 +10,19 @@ import SwiftUI
 struct DebugMenuView: View {
     
     @Environment(AppState.self) private var state
+    @AppStorage(GameSettings.redoVisibilityKey) var isRedoVisible = GameSettings.defaultRedoVisibility
     
     var body: some View {
         VStack(alignment: .leading) {
             Button("Reset all levels") {
                 state.resetAllGames()
             }
-            .buttonStyle(.bordered)
+            Button(isRedoVisible ? "Make Redo invisible" : "Make Redo visible") {
+                isRedoVisible.toggle()
+            }
             Spacer()
         }
+        .buttonStyle(.bordered)
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(10)
     }

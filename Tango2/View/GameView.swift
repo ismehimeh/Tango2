@@ -16,6 +16,7 @@ struct GameView: View {
     @AppStorage(GameSettings.clockVisibleKey) private var isClockVisible = GameSettings.defaultClockVisible
     @State private var viewModel = GameViewModel()
     @AppStorage(GameSettings.mistakeHighlightKey) private var isMistakeVisible = GameSettings.defaultMistakeHighlight
+    @AppStorage(GameSettings.redoVisibilityKey) private var isRedoVisible = GameSettings.defaultRedoVisibility
     @State private var showMistake = false
     @State var mistakeValidationID: UUID?
     
@@ -91,15 +92,28 @@ struct GameView: View {
 
     var undoAndHintView: some View {
         HStack {
-            Button {
-                undoManager?.undo()
-            } label: {
-                Text("Undo")
-                    .frame(maxWidth: .infinity)
+            
+            VStack {
+                Button {
+                    undoManager?.undo()
+                } label: {
+                    Text("Undo")
+                        .frame(maxWidth: .infinity)
+                }
+                .disabled(!(undoManager?.canUndo ?? false))
+                
+                if isRedoVisible {
+                    Button {
+                        undoManager?.redo()
+                    } label: {
+                        Text("Redo")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .disabled(!(undoManager?.canRedo ?? false))
+                }
             }
             .buttonStyle(.bordered)
             .buttonBorderShape(.capsule)
-            .disabled(!(undoManager?.canUndo ?? false))
 
             Button {
                 print("Hint!")
