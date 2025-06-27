@@ -168,9 +168,25 @@ class Game {
     }
     
     func clearField() {
-        gameCells = gameCells.map { cell in
-            GameCell(predefinedValue: cell.predefinedValue)
+        let oldCells = gameCells
+        
+        undoManager?.registerUndo(withTarget: self) { [weak self] target in
+            guard let self else { return }
+            
+            resetField(with: oldCells)
+            
+            undoManager?.registerUndo(withTarget: self) { redoTarget in
+                redoTarget.clearField()
+            }
         }
+        
+        resetField(with: gameCells.cleared())
+    }
+    
+    func resetField(with cells: [GameCell]) {
+        gameCells = cells
+        isSolved = checkIsSolved()
+        isMistake = !isFieldValid()
     }
     
     func setCellValue(at row: Int, column: Int, value: CellValue?) {

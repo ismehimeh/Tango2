@@ -53,3 +53,11 @@ extension GameCell {
         hasher.combine(_value)
     }
 }
+
+extension Array where Element == GameCell {
+    
+    /// Returns array of GameCells which where reset to predefinedValue
+    func cleared() -> Self {
+        self.map { GameCell(predefinedValue: $0.predefinedValue) }
+    }
+}
