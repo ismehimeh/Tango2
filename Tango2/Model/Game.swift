@@ -21,11 +21,17 @@ class Game {
     var isSolved = false
     var isMistake = false
     var secondsSpent = 0
+    
+    private var undoManager: UndoManager?
 
     init(_ level: Level) {
         self.level = level
         // Convert 2D array to flat array
         self.gameCells = level.gameCells.flatMap { $0 }
+    }
+    
+    func setUndoManager(_ undoManager: UndoManager?) {
+        self.undoManager = undoManager
     }
     
     // Helper methods for 2D access
@@ -121,10 +127,22 @@ class Game {
         return true
     }
     
-    func toogleCell(_ i: Int, _ j: Int) {
+    func toggleCell(_ i: Int, _ j: Int) {
         let index = cellIndex(row: i, column: j)
         let cell = gameCells[index]
         guard cell.predefinedValue == nil else { return }
+        
+        let oldValue = cell.value
+        
+        undoManager?.registerUndo(withTarget: self) { [weak self] target in
+            guard let self else { return }
+            
+            target.setCellValue(at: i, column: j, value: oldValue)
+            
+            undoManager?.registerUndo(withTarget: target) { redoTarget in
+                target.toggleCell(i, j)
+            }
+        }
 
         if cell.value == nil {
             gameCells[index].value = .zero
@@ -153,5 +171,13 @@ class Game {
         gameCells = gameCells.map { cell in
             GameCell(predefinedValue: cell.predefinedValue)
         }
+    }
+    
+    func setCellValue(at row: Int, column: Int, value: CellValue?) {
+        let index = cellIndex(row: row, column: column)
+        gameCells[index].value = value
+        
+        isSolved = checkIsSolved()
+        isMistake = !isFieldValid()
     }
 }

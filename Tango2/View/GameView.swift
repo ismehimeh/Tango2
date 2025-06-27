@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct GameView: View {
+    @Environment(\.undoManager) var undoManager
         
     @State private var showingSettings = false
     @State private var showingResult = false
@@ -40,6 +41,7 @@ struct GameView: View {
             }
         }
         .onAppear {
+            game.setUndoManager(undoManager)
             viewModel.secondsPassed = game.secondsSpent
             viewModel.startTimer()
         }
@@ -90,13 +92,14 @@ struct GameView: View {
     var undoAndHintView: some View {
         HStack {
             Button {
-                print("Undo!")
+                undoManager?.undo()
             } label: {
                 Text("Undo")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
             .buttonBorderShape(.capsule)
+            .disabled(!(undoManager?.canUndo ?? false))
 
             Button {
                 print("Hint!")
