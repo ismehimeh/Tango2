@@ -12,11 +12,15 @@ struct CellView: View {
     let column: Int
     let backgroundColor: Color
     let cellContent: String?
+    @Binding var isMarkedAsMistake: Bool
 
     var body: some View {
         ZStack {
             Rectangle()
                 .foregroundColor(backgroundColor)
+            if isMarkedAsMistake {
+                Color.red.opacity(0.5)
+            }
             if let text = cellContent {
                 Text(text)
                     .font(.title)
@@ -37,6 +41,17 @@ struct CellView: View {
 }
 
 #Preview {
-    CellView(row: 0, column: 0, backgroundColor: .gray, cellContent: "🌞")
-        .frame(width: 50, height: 50)
+    return CellView(row: 0, column: 0,
+                    backgroundColor: .gray,
+                    cellContent: "🌞",
+                    isMarkedAsMistake: .constant(false))
+    .frame(width: 50, height: 50)
+}
+
+#Preview("Mistaken") {
+    return CellView(row: 0, column: 0,
+                    backgroundColor: .gray,
+                    cellContent: "🌞",
+                    isMarkedAsMistake: .constant(true))
+    .frame(width: 50, height: 50)
 }

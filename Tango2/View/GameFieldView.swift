@@ -35,7 +35,7 @@ struct GameFieldView: View {
                                 CellView(row: i,
                                          column: j,
                                          backgroundColor: cellBackgroundColor(i, j),
-                                         cellContent: cellValue(i, j))
+                                         cellContent: cellValue(i, j), isMarkedAsMistake: $showMistake)
                             }
                             .onTapGesture {
                                 tapCell(i, j)
