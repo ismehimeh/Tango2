@@ -108,4 +108,48 @@ struct Tango2Tests {
         #expect(game.getMistakes(forRowWithIndex: 5).contains(.noMoreThan2))
         #expect(game.getMistakes(forRowWithIndex: 5).contains(.sameNumberValues))
     }
+    
+    // MARK: - Column Mistake Tests
+    
+    @Test func columnWithThreeConsecutiveZeroesReturnsNoMoreThan2Error() async throws {
+        let game = Game(columnMistakesTestLevel)
+        let expectedResult: [MistakeType] = [.noMoreThan2]
+        #expect(game.getMistakes(forColumnWithIndex: 0) == expectedResult)
+    }
+    
+    @Test func columnWithThreeConsecutiveOnesReturnsNoMoreThan2Error() async throws {
+        let game = Game(columnMistakesTestLevel)
+        let expectedResult: [MistakeType] = [.noMoreThan2]
+        #expect(game.getMistakes(forColumnWithIndex: 2) == expectedResult)
+    }
+    
+    @Test func columnWithEqualConditionViolationReturnsSignViolationError() async throws {
+        let game = Game(columnMistakesTestLevel)
+        let expectedResult: [MistakeType] = [.signViolation(.equal)]
+        #expect(game.getMistakes(forColumnWithIndex: 1) == expectedResult)
+    }
+    
+    @Test func columnWithOppositeConditionViolationReturnsSignViolationError() async throws {
+        let game = Game(columnMistakesTestLevel)
+        let expectedResult: [MistakeType] = [.signViolation(.opposite), .noMoreThan2]
+        #expect(game.getMistakes(forColumnWithIndex: 4) == expectedResult)
+    }
+    
+    @Test func columnWithUnbalancedValuesReturnsSameNumberValuesError() async throws {
+        let game = Game(columnMistakesTestLevel)
+        let expectedResult: [MistakeType] = [.noMoreThan2, .sameNumberValues]
+        #expect(game.getMistakes(forColumnWithIndex: 5) == expectedResult)
+    }
+    
+    // MARK: - Board-wide Mistake Tests
+    
+    @Test func getBoardWideMistakesReturnsAllUniqueErrorTypes() async throws {
+        let game = Game(columnMistakesTestLevel)
+        let mistakes = game.getMistakes()
+        
+        #expect(mistakes.contains(.noMoreThan2))
+        #expect(mistakes.contains(.signViolation(.equal)))
+        #expect(mistakes.contains(.signViolation(.opposite)))
+        #expect(mistakes.contains(.sameNumberValues))
+    }
 }

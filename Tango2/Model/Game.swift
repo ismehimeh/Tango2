@@ -201,34 +201,97 @@ class Game {
 // - MARK: Mistakes
 extension Game {
     
+    // MARK: - Public Mistake Detection Methods
+    
+    /// Get all mistakes across the entire board
+    func getMistakes() -> [MistakeType] {
+        var allMistakes = Set<MistakeType>()
+        
+        // Check all rows
+        for rowIndex in 0..<level.gameCells.count {
+            allMistakes.formUnion(getMistakes(forRowWithIndex: rowIndex))
+        }
+        
+        // Check all columns
+        for columnIndex in 0..<level.gameCells[0].count {
+            allMistakes.formUnion(getMistakes(forColumnWithIndex: columnIndex))
+        }
+        
+        return Array(allMistakes)
+    }
+    
+    /// Get mistakes for a specific row
     func getMistakes(forRowWithIndex rowIndex: Int) -> [MistakeType] {
         var mistakes = [MistakeType]()
         
-        // Check for sign violations
-        mistakes += checkSignViolation(forRowWithIndex: rowIndex)
+        // Check for sign violations in this row
+        mistakes += checkSignViolation(
+            cells: row(rowIndex),
+            isRow: true,
+            index: rowIndex
+        )
         
         // Check for no more than 2 consecutive same values
-        mistakes += checkNoMoreThan2(forRowWithIndex: rowIndex)
+        mistakes += checkNoMoreThan2(cells: row(rowIndex))
         
         // Check for equal number of zeros and ones
-        mistakes += checkSameNumberValues(forRowWithIndex: rowIndex)
+        mistakes += checkSameNumberValues(cells: row(rowIndex))
         
         return mistakes
     }
     
-    private func checkSignViolation(forRowWithIndex rowIndex: Int) -> [MistakeType] {
-        
-        let row = row(rowIndex)
+    /// Get mistakes for a specific column
+    func getMistakes(forColumnWithIndex columnIndex: Int) -> [MistakeType] {
         var mistakes = [MistakeType]()
         
+        // Check for sign violations in this column
+        mistakes += checkSignViolation(
+            cells: column(columnIndex),
+            isRow: false,
+            index: columnIndex
+        )
+        
+        // Check for no more than 2 consecutive same values
+        mistakes += checkNoMoreThan2(cells: column(columnIndex))
+        
+        // Check for equal number of zeros and ones
+        mistakes += checkSameNumberValues(cells: column(columnIndex))
+        
+        return mistakes
+    }
+    
+    // MARK: - Private Helper Methods for Mistake Detection
+    
+    /**
+     Checks for sign violations between cells based on game conditions.
+     
+     - Parameters:
+       - cells: Array of cells to check (either a row or column)
+       - isRow: True if checking a row, false if checking a column
+       - index: The index of the row or column being checked
+     - Returns: Array of mistake types found
+     */
+    private func checkSignViolation(cells: [GameCell], isRow: Bool, index: Int) -> [MistakeType] {
+        var mistakes = [MistakeType]()
+        
+        // Filter conditions that apply to this row/column
         let relatedConditions = gameConditions.filter {
-            $0.cellA.row == rowIndex && $0.cellB.row == rowIndex
+            if isRow {
+                return $0.cellA.row == index && $0.cellB.row == index
+            } else {
+                return $0.cellA.column == index && $0.cellB.column == index
+            }
         }
         
         relatedConditions.forEach { condition in
-            let cellAValue = row[condition.cellA.column].value
-            let cellBValue = row[condition.cellB.column].value
+            let positionA = isRow ? condition.cellA.column : condition.cellA.row
+            let positionB = isRow ? condition.cellB.column : condition.cellB.row
+            
+            let cellAValue = cells[positionA].value
+            let cellBValue = cells[positionB].value
+            
             guard cellAValue != nil && cellBValue != nil else { return }
+            
             switch condition.condition {
             case .equal:
                 if cellAValue != cellBValue {
@@ -244,15 +307,20 @@ extension Game {
         return mistakes
     }
     
-    private func checkNoMoreThan2(forRowWithIndex rowIndex: Int) -> [MistakeType] {
-        let row = row(rowIndex)
+    /**
+     Checks for more than 2 consecutive identical values in a line of cells.
+     
+     - Parameter cells: Array of cells to check
+     - Returns: Array of mistake types found
+     */
+    private func checkNoMoreThan2(cells: [GameCell]) -> [MistakeType] {
         var mistakes = [MistakeType]()
         
         // Check for more than 2 consecutive same values
         var consecutiveZeroes = 0
         var consecutiveOnes = 0
         
-        for cell in row {
+        for cell in cells {
             if cell.value == .zero {
                 consecutiveZeroes += 1
                 consecutiveOnes = 0
@@ -268,23 +336,28 @@ extension Game {
             // If we find more than 2 consecutive same values, add the mistake
             if consecutiveZeroes > 2 || consecutiveOnes > 2 {
                 mistakes.append(.noMoreThan2)
-                break // Only add this mistake once per row
+                break // Only add this mistake once per line
             }
         }
         
         return mistakes
     }
     
-    private func checkSameNumberValues(forRowWithIndex rowIndex: Int) -> [MistakeType] {
-        let row = row(rowIndex)
+    /**
+     Checks if a completely filled line has an equal number of zeros and ones.
+     
+     - Parameter cells: Array of cells to check
+     - Returns: Array of mistake types found
+     */
+    private func checkSameNumberValues(cells: [GameCell]) -> [MistakeType] {
         var mistakes = [MistakeType]()
         
         // Count zeroes, ones, and nil values
-        let zeroCount = row.filter { $0.value == .zero }.count
-        let oneCount = row.filter { $0.value == .one }.count
-        let nilCount = row.filter { $0.value == nil }.count
+        let zeroCount = cells.filter { $0.value == .zero }.count
+        let oneCount = cells.filter { $0.value == .one }.count
+        let nilCount = cells.filter { $0.value == nil }.count
         
-        // Only check for balance in completely filled rows (no nil values)
+        // Only check for balance in completely filled lines (no nil values)
         if nilCount == 0 {
             // Check if number of zeros equals number of ones
             if zeroCount != oneCount {

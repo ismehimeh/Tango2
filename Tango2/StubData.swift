@@ -122,3 +122,23 @@ let sameNumberValuesTestLevel = Level.create(
     ],
     conditions: []
 )
+
+// Test level for column and whole board mistake checking
+let columnMistakesTestLevel = Level.create(
+    title: "Column Mistakes Test",
+    boardDefinition: [
+        // This board is designed to have various column-based mistakes
+        [.zero, .zero, .one,  .one,  .zero, .one],
+        [.zero, .zero, .one,  .one,  .zero, .one],
+        [.zero, .one,  .one,  .one,  .one,  .one],
+        [.one,  .zero, .zero, .zero, .one,  .one],
+        [.one,  .one,  .zero, .zero, .one,  .zero],
+        [.one,  .one,  .zero, .zero, .zero, .zero]
+    ],
+    conditions: [
+        // Condition in column 1 that will be violated (equal values)
+        (.equal, (3, 1), (4, 1)),     // .zero and .one should be equal
+        // Condition in column 4 that will be violated (opposite values)
+        (.opposite, (0, 4), (1, 4))   // Both are .zero, should be opposite
+    ]
+)
