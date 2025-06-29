@@ -5,14 +5,14 @@
 //  Created by Sergei Vasilenko on 28.06.2025.
 //
 
-enum Mistake {
+enum MistakeType {
 
     case noMoreThan2
     case signViolation(GameCellCondition.Condition)
     case sameNumberValues
 }
 
-extension Mistake {
+extension MistakeType {
     
     var description: String {
         switch self {

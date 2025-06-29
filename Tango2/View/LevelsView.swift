@@ -60,10 +60,8 @@ struct LevelsView: View {
 }
 
 #Preview {
-    @Previewable @State var levels = (1...100).map { Level(title: "\($0)",
-                                       gameCells: level1Cells,
-                                       gameConditions: level1Conditions) }
-    return LevelsView(levels: $levels)
+    @Previewable @State var levels = (1...100).map { _ in level1 }
+    LevelsView(levels: $levels)
 }
 
 @Observable
