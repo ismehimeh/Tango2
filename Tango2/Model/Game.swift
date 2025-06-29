@@ -202,10 +202,14 @@ class Game {
 extension Game {
     
     func getMistakes(forRowWithIndex rowIndex: Int) -> [MistakeType] {
-        // signViolation check
         var mistakes = [MistakeType]()
         
+        // Check for sign violations
         mistakes += checkSignViolation(forRowWithIndex: rowIndex)
+        
+        // Check for no more than 2 consecutive same values
+        mistakes += checkNoMoreThan2(forRowWithIndex: rowIndex)
+        
         return mistakes
     }
     
@@ -231,6 +235,37 @@ extension Game {
                 if cellAValue == cellBValue {
                     mistakes.append(.signViolation(.opposite))
                 }
+            }
+        }
+        
+        return mistakes
+    }
+    
+    private func checkNoMoreThan2(forRowWithIndex rowIndex: Int) -> [MistakeType] {
+        let row = row(rowIndex)
+        var mistakes = [MistakeType]()
+        
+        // Check for more than 2 consecutive same values
+        var consecutiveZeroes = 0
+        var consecutiveOnes = 0
+        
+        for cell in row {
+            if cell.value == .zero {
+                consecutiveZeroes += 1
+                consecutiveOnes = 0
+            } else if cell.value == .one {
+                consecutiveZeroes = 0
+                consecutiveOnes += 1
+            } else {
+                // nil value resets both counters
+                consecutiveZeroes = 0
+                consecutiveOnes = 0
+            }
+            
+            // If we find more than 2 consecutive same values, add the mistake
+            if consecutiveZeroes > 2 || consecutiveOnes > 2 {
+                mistakes.append(.noMoreThan2)
+                break // Only add this mistake once per row
             }
         }
         

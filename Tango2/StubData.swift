@@ -83,3 +83,22 @@ let mistakesTestLevel = Level.create(
         (.opposite, (3, 1), (3, 2))
     ]
 )
+
+// Test level specifically for consecutive values rule
+let consecutiveValuesTestLevel = Level.create(
+    title: "Consecutive Values Test",
+    boardDefinition: [
+        // Row with two consecutive values (valid)
+        [.zero, .zero, nil, nil, nil, nil],
+        // Row with three consecutive zeroes (invalid)
+        [.zero, .zero, .zero, nil, nil, nil],
+        // Row with three consecutive ones (invalid)
+        [nil, nil, .one, .one, .one, nil],
+        // Row with both sign violation and consecutive values violation
+        [.zero, .one, .one, .one, nil, nil]
+    ],
+    conditions: [
+        // This condition will be violated in row 3
+        (.equal, (3, 0), (3, 1))
+    ]
+)
