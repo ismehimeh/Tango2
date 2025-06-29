@@ -5,7 +5,7 @@
 //  Created by Sergei Vasilenko on 28.06.2025.
 //
 
-enum MistakeType {
+enum MistakeType: Equatable {
 
     case noMoreThan2
     case signViolation(GameCellCondition.Condition)

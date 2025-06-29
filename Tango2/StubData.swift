@@ -65,3 +65,21 @@ let level3 = Level.create(
         (.equal, (5, 0), (5, 1))
     ]
 )
+
+let mistakesTestLevel = Level.create(
+    title: "Mistakes Test",
+    boardDefinition: [
+        [.zero, .one, nil, nil, nil, nil],
+        [.zero, .zero, nil, nil, nil, nil],
+        [.zero, .one, nil, nil, .zero, .zero],
+        [.zero, .one, .one, nil, nil, nil],
+    ],
+    conditions: [
+        (.equal, (0, 0), (0, 1)),
+        (.opposite, (1, 0), (1, 1)),
+        (.equal, (2, 0), (2, 1)),
+        (.opposite, (2, 4), (2, 5)),
+        (.equal, (3, 0), (3, 1)),
+        (.opposite, (3, 1), (3, 2))
+    ]
+)

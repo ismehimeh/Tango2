@@ -197,3 +197,43 @@ class Game {
         isMistake = !isFieldValid()
     }
 }
+
+// - MARK: Mistakes
+extension Game {
+    
+    func getMistakes(forRowWithIndex rowIndex: Int) -> [MistakeType] {
+        // signViolation check
+        var mistakes = [MistakeType]()
+        
+        mistakes += checkSignViolation(forRowWithIndex: rowIndex)
+        return mistakes
+    }
+    
+    private func checkSignViolation(forRowWithIndex rowIndex: Int) -> [MistakeType] {
+        
+        let row = row(rowIndex)
+        var mistakes = [MistakeType]()
+        
+        let relatedConditions = gameConditions.filter {
+            $0.cellA.row == rowIndex && $0.cellB.row == rowIndex
+        }
+        
+        relatedConditions.forEach { condition in
+            let cellAValue = row[condition.cellA.column].value
+            let cellBValue = row[condition.cellB.column].value
+            guard cellAValue != nil && cellBValue != nil else { return }
+            switch condition.condition {
+            case .equal:
+                if cellAValue != cellBValue {
+                    mistakes.append(.signViolation(.equal))
+                }
+            case .opposite:
+                if cellAValue == cellBValue {
+                    mistakes.append(.signViolation(.opposite))
+                }
+            }
+        }
+        
+        return mistakes
+    }
+}
