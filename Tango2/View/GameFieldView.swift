@@ -28,9 +28,9 @@ struct GameFieldView: View {
                 .foregroundStyle(Constants.fieldBackgroundColor)
                 .aspectRatio(1, contentMode: .fit)
             Grid(horizontalSpacing: 2, verticalSpacing: 2) {
-                ForEach(0..<game.lineLength) { i in
+                ForEach(0..<game.lineLength, id: \.self) { i in
                     GridRow {
-                        ForEach(0..<game.lineLength) { j in
+                        ForEach(0..<game.lineLength, id: \.self) { j in
                             ZStack {
                                 CellView(row: i,
                                          column: j,

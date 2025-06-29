@@ -11,7 +11,7 @@ import Foundation
 class Game {
 
     let level: Level
-    private(set) var lineLength = 6 // Standard game board size
+    let lineLength = 6 // Standard game board size
     
     var gameCells: [GameCell]
     
