@@ -6,7 +6,6 @@
 //
 
 enum MistakeType: Hashable {
-
     case noMoreThan2
     case signViolation(GameCellCondition.Condition)
     case sameNumberValues
@@ -30,4 +29,3 @@ extension MistakeType {
         }
     }
 }
-

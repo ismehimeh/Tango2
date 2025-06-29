@@ -20,6 +20,7 @@ class Game {
     }
     var isSolved = false
     var isMistake = false
+    var mistakes = [MistakeType]()
     var secondsSpent = 0
     
     private var undoManager: UndoManager?
@@ -28,6 +29,9 @@ class Game {
         self.level = level
         // Convert 2D array to flat array
         self.gameCells = level.gameCells.flatMap { $0 }
+        isSolved = checkIsSolved()
+        isMistake = !isFieldValid()
+        mistakes = getMistakes()
     }
     
     func setUndoManager(_ undoManager: UndoManager?) {
@@ -156,6 +160,7 @@ class Game {
         
         isSolved = checkIsSolved()
         isMistake = !isFieldValid()
+        mistakes = getMistakes()
         
 //        let mistakeId = UUID()
 //        mistakeValidationID = mistakeId
@@ -187,6 +192,7 @@ class Game {
         gameCells = cells
         isSolved = checkIsSolved()
         isMistake = !isFieldValid()
+        mistakes = getMistakes()
     }
     
     func setCellValue(at row: Int, column: Int, value: CellValue?) {
@@ -195,6 +201,7 @@ class Game {
         
         isSolved = checkIsSolved()
         isMistake = !isFieldValid()
+        mistakes = getMistakes()
     }
 }
 
@@ -217,7 +224,7 @@ extension Game {
             allMistakes.formUnion(getMistakes(forColumnWithIndex: columnIndex))
         }
         
-        return Array(allMistakes)
+        return Array(allMistakes.sorted(by: { $0.description < $1.description }))
     }
     
     /// Get mistakes for a specific row

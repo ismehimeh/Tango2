@@ -73,6 +73,8 @@ let mistakesTestLevel = Level.create(
         [.zero, .zero, nil, nil, nil, nil],
         [.zero, .one, nil, nil, .zero, .zero],
         [.zero, .one, .one, nil, nil, nil],
+        [.zero, .one, .one, nil, nil, nil], // TODO: these last 2 rows are not used in tests, but when I used mistakesTestLevel with 4 rows in preview - it crashed because "index out of range"
+        [.zero, .one, .one, nil, nil, nil],
     ],
     conditions: [
         (.equal, (0, 0), (0, 1)),
