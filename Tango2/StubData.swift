@@ -97,6 +97,8 @@ let consecutiveValuesTestLevel = Level.create(
         // Row with three consecutive ones (invalid)
         [nil, nil, .one, .one, .one, nil],
         // Row with both sign violation and consecutive values violation
+        [.zero, .one, .one, .one, nil, nil],
+        [.zero, .one, .one, .one, nil, nil],
         [.zero, .one, .one, .one, nil, nil]
     ],
     conditions: [

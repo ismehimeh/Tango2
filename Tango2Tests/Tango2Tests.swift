@@ -65,7 +65,6 @@ struct Tango2Tests {
     
     @Test func combinedErrorsReturnsAllMistakes() async throws {
         let game = Game(consecutiveValuesTestLevel)
-        let expectedResult: [MistakeType] = [.signViolation(.equal), .noMoreThan2]
         #expect(game.getMistakes(forRowWithIndex: 3).contains(.signViolation(.equal)))
         #expect(game.getMistakes(forRowWithIndex: 3).contains(.noMoreThan2))
     }
