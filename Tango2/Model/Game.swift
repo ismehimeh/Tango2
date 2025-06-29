@@ -210,6 +210,9 @@ extension Game {
         // Check for no more than 2 consecutive same values
         mistakes += checkNoMoreThan2(forRowWithIndex: rowIndex)
         
+        // Check for equal number of zeros and ones
+        mistakes += checkSameNumberValues(forRowWithIndex: rowIndex)
+        
         return mistakes
     }
     
@@ -266,6 +269,26 @@ extension Game {
             if consecutiveZeroes > 2 || consecutiveOnes > 2 {
                 mistakes.append(.noMoreThan2)
                 break // Only add this mistake once per row
+            }
+        }
+        
+        return mistakes
+    }
+    
+    private func checkSameNumberValues(forRowWithIndex rowIndex: Int) -> [MistakeType] {
+        let row = row(rowIndex)
+        var mistakes = [MistakeType]()
+        
+        // Count zeroes, ones, and nil values
+        let zeroCount = row.filter { $0.value == .zero }.count
+        let oneCount = row.filter { $0.value == .one }.count
+        let nilCount = row.filter { $0.value == nil }.count
+        
+        // Only check for balance in completely filled rows (no nil values)
+        if nilCount == 0 {
+            // Check if number of zeros equals number of ones
+            if zeroCount != oneCount {
+                mistakes.append(.sameNumberValues)
             }
         }
         

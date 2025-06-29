@@ -102,3 +102,23 @@ let consecutiveValuesTestLevel = Level.create(
         (.equal, (3, 0), (3, 1))
     ]
 )
+
+// Test level for same number values rule
+let sameNumberValuesTestLevel = Level.create(
+    title: "Same Number Values Test",
+    boardDefinition: [
+        // Valid fully filled row with equal zeros and ones (3 each)
+        [.zero, .zero, .zero, .one, .one, .one],
+        // Valid partially filled row (has nil values, so not checked)
+        [.zero, .zero, .zero, .one, nil, nil],
+        // Another valid partially filled row
+        [.zero, .zero, .one, nil, nil, nil],
+        // Invalid fully filled row - 6 ones, 0 zeros (imbalanced)
+        [.one, .one, .one, .one, .one, .one],
+        // Invalid fully filled row - 2 zeros, 4 ones (imbalanced) 
+        [.zero, .zero, .one, .one, .one, .one],
+        // Row with multiple rule violations (3 consecutive ones and fully filled imbalanced)
+        [.zero, .one, .one, .one, .one, .one]
+    ],
+    conditions: []
+)
