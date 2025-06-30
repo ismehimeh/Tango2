@@ -35,7 +35,8 @@ struct GameFieldView: View {
                                 CellView(row: i,
                                          column: j,
                                          backgroundColor: cellBackgroundColor(i, j),
-                                         cellContent: cellValue(i, j), isMarkedAsMistake: $showMistake)
+                                         cellContent: cellValue(i, j),
+                                         isMarkedAsMistake: isCellWithMistake(i, j))
                             }
                             .onTapGesture {
                                 tapCell(i, j)
@@ -97,6 +98,11 @@ struct GameFieldView: View {
         }
 
         return nil
+    }
+    
+    func isCellWithMistake(_ i: Int, _ j: Int) -> Bool {
+        let cell = game.cell(at: i, column: j)
+        return cell.hasMistake()
     }
     
     func tapCell(_ i: Int, _ j: Int) {

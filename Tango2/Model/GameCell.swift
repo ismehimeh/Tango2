@@ -39,6 +39,10 @@ class GameCell: Hashable {
         self.predefinedValue = predefinedValue
         self._value = value
     }
+    
+    func hasMistake() -> Bool {
+        return false
+    }
 }
 
 extension GameCell: Equatable {

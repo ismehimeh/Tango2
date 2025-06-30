@@ -12,7 +12,7 @@ struct CellView: View {
     let column: Int
     let backgroundColor: Color
     let cellContent: String?
-    @Binding var isMarkedAsMistake: Bool
+    let isMarkedAsMistake: Bool
 
     var body: some View {
         ZStack {
@@ -44,7 +44,7 @@ struct CellView: View {
     return CellView(row: 0, column: 0,
                     backgroundColor: .gray,
                     cellContent: "🌞",
-                    isMarkedAsMistake: .constant(false))
+                    isMarkedAsMistake: false)
     .frame(width: 50, height: 50)
 }
 
@@ -52,6 +52,6 @@ struct CellView: View {
     return CellView(row: 0, column: 0,
                     backgroundColor: .gray,
                     cellContent: "🌞",
-                    isMarkedAsMistake: .constant(true))
+                    isMarkedAsMistake: true)
     .frame(width: 50, height: 50)
 }
