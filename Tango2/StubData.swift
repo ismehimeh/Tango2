@@ -82,3 +82,16 @@ let testLevel1 = Level.create(
         (.opposite, (1, 0), (2, 0))
     ]
 )
+
+let testLevel2 = Level.create(
+    title: "n/a",
+    boardDefinition: [
+        [.zero, .zero, .one, .zero, .one, .zero],
+        [nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil]
+    ],
+    conditions: [ ]
+)

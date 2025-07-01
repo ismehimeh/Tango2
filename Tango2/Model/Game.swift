@@ -237,6 +237,7 @@ extension Game {
     func getMistakes(forRowWithIndex rowIndex: Int) -> [Mistake] {
         var mistakes = [Mistake]()
         mistakes.append(contentsOf: checkSignViolation(cells: row(rowIndex), isRow: true, index: rowIndex))
+        mistakes.append(contentsOf: checkSameNumberValues(cells: row(rowIndex), isRow: true, index: rowIndex))
         return mistakes
     }
     
@@ -337,8 +338,8 @@ extension Game {
      - Parameter cells: Array of cells to check
      - Returns: Array of mistake types found
      */
-    private func checkSameNumberValues(cells: [GameCell]) -> [MistakeType] {
-        var mistakes = [MistakeType]()
+    private func checkSameNumberValues(cells: [GameCell], isRow: Bool, index: Int) -> [Mistake] {
+        var mistakes = [Mistake]()
         
         // Count zeroes, ones, and nil values
         let zeroCount = cells.filter { $0.value == .zero }.count
@@ -349,7 +350,10 @@ extension Game {
         if nilCount == 0 {
             // Check if number of zeros equals number of ones
             if zeroCount != oneCount {
-                mistakes.append(.sameNumberValues)
+                let cells = (0..<cells.count).map {
+                    CellPosition(row: isRow ? index : $0, column: isRow ? $0 : index)
+                }
+                mistakes.append(.init(cells: cells, type: .sameNumberValues))
             }
         }
         

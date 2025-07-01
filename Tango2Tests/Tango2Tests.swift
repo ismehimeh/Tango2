@@ -43,4 +43,16 @@ struct Tango2Tests {
                                       type: .signViolation(.opposite))]
         #expect(game.getMistakes(forColumnWithIndex: 0) == expectedResult)
     }
+    
+    @Test func detectsSameNumberViolationForRow() async throws {
+        let game = Game(testLevel2)
+        let expectedResult = [Mistake(cells: [.init(row: 0, column: 0),
+                                              .init(row: 0, column: 1),
+                                              .init(row: 0, column: 2),
+                                              .init(row: 0, column: 3),
+                                              .init(row: 0, column: 4),
+                                              .init(row: 0, column: 5)],
+                                      type: .sameNumberValues)]
+        #expect(game.getMistakes(forRowWithIndex: 0) == expectedResult)
+    }
 }
