@@ -20,7 +20,7 @@ class Game {
     }
     var isSolved = false
     var isMistake = false
-    var mistakes = [MistakeType]()
+    var mistakes = [Mistake]()
     var secondsSpent = 0
     
     private var undoManager: UndoManager?
@@ -32,6 +32,16 @@ class Game {
         isSolved = checkIsSolved()
         isMistake = !isFieldValid()
         mistakes = getMistakes()
+    }
+    
+    // TODO: test
+    // looking for mistake with this row and column
+    func isMistakeCell(i: Int, j: Int) -> Bool {
+        return mistakes.contains { mistake in
+            mistake.cells.contains { cell in
+                cell.row == i && cell.column == j
+            }
+        }
     }
     
     func setUndoManager(_ undoManager: UndoManager?) {
@@ -208,62 +218,30 @@ class Game {
 // - MARK: Mistakes
 extension Game {
     
-    // MARK: - Public Mistake Detection Methods
-    
-    /// Get all mistakes across the entire board
-    func getMistakes() -> [MistakeType] {
-        var allMistakes = Set<MistakeType>()
+    func getMistakes() -> [Mistake] {
+        var allMistakes = [Mistake]()
         
         // Check all rows
         for rowIndex in 0..<level.gameCells.count {
-            allMistakes.formUnion(getMistakes(forRowWithIndex: rowIndex))
+            allMistakes.append(contentsOf: getMistakes(forRowWithIndex: rowIndex))
         }
         
         // Check all columns
         for columnIndex in 0..<level.gameCells[0].count {
-            allMistakes.formUnion(getMistakes(forColumnWithIndex: columnIndex))
+            allMistakes.append(contentsOf: getMistakes(forColumnWithIndex: columnIndex))
         }
         
-        return Array(allMistakes.sorted(by: { $0.description < $1.description }))
+        return allMistakes
     }
     
-    /// Get mistakes for a specific row
-    func getMistakes(forRowWithIndex rowIndex: Int) -> [MistakeType] {
-        var mistakes = [MistakeType]()
-        
-        // Check for sign violations in this row
-        mistakes += checkSignViolation(
-            cells: row(rowIndex),
-            isRow: true,
-            index: rowIndex
-        )
-        
-        // Check for no more than 2 consecutive same values
-        mistakes += checkNoMoreThan2(cells: row(rowIndex))
-        
-        // Check for equal number of zeros and ones
-        mistakes += checkSameNumberValues(cells: row(rowIndex))
-        
+    func getMistakes(forRowWithIndex rowIndex: Int) -> [Mistake] {
+        var mistakes = [Mistake]()
+        mistakes.append(contentsOf: checkSignViolation(cells: row(rowIndex), isRow: true, index: rowIndex))
         return mistakes
     }
     
-    /// Get mistakes for a specific column
-    func getMistakes(forColumnWithIndex columnIndex: Int) -> [MistakeType] {
-        var mistakes = [MistakeType]()
-        
-        // Check for sign violations in this column
-        mistakes += checkSignViolation(
-            cells: column(columnIndex),
-            isRow: false,
-            index: columnIndex
-        )
-        
-        // Check for no more than 2 consecutive same values
-        mistakes += checkNoMoreThan2(cells: column(columnIndex))
-        
-        // Check for equal number of zeros and ones
-        mistakes += checkSameNumberValues(cells: column(columnIndex))
-        
+    func getMistakes(forColumnWithIndex columnIndex: Int) -> [Mistake] {
+        var mistakes = [Mistake]()
         return mistakes
     }
     
@@ -278,8 +256,8 @@ extension Game {
        - index: The index of the row or column being checked
      - Returns: Array of mistake types found
      */
-    private func checkSignViolation(cells: [GameCell], isRow: Bool, index: Int) -> [MistakeType] {
-        var mistakes = [MistakeType]()
+    private func checkSignViolation(cells: [GameCell], isRow: Bool, index: Int) -> [Mistake] {
+        var mistakes = [Mistake]()
         
         // Filter conditions that apply to this row/column
         let relatedConditions = gameConditions.filter {
@@ -302,11 +280,13 @@ extension Game {
             switch condition.condition {
             case .equal:
                 if cellAValue != cellBValue {
-                    mistakes.append(.signViolation(.equal))
+                    mistakes.append(.init(cells: [condition.cellA, condition.cellB],
+                                          type: .signViolation(.equal)))
                 }
             case .opposite:
                 if cellAValue == cellBValue {
-                    mistakes.append(.signViolation(.opposite))
+                    mistakes.append(.init(cells: [condition.cellA, condition.cellB],
+                                          type: .signViolation(.opposite)))
                 }
             }
         }

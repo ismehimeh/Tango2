@@ -130,7 +130,7 @@ struct GameView: View {
     var mistakesListView: some View {
         ForEach(game.mistakes, id: \.self) { mistake in
             HStack {
-                Text(mistake.description)
+                Text(mistake.type.description)
                     .multilineTextAlignment(.leading)
                 Spacer()
             }
@@ -168,7 +168,7 @@ struct GameView: View {
     GameView(game: game)
 }
 
-#Preview("Mistakes") {
-    @Previewable @State var game = Game(mistakesTestLevel)
-    GameView(game: game)
-}
+//#Preview("Mistakes") {
+//    @Previewable @State var game = Game(mistakesTestLevel)
+//    GameView(game: game)
+//}

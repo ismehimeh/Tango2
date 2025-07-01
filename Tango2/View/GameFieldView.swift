@@ -101,8 +101,7 @@ struct GameFieldView: View {
     }
     
     func isCellWithMistake(_ i: Int, _ j: Int) -> Bool {
-        let cell = game.cell(at: i, column: j)
-        return cell.hasMistake()
+        return game.isMistakeCell(i: i, j: j)
     }
     
     func tapCell(_ i: Int, _ j: Int) {

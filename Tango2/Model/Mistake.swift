@@ -5,6 +5,11 @@
 //  Created by Sergei Vasilenko on 28.06.2025.
 //
 
+struct Mistake: Equatable, Hashable {
+    let cells: [CellPosition]
+    let type: MistakeType
+}
+
 enum MistakeType: Hashable {
     case noMoreThan2
     case signViolation(GameCellCondition.Condition)
