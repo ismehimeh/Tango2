@@ -244,6 +244,7 @@ extension Game {
     func getMistakes(forColumnWithIndex columnIndex: Int) -> [Mistake] {
         var mistakes = [Mistake]()
         mistakes.append(contentsOf: checkSignViolation(cells: column(columnIndex), isRow: false, index: columnIndex))
+        mistakes.append(contentsOf: checkSameNumberValues(cells: column(columnIndex), isRow: false, index: columnIndex))
         return mistakes
     }
     

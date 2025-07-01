@@ -55,4 +55,16 @@ struct Tango2Tests {
                                       type: .sameNumberValues)]
         #expect(game.getMistakes(forRowWithIndex: 0) == expectedResult)
     }
+
+    @Test func detectsSameNumberViolationForColumn() async throws {
+        let game = Game(testLevel2)
+        let expectedResult = [Mistake(cells: [.init(row: 0, column: 0),
+                                              .init(row: 1, column: 0),
+                                              .init(row: 2, column: 0),
+                                              .init(row: 3, column: 0),
+                                              .init(row: 4, column: 0),
+                                              .init(row: 5, column: 0)],
+                                      type: .sameNumberValues)]
+        #expect(game.getMistakes(forColumnWithIndex: 0) == expectedResult)
+    }
 }

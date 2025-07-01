@@ -87,11 +87,11 @@ let testLevel2 = Level.create(
     title: "n/a",
     boardDefinition: [
         [.zero, .zero, .one, .zero, .one, .zero],
-        [nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, nil, nil, nil]
+        [.zero, nil, nil, nil, nil, nil],
+        [.one, nil, nil, nil, nil, nil],
+        [.zero, nil, nil, nil, nil, nil],
+        [.one, nil, nil, nil, nil, nil],
+        [.zero, nil, nil, nil, nil, nil]
     ],
     conditions: [ ]
 )
