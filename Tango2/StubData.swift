@@ -78,6 +78,7 @@ let testLevel1 = Level.create(
     ],
     conditions: [
         (.equal, (1, 0), (1, 1)),
-        (.opposite, (2, 0), (2, 1))
+        (.opposite, (2, 0), (2, 1)),
+        (.opposite, (1, 0), (2, 0))
     ]
 )
