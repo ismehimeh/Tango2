@@ -95,3 +95,29 @@ let testLevel2 = Level.create(
     ],
     conditions: [ ]
 )
+
+let testLevel3 = Level.create(
+    title: "n/a",
+    boardDefinition: [
+        [.zero, .zero, .zero, nil, nil, nil],
+        [.zero, nil, nil, nil, nil, nil],
+        [.zero, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil]
+    ],
+    conditions: [ ]
+)
+
+let testLevel4 = Level.create(
+    title: "n/a",
+    boardDefinition: [
+        [nil, nil, nil, nil, nil, nil],
+        [nil, .zero, .one, nil, nil, nil],
+        [nil, .zero, .one, nil, nil, nil],
+        [nil, nil, .zero, nil, nil, nil],
+        [nil, nil, .one, nil, nil, nil],
+        [nil, .zero, .one, nil, nil, nil]
+    ],
+    conditions: [ ]
+)

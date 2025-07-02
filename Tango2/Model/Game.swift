@@ -246,7 +246,7 @@ extension Game {
         var mistakes = [Mistake]()
         mistakes.append(contentsOf: checkSignViolation(cells: column(columnIndex), isRow: false, index: columnIndex))
         mistakes.append(contentsOf: checkSameNumberValues(cells: column(columnIndex), isRow: false, index: columnIndex))
-        mistakes.append(contentsOf: checkNoMoreThan2(cells: row(columnIndex), isRow: false, index: columnIndex))
+        mistakes.append(contentsOf: checkNoMoreThan2(cells: column(columnIndex), isRow: false, index: columnIndex))
         return mistakes
     }
     
@@ -305,11 +305,21 @@ extension Game {
      - Parameter cells: Array of cells to check
      - Returns: Array of mistake types found
      */
-    private func checkNoMoreThan2(cells: [GameCell], isRow: Bool, index: Int) -> [Mistake] {
+    func checkNoMoreThan2(cells: [GameCell], isRow: Bool, index: Int) -> [Mistake] {
         var mistakes = [Mistake]()
+        if let zerosMistakePosition = Game.checkNoMoreThan2(of: .zero, in: cells.map { $0.value }) {
+            let positions = (zerosMistakePosition.0...zerosMistakePosition.1).map {
+                CellPosition(row: isRow ? index : $0, column: isRow ? $0 : index)
+            }
+            mistakes.append(.init(cells: positions, type: .noMoreThan2))
+        }
         
-        // check for zeros
-        // check for ones
+        if let onesMistakePosition = Game.checkNoMoreThan2(of: .one, in: cells.map { $0.value }) {
+            let positions = (onesMistakePosition.0...onesMistakePosition.1).map {
+                CellPosition(row: isRow ? index : $0, column: isRow ? $0 : index)
+            }
+            mistakes.append(.init(cells: positions, type: .noMoreThan2))
+        }
         return mistakes
     }
     
@@ -331,6 +341,10 @@ extension Game {
                         if sequenceLength > 2 {
                             return (startIndex, startIndex + sequenceLength - 1)
                         }
+                        else {
+                            startIndex = -1
+                            sequenceLength = 0
+                        }
                     }
                 }
                 else {
@@ -351,6 +365,10 @@ extension Game {
                 if startIndex >= 0 {
                     if sequenceLength > 2 {
                         return (startIndex, startIndex + sequenceLength - 1)
+                    }
+                    else {
+                        startIndex = -1
+                        sequenceLength = 0
                     }
                 }
             }
