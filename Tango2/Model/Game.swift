@@ -11,7 +11,7 @@ import Foundation
 class Game {
 
     let level: Level
-    private(set) var lineLength = 6 // Standard game board size
+    let lineLength = 6 // Standard game board size
     
     var gameCells: [GameCell]
     
@@ -20,7 +20,7 @@ class Game {
     }
     var isSolved = false
     var isMistake = false
-    var mistakes = [MistakeType]()
+    var mistakes = [Mistake]()
     var secondsSpent = 0
     
     private var undoManager: UndoManager?
@@ -32,6 +32,16 @@ class Game {
         isSolved = checkIsSolved()
         isMistake = !isFieldValid()
         mistakes = getMistakes()
+    }
+    
+    // TODO: test
+    // looking for mistake with this row and column
+    func isMistakeCell(i: Int, j: Int) -> Bool {
+        return mistakes.contains { mistake in
+            mistake.cells.contains { cell in
+                cell.row == i && cell.column == j
+            }
+        }
     }
     
     func setUndoManager(_ undoManager: UndoManager?) {
@@ -208,62 +218,35 @@ class Game {
 // - MARK: Mistakes
 extension Game {
     
-    // MARK: - Public Mistake Detection Methods
-    
-    /// Get all mistakes across the entire board
-    func getMistakes() -> [MistakeType] {
-        var allMistakes = Set<MistakeType>()
+    func getMistakes() -> [Mistake] {
+        var allMistakes = [Mistake]()
         
         // Check all rows
         for rowIndex in 0..<level.gameCells.count {
-            allMistakes.formUnion(getMistakes(forRowWithIndex: rowIndex))
+            allMistakes.append(contentsOf: getMistakes(forRowWithIndex: rowIndex))
         }
         
         // Check all columns
         for columnIndex in 0..<level.gameCells[0].count {
-            allMistakes.formUnion(getMistakes(forColumnWithIndex: columnIndex))
+            allMistakes.append(contentsOf: getMistakes(forColumnWithIndex: columnIndex))
         }
         
-        return Array(allMistakes.sorted(by: { $0.description < $1.description }))
+        return allMistakes
     }
     
-    /// Get mistakes for a specific row
-    func getMistakes(forRowWithIndex rowIndex: Int) -> [MistakeType] {
-        var mistakes = [MistakeType]()
-        
-        // Check for sign violations in this row
-        mistakes += checkSignViolation(
-            cells: row(rowIndex),
-            isRow: true,
-            index: rowIndex
-        )
-        
-        // Check for no more than 2 consecutive same values
-        mistakes += checkNoMoreThan2(cells: row(rowIndex))
-        
-        // Check for equal number of zeros and ones
-        mistakes += checkSameNumberValues(cells: row(rowIndex))
-        
+    func getMistakes(forRowWithIndex rowIndex: Int) -> [Mistake] {
+        var mistakes = [Mistake]()
+        mistakes.append(contentsOf: checkSignViolation(cells: row(rowIndex), isRow: true, index: rowIndex))
+        mistakes.append(contentsOf: checkSameNumberValues(cells: row(rowIndex), isRow: true, index: rowIndex))
+        mistakes.append(contentsOf: checkNoMoreThan2(cells: row(rowIndex), isRow: true, index: rowIndex))
         return mistakes
     }
     
-    /// Get mistakes for a specific column
-    func getMistakes(forColumnWithIndex columnIndex: Int) -> [MistakeType] {
-        var mistakes = [MistakeType]()
-        
-        // Check for sign violations in this column
-        mistakes += checkSignViolation(
-            cells: column(columnIndex),
-            isRow: false,
-            index: columnIndex
-        )
-        
-        // Check for no more than 2 consecutive same values
-        mistakes += checkNoMoreThan2(cells: column(columnIndex))
-        
-        // Check for equal number of zeros and ones
-        mistakes += checkSameNumberValues(cells: column(columnIndex))
-        
+    func getMistakes(forColumnWithIndex columnIndex: Int) -> [Mistake] {
+        var mistakes = [Mistake]()
+        mistakes.append(contentsOf: checkSignViolation(cells: column(columnIndex), isRow: false, index: columnIndex))
+        mistakes.append(contentsOf: checkSameNumberValues(cells: column(columnIndex), isRow: false, index: columnIndex))
+        mistakes.append(contentsOf: checkNoMoreThan2(cells: column(columnIndex), isRow: false, index: columnIndex))
         return mistakes
     }
     
@@ -278,8 +261,8 @@ extension Game {
        - index: The index of the row or column being checked
      - Returns: Array of mistake types found
      */
-    private func checkSignViolation(cells: [GameCell], isRow: Bool, index: Int) -> [MistakeType] {
-        var mistakes = [MistakeType]()
+    private func checkSignViolation(cells: [GameCell], isRow: Bool, index: Int) -> [Mistake] {
+        var mistakes = [Mistake]()
         
         // Filter conditions that apply to this row/column
         let relatedConditions = gameConditions.filter {
@@ -302,11 +285,13 @@ extension Game {
             switch condition.condition {
             case .equal:
                 if cellAValue != cellBValue {
-                    mistakes.append(.signViolation(.equal))
+                    mistakes.append(.init(cells: [condition.cellA, condition.cellB],
+                                          type: .signViolation(.equal)))
                 }
             case .opposite:
                 if cellAValue == cellBValue {
-                    mistakes.append(.signViolation(.opposite))
+                    mistakes.append(.init(cells: [condition.cellA, condition.cellB],
+                                          type: .signViolation(.opposite)))
                 }
             }
         }
@@ -320,34 +305,82 @@ extension Game {
      - Parameter cells: Array of cells to check
      - Returns: Array of mistake types found
      */
-    private func checkNoMoreThan2(cells: [GameCell]) -> [MistakeType] {
-        var mistakes = [MistakeType]()
-        
-        // Check for more than 2 consecutive same values
-        var consecutiveZeroes = 0
-        var consecutiveOnes = 0
-        
-        for cell in cells {
-            if cell.value == .zero {
-                consecutiveZeroes += 1
-                consecutiveOnes = 0
-            } else if cell.value == .one {
-                consecutiveZeroes = 0
-                consecutiveOnes += 1
-            } else {
-                // nil value resets both counters
-                consecutiveZeroes = 0
-                consecutiveOnes = 0
+    func checkNoMoreThan2(cells: [GameCell], isRow: Bool, index: Int) -> [Mistake] {
+        var mistakes = [Mistake]()
+        if let zerosMistakePosition = Game.checkNoMoreThan2(of: .zero, in: cells.map { $0.value }) {
+            let positions = (zerosMistakePosition.0...zerosMistakePosition.1).map {
+                CellPosition(row: isRow ? index : $0, column: isRow ? $0 : index)
             }
-            
-            // If we find more than 2 consecutive same values, add the mistake
-            if consecutiveZeroes > 2 || consecutiveOnes > 2 {
-                mistakes.append(.noMoreThan2)
-                break // Only add this mistake once per line
+            mistakes.append(.init(cells: positions, type: .noMoreThan2))
+        }
+        
+        if let onesMistakePosition = Game.checkNoMoreThan2(of: .one, in: cells.map { $0.value }) {
+            let positions = (onesMistakePosition.0...onesMistakePosition.1).map {
+                CellPosition(row: isRow ? index : $0, column: isRow ? $0 : index)
+            }
+            mistakes.append(.init(cells: positions, type: .noMoreThan2))
+        }
+        return mistakes
+    }
+    
+    // we have line of length 6
+    // so there could be only 2 mistaked sequence of different symbols (000111 where 000 and 111 are mistakes) per line
+    // or just one sequence per line (010111, 001111, 111111)
+    // that is why we return single optional tuple instead of array
+    static func checkNoMoreThan2(of target: CellValue, in array: [CellValue?]) -> (Int, Int)? {
+        var startIndex = -1
+        var sequenceLength = 0
+        for i in 0..<array.count {
+            // not nil
+            if let value = array[i] {
+                if startIndex >= 0 {
+                    if value == target {
+                        sequenceLength += 1
+                    }
+                    else {
+                        if sequenceLength > 2 {
+                            return (startIndex, startIndex + sequenceLength - 1)
+                        }
+                        else {
+                            startIndex = -1
+                            sequenceLength = 0
+                        }
+                    }
+                }
+                else {
+                    if value == target {
+                        sequenceLength += 1
+                        startIndex = i
+                    }
+                    else {
+                        if sequenceLength > 2 {
+                            return (startIndex, startIndex + sequenceLength - 1)
+                        }
+                    }
+                }
+            }
+            // nil
+            else {
+                // if we started to track sequence
+                if startIndex >= 0 {
+                    if sequenceLength > 2 {
+                        return (startIndex, startIndex + sequenceLength - 1)
+                    }
+                    else {
+                        startIndex = -1
+                        sequenceLength = 0
+                    }
+                }
             }
         }
         
-        return mistakes
+        if startIndex >= 0 {
+            if sequenceLength > 2 {
+                return (startIndex, startIndex + sequenceLength - 1)
+            }
+        }
+        
+        return nil
     }
     
     /**
@@ -356,8 +389,8 @@ extension Game {
      - Parameter cells: Array of cells to check
      - Returns: Array of mistake types found
      */
-    private func checkSameNumberValues(cells: [GameCell]) -> [MistakeType] {
-        var mistakes = [MistakeType]()
+    private func checkSameNumberValues(cells: [GameCell], isRow: Bool, index: Int) -> [Mistake] {
+        var mistakes = [Mistake]()
         
         // Count zeroes, ones, and nil values
         let zeroCount = cells.filter { $0.value == .zero }.count
@@ -368,7 +401,10 @@ extension Game {
         if nilCount == 0 {
             // Check if number of zeros equals number of ones
             if zeroCount != oneCount {
-                mistakes.append(.sameNumberValues)
+                let cells = (0..<cells.count).map {
+                    CellPosition(row: isRow ? index : $0, column: isRow ? $0 : index)
+                }
+                mistakes.append(.init(cells: cells, type: .sameNumberValues))
             }
         }
         
