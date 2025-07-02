@@ -19,7 +19,13 @@ struct CellView: View {
             Rectangle()
                 .foregroundColor(backgroundColor)
             if isMarkedAsMistake {
-                Color.red.opacity(0.5)
+                Stripes()
+                    .rotation(.degrees(45))
+                    .stroke(lineWidth: 4)
+                    .fill(.red)
+                    .stroke(.red)
+                    .scaleEffect(1.4)
+                    .clipped()
             }
             if let text = cellContent {
                 Text(text)
@@ -37,6 +43,22 @@ struct CellView: View {
                     )
             }
         )
+    }
+}
+
+struct Stripes: Shape {
+    
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        let width = rect.size.width
+        let height = rect.size.height
+        
+        for x in stride(from: 0, through: width, by: width / 4) {
+            path.move(to: CGPoint(x: x, y: 0))
+            path.addLine(to: CGPoint(x: x, y: height))
+        }
+        
+        return path
     }
 }
 

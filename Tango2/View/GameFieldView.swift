@@ -65,10 +65,6 @@ struct GameFieldView: View {
             }
         }
         .overlay {
-            if showMistake {
-                Color.red.opacity(0.2)
-                    .allowsHitTesting(false)
-            }
             if showSolved {
                 Color.green.opacity(0.2)
                     .allowsHitTesting(false)
