@@ -67,4 +67,76 @@ struct Tango2Tests {
                                       type: .sameNumberValues)]
         #expect(game.getMistakes(forColumnWithIndex: 0) == expectedResult)
     }
+    
+    @Test func checkNoMoreThan2ForEmptyRowReturnsNil() async throws {
+        let array: [CellValue?] = [nil, nil, nil, nil, nil]
+        let expectedResult: (Int, Int)? = nil
+        let result = Game.checkNoMoreThan2(of: .one, in: array)
+        #expect(result?.0 == expectedResult?.0)
+        #expect(result?.1 == expectedResult?.1)
+    }
+    
+    @Test func checkNoMoreThan2ForRowWith2OnesReturnsNil() async throws {
+        let array: [CellValue?] = [.one, .one, nil, nil, nil]
+        let expectedResult: (Int, Int)? = nil
+        let result = Game.checkNoMoreThan2(of: .one, in: array)
+        #expect(result?.0 == expectedResult?.0)
+        #expect(result?.1 == expectedResult?.1)
+    }
+    
+    @Test func checkNoMoreThan2ForRowWith3OnesReturns02() async throws {
+        let array: [CellValue?] = [.one, .one, .one, nil, nil, nil]
+        let expectedResult: (Int, Int)? = (0, 2)
+        let result = Game.checkNoMoreThan2(of: .one, in: array)
+        #expect(result?.0 == expectedResult?.0)
+        #expect(result?.1 == expectedResult?.1)
+    }
+    
+    @Test func checkNoMoreThan2ForRowWith4OnesReturns03() async throws {
+        let array: [CellValue?] = [.one, .one, .one, .one, nil, nil]
+        let expectedResult: (Int, Int)? = (0, 3)
+        let result = Game.checkNoMoreThan2(of: .one, in: array)
+        #expect(result?.0 == expectedResult?.0)
+        #expect(result?.1 == expectedResult?.1)
+    }
+    
+    @Test func checkNoMoreThan2ForRowWith5OnesReturns04() async throws {
+        let array: [CellValue?] = [.one, .one, .one, .one, .one, nil]
+        let expectedResult: (Int, Int)? = (0, 4)
+        let result = Game.checkNoMoreThan2(of: .one, in: array)
+        #expect(result?.0 == expectedResult?.0)
+        #expect(result?.1 == expectedResult?.1)
+    }
+    
+    @Test func checkNoMoreThan2ForRowWith6OnesReturns05() async throws {
+        let array: [CellValue?] = [.one, .one, .one, .one, .one, .one]
+        let expectedResult: (Int, Int)? = (0, 5)
+        let result = Game.checkNoMoreThan2(of: .one, in: array)
+        #expect(result?.0 == expectedResult?.0)
+        #expect(result?.1 == expectedResult?.1)
+    }
+    
+    @Test func checkNoMoreThan2ForRowWith5OnesInTheEndReturns15() async throws {
+        let array: [CellValue?] = [nil, .one, .one, .one, .one, .one]
+        let expectedResult: (Int, Int)? = (1, 5)
+        let result = Game.checkNoMoreThan2(of: .one, in: array)
+        #expect(result?.0 == expectedResult?.0)
+        #expect(result?.1 == expectedResult?.1)
+    }
+    
+    @Test func checkNoMoreThan2ForRowWith4OnesInTheEndReturns25() async throws {
+        let array: [CellValue?] = [nil, nil, .one, .one, .one, .one]
+        let expectedResult: (Int, Int)? = (2, 5)
+        let result = Game.checkNoMoreThan2(of: .one, in: array)
+        #expect(result?.0 == expectedResult?.0)
+        #expect(result?.1 == expectedResult?.1)
+    }
+    
+    @Test func checkNoMoreThan2ForRowWith3OnesInTheMiddleReturns13() async throws {
+        let array: [CellValue?] = [nil, .one, .one, .one, nil, nil]
+        let expectedResult: (Int, Int)? = (1, 3)
+        let result = Game.checkNoMoreThan2(of: .one, in: array)
+        #expect(result?.0 == expectedResult?.0)
+        #expect(result?.1 == expectedResult?.1)
+    }
 }

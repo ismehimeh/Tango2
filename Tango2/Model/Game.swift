@@ -238,6 +238,7 @@ extension Game {
         var mistakes = [Mistake]()
         mistakes.append(contentsOf: checkSignViolation(cells: row(rowIndex), isRow: true, index: rowIndex))
         mistakes.append(contentsOf: checkSameNumberValues(cells: row(rowIndex), isRow: true, index: rowIndex))
+        mistakes.append(contentsOf: checkNoMoreThan2(cells: row(rowIndex), isRow: true, index: rowIndex))
         return mistakes
     }
     
@@ -245,6 +246,7 @@ extension Game {
         var mistakes = [Mistake]()
         mistakes.append(contentsOf: checkSignViolation(cells: column(columnIndex), isRow: false, index: columnIndex))
         mistakes.append(contentsOf: checkSameNumberValues(cells: column(columnIndex), isRow: false, index: columnIndex))
+        mistakes.append(contentsOf: checkNoMoreThan2(cells: row(columnIndex), isRow: false, index: columnIndex))
         return mistakes
     }
     
@@ -303,34 +305,64 @@ extension Game {
      - Parameter cells: Array of cells to check
      - Returns: Array of mistake types found
      */
-    private func checkNoMoreThan2(cells: [GameCell]) -> [MistakeType] {
-        var mistakes = [MistakeType]()
+    private func checkNoMoreThan2(cells: [GameCell], isRow: Bool, index: Int) -> [Mistake] {
+        var mistakes = [Mistake]()
         
-        // Check for more than 2 consecutive same values
-        var consecutiveZeroes = 0
-        var consecutiveOnes = 0
-        
-        for cell in cells {
-            if cell.value == .zero {
-                consecutiveZeroes += 1
-                consecutiveOnes = 0
-            } else if cell.value == .one {
-                consecutiveZeroes = 0
-                consecutiveOnes += 1
-            } else {
-                // nil value resets both counters
-                consecutiveZeroes = 0
-                consecutiveOnes = 0
+        // check for zeros
+        // check for ones
+        return mistakes
+    }
+    
+    // we have line of length 6
+    // so there could be only 2 mistaked sequence of different symbols (000111 where 000 and 111 are mistakes) per line
+    // or just one sequence per line (010111, 001111, 111111)
+    // that is why we return single optional tuple instead of array
+    static func checkNoMoreThan2(of target: CellValue, in array: [CellValue?]) -> (Int, Int)? {
+        var startIndex = -1
+        var sequenceLength = 0
+        for i in 0..<array.count {
+            // not nil
+            if let value = array[i] {
+                if startIndex >= 0 {
+                    if value == target {
+                        sequenceLength += 1
+                    }
+                    else {
+                        if sequenceLength > 2 {
+                            return (startIndex, startIndex + sequenceLength - 1)
+                        }
+                    }
+                }
+                else {
+                    if value == target {
+                        sequenceLength += 1
+                        startIndex = i
+                    }
+                    else {
+                        if sequenceLength > 2 {
+                            return (startIndex, startIndex + sequenceLength - 1)
+                        }
+                    }
+                }
             }
-            
-            // If we find more than 2 consecutive same values, add the mistake
-            if consecutiveZeroes > 2 || consecutiveOnes > 2 {
-                mistakes.append(.noMoreThan2)
-                break // Only add this mistake once per line
+            // nil
+            else {
+                // if we started to track sequence
+                if startIndex >= 0 {
+                    if sequenceLength > 2 {
+                        return (startIndex, startIndex + sequenceLength - 1)
+                    }
+                }
             }
         }
         
-        return mistakes
+        if startIndex >= 0 {
+            if sequenceLength > 2 {
+                return (startIndex, startIndex + sequenceLength - 1)
+            }
+        }
+        
+        return nil
     }
     
     /**
