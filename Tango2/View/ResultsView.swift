@@ -12,26 +12,52 @@ struct ResultView: View {
     @Environment(\.dismiss) var dismiss
     @Environment(Router.self) var router
     
+    var levelTitle: String
+    var timeSpent: String
+    
     var body: some View {
         VStack {
+            
+            Text("You're crushing it!")
+                .font(.largeTitle)
+                .bold()
+                .padding(.bottom, 40)
+                .padding(.top, 50)
+            
+            VStack {
+                Text(levelTitle)
+                    .font(.largeTitle)
+                    .bold()
+                Text(timeSpent)
+                    .font(.title3)
+                    .fontWeight(.medium)
+            }
+            .padding(30)
+            .background(.white)
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            
             Button {
                 tapNextLevel()
             } label: {
-                Text("Play next levels")
+                HStack {
+                    Text("Next Level")
+                    Image(systemName: "chevron.forward.2")
+                }
             }
+            .buttonStyle(.borderedProminent)
+            .padding(.top, 40)
 
             Button {
                 tapGoToLevels()
             } label: {
-                Text("Main Page")
+                Text("Go to levels")
+                    .foregroundStyle(.white)
             }
 
-            Button {
-                tapPop()
-            } label: {
-                Text("TEMP: Just pop it")
-            }
+            Spacer()
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(.secondary)
         .navigationBarBackButtonHidden()
     }
     
@@ -43,8 +69,9 @@ struct ResultView: View {
         dismiss()
         router.path.removeLast()
     }
-    
-    private func tapPop() {
-        dismiss()
-    }
+}
+
+#Preview {
+    ResultView(levelTitle: "23", timeSpent: "1:20")
+        .environment(Router(path: .init()))
 }

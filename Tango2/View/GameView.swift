@@ -62,7 +62,8 @@ struct GameView: View {
                 .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $showingResult) {
-            ResultView()
+            ResultView(levelTitle: game.level.title,
+                       timeSpent: viewModel.timeString)
         }
         .alert("You sure?", isPresented: $showingClearAlert) {
             Button("Yes", role: .destructive) {

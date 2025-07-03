@@ -64,11 +64,4 @@ struct LevelsView: View {
     LevelsView(levels: $levels)
 }
 
-@Observable
-class Router {
-    var path: NavigationPath
-    
-    init(path: NavigationPath) {
-        self.path = path
-    }
-}
+
