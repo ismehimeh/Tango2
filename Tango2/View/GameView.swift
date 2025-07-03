@@ -194,3 +194,9 @@ struct GameView: View {
 //    @Previewable @State var game = Game(mistakesTestLevel)
 //    GameView(game: game)
 //}
+
+#Preview("Almost solved") {
+    @Previewable @State var game = Game(level3)
+    GameView(game: game)
+        .environment(Router(path: .init()))
+}
