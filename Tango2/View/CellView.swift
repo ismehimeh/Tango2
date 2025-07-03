@@ -12,11 +12,21 @@ struct CellView: View {
     let column: Int
     let backgroundColor: Color
     let cellContent: String?
+    let isMarkedAsMistake: Bool
 
     var body: some View {
         ZStack {
             Rectangle()
                 .foregroundColor(backgroundColor)
+            if isMarkedAsMistake {
+                Stripes()
+                    .rotation(.degrees(45))
+                    .stroke(lineWidth: 4)
+                    .fill(.red)
+                    .stroke(.red)
+                    .scaleEffect(1.4)
+                    .clipped()
+            }
             if let text = cellContent {
                 Text(text)
                     .font(.title)
@@ -36,7 +46,34 @@ struct CellView: View {
     }
 }
 
+struct Stripes: Shape {
+    
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+        let width = rect.size.width
+        let height = rect.size.height
+        
+        for x in stride(from: 0, through: width, by: width / 4) {
+            path.move(to: CGPoint(x: x, y: 0))
+            path.addLine(to: CGPoint(x: x, y: height))
+        }
+        
+        return path
+    }
+}
+
 #Preview {
-    CellView(row: 0, column: 0, backgroundColor: .gray, cellContent: "🌞")
-        .frame(width: 50, height: 50)
+    return CellView(row: 0, column: 0,
+                    backgroundColor: .gray,
+                    cellContent: "🌞",
+                    isMarkedAsMistake: false)
+    .frame(width: 50, height: 50)
+}
+
+#Preview("Mistaken") {
+    return CellView(row: 0, column: 0,
+                    backgroundColor: .gray,
+                    cellContent: "🌞",
+                    isMarkedAsMistake: true)
+    .frame(width: 50, height: 50)
 }

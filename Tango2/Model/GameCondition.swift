@@ -8,7 +8,7 @@
 import Foundation
 
 struct GameCellCondition: Identifiable, Hashable {
-    enum Condition {
+    enum Condition: Hashable {
         case equal
         case opposite
     }

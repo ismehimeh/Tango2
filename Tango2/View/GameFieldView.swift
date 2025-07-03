@@ -28,14 +28,15 @@ struct GameFieldView: View {
                 .foregroundStyle(Constants.fieldBackgroundColor)
                 .aspectRatio(1, contentMode: .fit)
             Grid(horizontalSpacing: 2, verticalSpacing: 2) {
-                ForEach(0..<game.lineLength) { i in
+                ForEach(0..<game.lineLength, id: \.self) { i in
                     GridRow {
-                        ForEach(0..<game.lineLength) { j in
+                        ForEach(0..<game.lineLength, id: \.self) { j in
                             ZStack {
                                 CellView(row: i,
                                          column: j,
                                          backgroundColor: cellBackgroundColor(i, j),
-                                         cellContent: cellValue(i, j))
+                                         cellContent: cellValue(i, j),
+                                         isMarkedAsMistake: isCellWithMistake(i, j))
                             }
                             .onTapGesture {
                                 tapCell(i, j)
@@ -64,10 +65,6 @@ struct GameFieldView: View {
             }
         }
         .overlay {
-            if showMistake {
-                Color.red.opacity(0.2)
-                    .allowsHitTesting(false)
-            }
             if showSolved {
                 Color.green.opacity(0.2)
                     .allowsHitTesting(false)
@@ -97,6 +94,10 @@ struct GameFieldView: View {
         }
 
         return nil
+    }
+    
+    func isCellWithMistake(_ i: Int, _ j: Int) -> Bool {
+        return game.isMistakeCell(i: i, j: j)
     }
     
     func tapCell(_ i: Int, _ j: Int) {

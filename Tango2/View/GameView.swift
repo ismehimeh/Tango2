@@ -29,6 +29,7 @@ struct GameView: View {
                 topView
                 GameFieldView(game: game, showMistake: $showMistake, showSolved: $showingResult)
                 undoAndHintView
+                mistakesListView
                 HowToPlayView()
                     .frame(width: 300)
             }
@@ -67,7 +68,7 @@ struct GameView: View {
         .onChange(of: game.isSolved, initial: false) { _, newValue in
             showingResult = newValue
         }
-        .onChange(of: game.isMistake, initial: false) { _, newValue in
+        .onChange(of: game.isMistake, initial: true) { _, newValue in
             processMistake(newValue)
         }
     }
@@ -126,6 +127,21 @@ struct GameView: View {
         }
     }
     
+    var mistakesListView: some View {
+        ForEach(game.mistakes, id: \.self) { mistake in
+            HStack {
+                Text(mistake.type.description)
+                    .multilineTextAlignment(.leading)
+                Spacer()
+            }
+            .padding(16)
+            .background(
+                RoundedRectangle(cornerRadius: 4)
+                    .stroke(.red)
+            )
+        }
+    }
+    
     private func processMistake(_ newValue: Bool) {
         if newValue {
             let mistakeId = UUID()
@@ -151,3 +167,8 @@ struct GameView: View {
     @Previewable @State var game = Game(level1)
     GameView(game: game)
 }
+
+//#Preview("Mistakes") {
+//    @Previewable @State var game = Game(mistakesTestLevel)
+//    GameView(game: game)
+//}
