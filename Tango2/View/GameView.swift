@@ -19,6 +19,9 @@ struct GameView: View {
     @AppStorage(GameSettings.redoVisibilityKey) private var isRedoVisible = GameSettings.defaultRedoVisibility
     @State private var showMistake = false
     @State var mistakeValidationID: UUID?
+    @State private var isControlsDisabled = false
+    
+    private let winningDelay = 2
     
     var game: Game
     
@@ -42,6 +45,8 @@ struct GameView: View {
                 Image(systemName: "gearshape.fill")
             }
         }
+        .navigationBarBackButtonHidden(isControlsDisabled)
+        .disabled(isControlsDisabled)
         .onAppear {
             game.setUndoManager(undoManager)
             viewModel.secondsPassed = game.secondsSpent
@@ -66,7 +71,24 @@ struct GameView: View {
             Button("No", role: .cancel) { }
         }
         .onChange(of: game.isSolved, initial: false) { _, newValue in
-            showingResult = newValue
+            viewModel.stopStimer()
+            isControlsDisabled = true
+            
+            // run glimmer animations
+            // scale a littble bit every cell?
+            // show result screen after everything happend
+            
+            if newValue {
+                Task {
+                    try? await Task.sleep(for: .seconds(winningDelay))
+                    await MainActor.run {
+                        showingResult = true
+                    }
+                }
+            }
+            else {
+                showingResult = newValue
+            }
         }
         .onChange(of: game.isMistake, initial: true) { _, newValue in
             processMistake(newValue)
