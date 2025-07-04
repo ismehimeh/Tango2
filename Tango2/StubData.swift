@@ -63,8 +63,24 @@ let level3 = Level.create(
         (.opposite, (0, 5), (1, 5)),
         (.equal, (4, 0), (5, 0)),
         (.equal, (5, 0), (5, 1))
-    ]
-)
+    ])
+
+// Difficulty: HARD
+let level4 = Level.create(
+    title: "4",
+    boardDefinition: [
+        [.zero, nil, nil, .zero, nil, nil],
+        [nil, nil, nil, nil, nil, nil],
+        [.one, nil, nil, .zero, nil, nil],
+        [nil, nil, .zero, nil, nil, .zero],
+        [nil, nil, nil, nil, nil, nil],
+        [nil, nil, .zero, nil, nil, .zero]
+    ], conditions: [
+        (.equal, (1, 1), (1, 2)),
+        (.opposite, (4, 3), (4, 4)),
+        (.equal, (0, 5), (1, 5)),
+        (.opposite, (4, 0), (5, 0))
+    ])
 
 let testLevel1 = Level.create(
     title: "n/a",
