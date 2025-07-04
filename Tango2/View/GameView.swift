@@ -21,7 +21,7 @@ struct GameView: View {
     @State var mistakeValidationID: UUID?
     @State private var isControlsDisabled = false
     
-    private let winningDelay = 2
+    private let winningDelay = 0.1
     
     var game: Game
     
