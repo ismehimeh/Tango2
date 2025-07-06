@@ -18,7 +18,7 @@ class Game {
     var gameConditions: [GameCellCondition] {
         level.gameConditions
     }
-    var isSolved = false
+    var isSolved = true
     var isMistake = false
     var mistakes = [Mistake]()
     var secondsSpent = 0

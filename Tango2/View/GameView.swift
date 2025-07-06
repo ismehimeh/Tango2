@@ -21,7 +21,7 @@ struct GameView: View {
     @State var mistakeValidationID: UUID?
     @State private var isControlsDisabled = false
     
-    private let winningDelay = 2
+    private let winningDelay = 0.1
     
     var game: Game
     
@@ -62,7 +62,8 @@ struct GameView: View {
                 .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $showingResult) {
-            ResultView()
+            ResultView(levelTitle: game.level.title,
+                       timeSpent: viewModel.timeString)
         }
         .alert("You sure?", isPresented: $showingClearAlert) {
             Button("Yes", role: .destructive) {
@@ -70,15 +71,17 @@ struct GameView: View {
             }
             Button("No", role: .cancel) { }
         }
-        .onChange(of: game.isSolved, initial: false) { _, newValue in
-            viewModel.stopStimer()
-            isControlsDisabled = true
+        .onChange(of: game.isSolved, initial: false) { oldValue, newValue in
             
-            // run glimmer animations
-            // scale a littble bit every cell?
-            // show result screen after everything happend
-            
-            if newValue {
+            if oldValue && !newValue {
+                viewModel.startTimer()
+                isControlsDisabled = false
+                showingResult = false
+            }
+            else if !oldValue && newValue {
+                viewModel.stopStimer()
+                isControlsDisabled = true
+                
                 Task {
                     try? await Task.sleep(for: .seconds(winningDelay))
                     await MainActor.run {
@@ -86,9 +89,12 @@ struct GameView: View {
                     }
                 }
             }
-            else {
-                showingResult = newValue
-            }
+            
+            
+            
+            // run glimmer animations
+            // scale a littble bit every cell?
+            // show result screen after everything happend
         }
         .onChange(of: game.isMistake, initial: true) { _, newValue in
             processMistake(newValue)
@@ -194,3 +200,9 @@ struct GameView: View {
 //    @Previewable @State var game = Game(mistakesTestLevel)
 //    GameView(game: game)
 //}
+
+#Preview("Almost solved") {
+    @Previewable @State var game = Game(level3)
+    GameView(game: game)
+        .environment(Router(path: .init()))
+}
