@@ -50,6 +50,9 @@ struct LevelsView: View {
                         return newGame
                     }
                 }())
+                .onAppear {
+                    state.updateIndex(accordingTo: level)
+                }
             }
         }
         .environment(router)

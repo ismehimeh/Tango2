@@ -71,15 +71,17 @@ struct GameView: View {
             }
             Button("No", role: .cancel) { }
         }
-        .onChange(of: game.isSolved, initial: false) { _, newValue in
-            viewModel.stopStimer()
-            isControlsDisabled = true
+        .onChange(of: game.isSolved, initial: false) { oldValue, newValue in
             
-            // run glimmer animations
-            // scale a littble bit every cell?
-            // show result screen after everything happend
-            
-            if newValue {
+            if oldValue && !newValue {
+                viewModel.startTimer()
+                isControlsDisabled = false
+                showingResult = false
+            }
+            else if !oldValue && newValue {
+                viewModel.stopStimer()
+                isControlsDisabled = true
+                
                 Task {
                     try? await Task.sleep(for: .seconds(winningDelay))
                     await MainActor.run {
@@ -87,9 +89,12 @@ struct GameView: View {
                     }
                 }
             }
-            else {
-                showingResult = newValue
-            }
+            
+            
+            
+            // run glimmer animations
+            // scale a littble bit every cell?
+            // show result screen after everything happend
         }
         .onChange(of: game.isMistake, initial: true) { _, newValue in
             processMistake(newValue)

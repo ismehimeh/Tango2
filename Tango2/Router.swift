@@ -15,7 +15,7 @@ class Router {
         self.path = path
     }
     
-    func openLevel()
+    func open(_ level: Level) {
+        path.append(level)
+    }
 }
-
-// you finished trying to figure out how to go to the next level
