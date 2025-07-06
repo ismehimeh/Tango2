@@ -14,6 +14,8 @@ class Router {
     init(path: NavigationPath) {
         self.path = path
     }
+    
+    func openLevel()
 }
 
 // you finished trying to figure out how to go to the next level

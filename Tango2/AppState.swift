@@ -9,6 +9,7 @@ import SwiftUI
 
 @Observable
 final class AppState {
+    let levels: [Level] = [level1, level2, level3, level4]
     var games: [Level.ID: Game] = [:]
     
     func resetAllGames() {

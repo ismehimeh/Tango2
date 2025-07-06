@@ -9,7 +9,6 @@ import SwiftUI
 
 @main
 struct Tango2App: App {
-    @State private var levels: [Level] = [level1, level2, level3, level4]
     @State private var appState = AppState()
     
     init() {
@@ -18,7 +17,7 @@ struct Tango2App: App {
     
     var body: some Scene {
         WindowGroup {
-            LevelsView(levels: $levels)
+            LevelsView(levels: appState.levels)
                 .environment(appState)
         }
     }

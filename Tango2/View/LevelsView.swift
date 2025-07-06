@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LevelsView: View {
 
-    @Binding var levels: [Level]
+    var levels: [Level]
     @Environment(AppState.self) private var state
     @State private var router = Router(path: NavigationPath())
     @State private var showingDebugMenu = false
@@ -60,8 +60,8 @@ struct LevelsView: View {
 }
 
 #Preview {
-    @Previewable @State var levels = (1...100).map { _ in level1 }
-    LevelsView(levels: $levels)
+    var levels = (1...100).map { _ in level1 }
+    LevelsView(levels: levels)
 }
 
 
