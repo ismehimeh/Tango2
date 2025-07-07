@@ -84,16 +84,7 @@ struct GameFieldView: View {
 
     func cellValue(_ i: Int, _ j: Int) -> String? {
         let cell = game.cell(at: i, column: j)
-
-        if let value = cell.predefinedValue {
-            return value == .zero ? "🌞" : "🌚"
-        }
-
-        if let value = cell.value {
-            return value == .zero ? "🌞" : "🌚"
-        }
-
-        return nil
+        return cell.predefinedValue?.symbol ?? cell.value?.symbol
     }
     
     func isCellWithMistake(_ i: Int, _ j: Int) -> Bool {

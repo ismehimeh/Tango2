@@ -65,7 +65,7 @@ struct Stripes: Shape {
 #Preview {
     return CellView(row: 0, column: 0,
                     backgroundColor: .gray,
-                    cellContent: "🌞",
+                    cellContent: zeroSymbol,
                     isMarkedAsMistake: false)
     .frame(width: 50, height: 50)
 }
@@ -73,7 +73,7 @@ struct Stripes: Shape {
 #Preview("Mistaken") {
     return CellView(row: 0, column: 0,
                     backgroundColor: .gray,
-                    cellContent: "🌞",
+                    cellContent: zeroSymbol,
                     isMarkedAsMistake: true)
     .frame(width: 50, height: 50)
 }
