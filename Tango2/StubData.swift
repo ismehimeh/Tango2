@@ -101,6 +101,22 @@ let level4 = Level.create(
         (.opposite, (4, 0), (5, 0))
     ])
 
+let level5 = Level.create(
+    title: "5",
+    boardDefinition: [
+        [.zero, .zero, nil, nil, nil, nil],
+        [.one, .one, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, .one, .zero],
+        [nil, nil, nil, nil, .zero, .zero],
+    ], conditions: [
+        (.opposite, (0, 2), (0, 3)),
+        (.equal, (1, 2), (1, 3)),
+        (.equal, (4, 2), (4, 3)),
+        (.opposite, (5, 2), (5, 3)),
+    ])
+
 let testLevel1 = Level.create(
     title: "n/a",
     boardDefinition: [
