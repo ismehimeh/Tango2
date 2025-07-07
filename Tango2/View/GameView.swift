@@ -33,6 +33,9 @@ struct GameView: View {
                 GameFieldView(game: game, showMistake: $showMistake, showSolved: $showingResult)
                 undoAndHintView
                 mistakesListView
+                if game.hintAvailable {
+                    hintsView
+                }
                 HowToPlayView()
                     .frame(width: 300)
             }
@@ -165,9 +168,22 @@ struct GameView: View {
             .padding(16)
             .background(
                 RoundedRectangle(cornerRadius: 4)
-                    .stroke(.red)
+                    .stroke(.red.opacity(0.2))
             )
         }
+    }
+    
+    var hintsView: some View {
+            HStack {
+                Text(game.hint?.description ?? "")
+                    .multilineTextAlignment(.leading)
+                Spacer()
+            }
+            .padding(16)
+            .background(
+                RoundedRectangle(cornerRadius: 4)
+                    .stroke(.red.opacity(0.2))
+            )
     }
     
     private func processMistake(_ newValue: Bool) {
@@ -194,15 +210,23 @@ struct GameView: View {
 #Preview {
     @Previewable @State var game = Game(level1)
     GameView(game: game)
+        .environment(Router(path: .init()))
 }
 
-//#Preview("Mistakes") {
-//    @Previewable @State var game = Game(mistakesTestLevel)
-//    GameView(game: game)
-//}
+#Preview("Mistake") {
+    @Previewable @State var game = Game(level1WithMistake)
+    GameView(game: game)
+        .environment(Router(path: .init()))
+}
 
 #Preview("Almost solved") {
     @Previewable @State var game = Game(level3)
+    GameView(game: game)
+        .environment(Router(path: .init()))
+}
+
+#Preview("Hint") {
+    @Previewable @State var game = Game(level1)
     GameView(game: game)
         .environment(Router(path: .init()))
 }

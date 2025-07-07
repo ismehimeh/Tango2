@@ -24,6 +24,25 @@ let level1 = Level.create(
     ]
 )
 
+// Level 1 with mistake
+let level1WithMistake = Level.create(
+    title: "1",
+    boardDefinition: [
+        [nil, nil, .zero, nil, nil, nil],
+        [nil, .one, .one, nil, nil, nil],
+        [.one, .one, .one, nil, nil, nil],
+        [nil, nil, nil, nil, .one, .zero],
+        [nil, nil, nil, .one, .zero, nil],
+        [nil, nil, nil, .zero, nil, nil]
+    ],
+    conditions: [
+        (.opposite, (0, 4), (0, 5)),
+        (.opposite, (0, 5), (1, 5)),
+        (.equal, (4, 0), (5, 0)),
+        (.equal, (5, 0), (5, 1))
+    ]
+)
+
 // MARK:  - Level 2
 let level2 = Level.create(
     title: "2",
