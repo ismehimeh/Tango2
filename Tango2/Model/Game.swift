@@ -23,7 +23,7 @@ class Game {
     var mistakes = [Mistake]()
     var secondsSpent = 0
     var hintAvailable = false
-    var hint: Hint? = .forcedThreeNoMoreThan2(wrongOption: "🌞", option: "🌚", sign: "=")
+    var hint: HintType? = .forcedThreeNoMoreThan2(wrongValue: .zero, value: .one, sign: "=")
     
     private var undoManager: UndoManager?
 
