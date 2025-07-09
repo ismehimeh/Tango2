@@ -424,8 +424,23 @@ extension Game {
         else {
             return Hint(type: .noMoreThan2(value: .one),
                         targetCell: .init(row: 0, column: 2),
-                        relatedCell: [.init(row: 0, column: 0),
+                        relatedCells: [.init(row: 0, column: 0),
                                       .init(row: 0, column: 1)])
         }
+    }
+    
+    static func getIncorrectCellHint(for line: [CellValue?], with correctLine: [CellValue]) -> Hint? {
+        guard line.count == correctLine.count else {
+            assertionFailure("Something really wrong! Provided 'line' and 'correctLine' differ in length!")
+            return nil
+        }
+        
+        for i in 0..<line.count {
+            guard let value = line[i] else { continue }
+            if value != correctLine[i] {
+                return Hint(type: .incorrectCell(value: correctLine[i]), targetCell: .init(row: 0, column: i))
+            }
+        }
+        return nil
     }
 }

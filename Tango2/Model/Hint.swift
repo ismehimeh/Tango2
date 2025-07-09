@@ -6,7 +6,7 @@
 //
 
 enum HintType: Equatable {
-    case incorrectCell
+    case incorrectCell(value: CellValue)
     case oneOptionLeft(lineName: String, value: CellValue)
     case forcedThreeWithSameNumber(lineName: String, wrongValue: CellValue, value: CellValue)
     case forcedThreeNoMoreThan2(wrongValue: CellValue, value: CellValue, sign: String)
@@ -41,5 +41,11 @@ struct Hint: Equatable {
     let targetCell: CellPosition
     
     /// An array of related cell positions that are relevant to this hint
-    let relatedCell: [CellPosition]
+    let relatedCells: [CellPosition]
+    
+    init(type: HintType, targetCell: CellPosition, relatedCells: [CellPosition] = []) {
+        self.type = type
+        self.targetCell = targetCell
+        self.relatedCells = relatedCells
+    }
 }
