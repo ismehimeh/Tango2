@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BA8DA1082E1089EA00DD3212 /* Testing in Frameworks */ = {isa = PBXBuildFile; productRef = BA8DA1072E1089EA00DD3212 /* Testing */; };
+		BA2F6CD12E1D99C1000EB63A /* TestPlan2.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = BA2F6CD02E1D99C1000EB63A /* TestPlan2.xctestplan */; };
 		BAFF9A322E1BF64D00D83D69 /* TestPlan.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = BAFF9A312E1BF64D00D83D69 /* TestPlan.xctestplan */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +23,7 @@
 
 /* Begin PBXFileReference section */
 		BA205BA72DF634AF00444FAA /* Tango2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tango2.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BA2F6CD02E1D99C1000EB63A /* TestPlan2.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestPlan2.xctestplan; sourceTree = "<group>"; };
 		BAFF9A272E1BF61600D83D69 /* Tango2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tango2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		BAFF9A312E1BF64D00D83D69 /* TestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestPlan.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -45,7 +46,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BA8DA1082E1089EA00DD3212 /* Testing in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -62,6 +62,7 @@
 		BA205B9E2DF634AF00444FAA = {
 			isa = PBXGroup;
 			children = (
+				BA2F6CD02E1D99C1000EB63A /* TestPlan2.xctestplan */,
 				BAFF9A312E1BF64D00D83D69 /* TestPlan.xctestplan */,
 				BA205BA92DF634AF00444FAA /* Tango2 */,
 				BAFF9A282E1BF61600D83D69 /* Tango2Tests */,
@@ -98,7 +99,6 @@
 			);
 			name = Tango2;
 			packageProductDependencies = (
-				BA8DA1072E1089EA00DD3212 /* Testing */,
 			);
 			productName = Tango2;
 			productReference = BA205BA72DF634AF00444FAA /* Tango2.app */;
@@ -156,7 +156,6 @@
 			mainGroup = BA205B9E2DF634AF00444FAA;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				BA8DA1042E1089AB00DD3212 /* XCRemoteSwiftPackageReference "swift-testing" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = BA205BA82DF634AF00444FAA /* Products */;
@@ -174,6 +173,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BA2F6CD12E1D99C1000EB63A /* TestPlan2.xctestplan in Resources */,
 				BAFF9A322E1BF64D00D83D69 /* TestPlan.xctestplan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -461,25 +461,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		BA8DA1042E1089AB00DD3212 /* XCRemoteSwiftPackageReference "swift-testing" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/swiftlang/swift-testing.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.1.1;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		BA8DA1072E1089EA00DD3212 /* Testing */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = BA8DA1042E1089AB00DD3212 /* XCRemoteSwiftPackageReference "swift-testing" */;
-			productName = Testing;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = BA205B9F2DF634AF00444FAA /* Project object */;
 }

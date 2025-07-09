@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "9539E586-B2F8-4FF7-BE68-AF6A23DD2D9D",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Tango2.xcodeproj",
+        "identifier" : "BAFF9A262E1BF61600D83D69",
+        "name" : "Tango2Tests"
+      }
+    }
+  ],
+  "version" : 1
+}
