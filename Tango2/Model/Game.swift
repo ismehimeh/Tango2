@@ -413,3 +413,19 @@ extension Game {
         return mistakes
     }
 }
+
+// MARK: Hints
+extension Game {
+    
+    static func getNoMoreThan2Hint(for line: [CellValue?], with conditions: [GameCellCondition]) -> Hint? {
+        if line.count(where: { $0 == nil }) >= 5 {
+            return nil
+        }
+        else {
+            return Hint(type: .noMoreThan2(value: .one),
+                        targetCell: .init(row: 0, column: 2),
+                        relatedCell: [.init(row: 0, column: 0),
+                                      .init(row: 0, column: 1)])
+        }
+    }
+}
