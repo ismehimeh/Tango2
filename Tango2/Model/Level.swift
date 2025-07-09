@@ -12,6 +12,7 @@ struct Level: Identifiable, Hashable {
     let title: String // TODO: I am not planning to use it, just need it to distinguish cell for now
     let gameCells: [[GameCell]]
     let gameConditions: [GameCellCondition]
+    let solvedCells: [[CellValue]]
     
     // Standard game board size (6x6)
     var lineLength: Int {
@@ -28,7 +29,8 @@ struct Level: Identifiable, Hashable {
                        boardDefinition: [[CellValue?]],
                        conditions: [(condition: GameCellCondition.Condition,
                                      position1: (row: Int, col: Int),
-                                     position2: (row: Int, col: Int))]) -> Level
+                                     position2: (row: Int, col: Int))],
+                       solvedCells: [[CellValue]] = []) -> Level
     {
         // Convert simple board definition to GameCells
         let gameCells = boardDefinition.map { row in
@@ -50,6 +52,9 @@ struct Level: Identifiable, Hashable {
                                                   column: cond.position2.col))
         }
         
-        return Level(title: title, gameCells: gameCells, gameConditions: gameConditions)
+        return Level(title: title,
+               gameCells: gameCells,
+               gameConditions: gameConditions,
+               solvedCells: solvedCells)
     }
 }

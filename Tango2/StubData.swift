@@ -21,6 +21,14 @@ let level1 = Level.create(
         (.opposite, (0, 5), (1, 5)),
         (.equal, (4, 0), (5, 0)),
         (.equal, (5, 0), (5, 1))
+    ],
+    solvedCells: [
+        [.one, .zero, .zero, .one, .one, .zero],
+        [.zero, .one, .one, .zero, .zero, .one],
+        [.one, .one, .zero, .one, .zero, .zero],
+        [.one, .zero, .one, .zero, .one, .zero],
+        [.zero, .one, .zero, .one, .zero, .one],
+        [.zero, .zero, .one, .zero, .one, .one],
     ]
 )
 
@@ -61,6 +69,14 @@ let level2 = Level.create(
         (.equal, (3, 5), (4, 5)),
         (.equal, (5, 0), (5, 1)),
         (.opposite, (5, 2), (5, 3))
+    ],
+    solvedCells: [
+        [.zero, .zero, .one, .one, .zero, .one],
+        [.one, .one, .zero, .zero, .one, .zero],
+        [.zero, .zero, .one, .zero, .one, .one],
+        [.one, .one, .zero, .one, .zero, .zero],
+        [.one, .one, .zero, .one, .zero, .zero],
+        [.zero, .zero, .one, .zero, .one, .one],
     ]
 )
 
@@ -82,6 +98,14 @@ let level3 = Level.create(
         (.opposite, (0, 5), (1, 5)),
         (.equal, (4, 0), (5, 0)),
         (.equal, (5, 0), (5, 1))
+    ],
+    solvedCells: [
+        [.one, .zero, .zero, .one, .one, .zero],
+        [.zero, .one, .one, .zero, .zero, .one],
+        [.one, .one, .zero, .one, .zero, .zero],
+        [.one, .zero, .one, .zero, .one, .zero],
+        [.zero, .one, .zero, .one, .zero, .one],
+        [.zero, .zero, .one, .zero, .one, .one],
     ])
 
 // Difficulty: HARD
@@ -99,6 +123,14 @@ let level4 = Level.create(
         (.opposite, (4, 3), (4, 4)),
         (.equal, (0, 5), (1, 5)),
         (.opposite, (4, 0), (5, 0))
+    ],
+    solvedCells: [
+        [.zero, .one, .one, .zero, .zero, .one],
+        [.one, .zero, .zero, .one, .zero, .one],
+        [.one, .zero, .one, .zero, .one, .zero],
+        [.zero, .one, .zero, .one, .one, .zero],
+        [.zero, .zero, .one, .one, .zero, .one],
+        [.one, .one, .zero, .zero, .one, .zero],
     ])
 
 let level5 = Level.create(
@@ -115,6 +147,14 @@ let level5 = Level.create(
         (.equal, (1, 2), (1, 3)),
         (.equal, (4, 2), (4, 3)),
         (.opposite, (5, 2), (5, 3)),
+    ],
+    solvedCells: [
+        [.zero, .zero, .one, .zero, .one, .one],
+        [.one, .one, .zero, .zero, .one, .zero],
+        [.zero, .zero, .one, .one, .zero, .one],
+        [.zero, .zero, .one, .one, .zero, .one],
+        [.one, .one, .zero, .zero, .one, .zero],
+        [.one, .one, .zero, .one, .zero, .zero],
     ])
 
 let testLevel1 = Level.create(
