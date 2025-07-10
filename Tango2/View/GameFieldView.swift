@@ -15,6 +15,7 @@ struct GameFieldView: View {
     var game: Game
     @Binding var showMistake: Bool
     @Binding var showSolved: Bool
+    var highlightedCell: CellPosition?
     
     enum Constants {
         static let cellPrefilledBackgroundColor = Color.init(red: 238 / 255.0, green: 234 / 255.0, blue: 232 / 255.0)
@@ -25,7 +26,7 @@ struct GameFieldView: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .foregroundStyle(Constants.fieldBackgroundColor)
+                .foregroundStyle(backgroundColor())
                 .aspectRatio(1, contentMode: .fit)
             Grid(horizontalSpacing: 2, verticalSpacing: 2) {
                 ForEach(0..<game.lineLength, id: \.self) { i in
@@ -36,7 +37,7 @@ struct GameFieldView: View {
                                          column: j,
                                          backgroundColor: cellBackgroundColor(i, j),
                                          cellContent: cellValue(i, j),
-                                         isMarkedAsMistake: isCellWithMistake(i, j))
+                                         isMarkedAsMistake: isCellWithMistake(i, j), isHighlighted: isCellHighlighted(i, j), isDimmed: isCellDimmed(i, j))
                             }
                             .onTapGesture {
                                 tapCell(i, j)
@@ -72,6 +73,16 @@ struct GameFieldView: View {
         }
     }
     
+    func isCellHighlighted(_ i: Int, _ j: Int) -> Bool {
+        guard let position = highlightedCell else { return false }
+        return position.row == i && position.column == j
+    }
+    
+    func isCellDimmed(_ i: Int, _ j: Int) -> Bool {
+        guard let position = highlightedCell else { return false }
+        return position.row != i || position.column != j
+    }
+    
     // MARK: - Functions
     func cellBackgroundColor(_ i: Int, _ j: Int) -> Color {
         let cell = game.cell(at: i, column: j)
@@ -94,12 +105,31 @@ struct GameFieldView: View {
     func tapCell(_ i: Int, _ j: Int) {
         game.toggleCell(i, j)
     }
+    
+    func backgroundColor() -> Color {
+        if highlightedCell != nil {
+            Constants.fieldBackgroundColor.mix(with: .black, by: 0.15)
+        }
+        else {
+            Constants.fieldBackgroundColor
+        }
+    }
 }
 
 #Preview {
     GameFieldView(game: .init(level1),
                   showMistake: .constant(false),
-                  showSolved: .constant(false))
+                  showSolved: .constant(false),
+                  highlightedCell: nil)
+        .aspectRatio(1, contentMode: .fit)
+        .padding()
+}
+
+#Preview {
+    GameFieldView(game: .init(level1),
+                  showMistake: .constant(false),
+                  showSolved: .constant(false),
+                  highlightedCell: .init(row: 1, column: 2))
         .aspectRatio(1, contentMode: .fit)
         .padding()
 }

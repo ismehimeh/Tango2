@@ -13,6 +13,10 @@ struct CellView: View {
     let backgroundColor: Color
     let cellContent: String?
     let isMarkedAsMistake: Bool
+    let isHighlighted: Bool
+    let isDimmed: Bool
+    
+    private let hihglightColor = Color(red: 50 / 255.0, green: 108 / 255.0, blue: 215 / 255.0)
 
     var body: some View {
         ZStack {
@@ -30,6 +34,14 @@ struct CellView: View {
             if let text = cellContent {
                 Text(text)
                     .font(.title)
+            }
+            if isHighlighted {
+                Rectangle()
+                    .strokeBorder(style: .init(lineWidth: 3))
+                    .foregroundStyle(hihglightColor)
+            }
+            if isDimmed {
+                Color.black.opacity(0.3)
             }
         }
         .background(
@@ -66,7 +78,9 @@ struct Stripes: Shape {
     return CellView(row: 0, column: 0,
                     backgroundColor: .gray,
                     cellContent: zeroSymbol,
-                    isMarkedAsMistake: false)
+                    isMarkedAsMistake: false,
+                    isHighlighted: false,
+                    isDimmed: false)
     .frame(width: 50, height: 50)
 }
 
@@ -74,6 +88,29 @@ struct Stripes: Shape {
     return CellView(row: 0, column: 0,
                     backgroundColor: .gray,
                     cellContent: zeroSymbol,
-                    isMarkedAsMistake: true)
+                    isMarkedAsMistake: true,
+                    isHighlighted: false,
+                    isDimmed: false)
     .frame(width: 50, height: 50)
 }
+
+#Preview("Highlighted") {
+    return CellView(row: 0, column: 0,
+                    backgroundColor: .gray,
+                    cellContent: zeroSymbol,
+                    isMarkedAsMistake: true,
+                    isHighlighted: true,
+                    isDimmed: false)
+    .frame(width: 50, height: 50)
+}
+
+#Preview("Dimmed") {
+    return CellView(row: 0, column: 0,
+                    backgroundColor: .white,
+                    cellContent: zeroSymbol,
+                    isMarkedAsMistake: false,
+                    isHighlighted: false,
+                    isDimmed: true)
+    .frame(width: 50, height: 50)
+}
+

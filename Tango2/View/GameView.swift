@@ -20,6 +20,7 @@ struct GameView: View {
     @State private var showMistake = false
     @State var mistakeValidationID: UUID?
     @State private var isControlsDisabled = false
+    @State var hint: Hint?
     
     private let winningDelay = 0.1
     
@@ -30,10 +31,13 @@ struct GameView: View {
         ScrollView {
             VStack {
                 topView
-                GameFieldView(game: game, showMistake: $showMistake, showSolved: $showingResult)
+                GameFieldView(game: game,
+                              showMistake: $showMistake,
+                              showSolved: $showingResult,
+                              highlightedCell: hint?.targetCell)
                 undoAndHintView
                 mistakesListView
-                if game.hintAvailable {
+                if hint != nil {
                     hintsView
                 }
                 HowToPlayView()
@@ -149,8 +153,12 @@ struct GameView: View {
 
             Button {
                 print("Hint!")
-                let hint = game.getHint()
-                print(hint)
+                if hint == nil {
+                    hint = game.getHint()
+                }
+                else {
+                    hint = nil
+                }
             } label: {
                 Text("Hint")
                     .frame(maxWidth: .infinity)
@@ -177,7 +185,7 @@ struct GameView: View {
     
     var hintsView: some View {
             HStack {
-                Text(game.hint?.description ?? "")
+                Text(hint?.type.description ?? "")
                     .multilineTextAlignment(.leading)
                 Spacer()
             }
