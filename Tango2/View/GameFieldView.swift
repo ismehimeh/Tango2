@@ -26,7 +26,7 @@ struct GameFieldView: View {
     var body: some View {
         ZStack {
             Rectangle()
-                .foregroundStyle(backgroundColor())
+                .foregroundStyle(Constants.fieldBackgroundColor)
                 .aspectRatio(1, contentMode: .fit)
             Grid(horizontalSpacing: 2, verticalSpacing: 2) {
                 ForEach(0..<game.lineLength, id: \.self) { i in
@@ -37,7 +37,8 @@ struct GameFieldView: View {
                                          column: j,
                                          backgroundColor: cellBackgroundColor(i, j),
                                          cellContent: cellValue(i, j),
-                                         isMarkedAsMistake: isCellWithMistake(i, j), isHighlighted: isCellHighlighted(i, j), isDimmed: isCellDimmed(i, j))
+                                         isMarkedAsMistake: isCellWithMistake(i, j), 
+                                         isHighlighted: isCellHighlighted(i, j))
                             }
                             .onTapGesture {
                                 tapCell(i, j)
@@ -51,6 +52,10 @@ struct GameFieldView: View {
                 cellEntries = value
             }
             .coordinateSpace(name: "grid")
+            
+            if highlightedCell != nil {
+                cellHighlightMask
+            }
 
             ZStack {
                 ForEach(game.gameConditions) { condition in
@@ -77,12 +82,7 @@ struct GameFieldView: View {
         guard let position = highlightedCell else { return false }
         return position.row == i && position.column == j
     }
-    
-    func isCellDimmed(_ i: Int, _ j: Int) -> Bool {
-        guard let position = highlightedCell else { return false }
-        return position.row != i || position.column != j
-    }
-    
+        
     // MARK: - Functions
     func cellBackgroundColor(_ i: Int, _ j: Int) -> Color {
         let cell = game.cell(at: i, column: j)
@@ -106,13 +106,28 @@ struct GameFieldView: View {
         game.toggleCell(i, j)
     }
     
-    func backgroundColor() -> Color {
-        if highlightedCell != nil {
-            Constants.fieldBackgroundColor.mix(with: .black, by: 0.15)
+    var cellHighlightMask: some View {
+        ZStack {
+            Rectangle()
+                .fill(Color.black.opacity(0.3))
+                .aspectRatio(1, contentMode: .fit)
+                .mask {
+                    ZStack {
+                        Rectangle()
+                        
+                        if let highlightedCell = highlightedCell,
+                           let cellEntry = cellEntries.last(where: { 
+                               $0.row == highlightedCell.row && $0.column == highlightedCell.column
+                           }) {
+                            Rectangle()
+                                .frame(width: cellEntry.rect.width, height: cellEntry.rect.height)
+                                .position(x: cellEntry.rect.midX, y: cellEntry.rect.midY)
+                                .blendMode(.destinationOut)
+                        }
+                    }
+                }
         }
-        else {
-            Constants.fieldBackgroundColor
-        }
+        .allowsHitTesting(false) // Allow taps to pass through
     }
 }
 

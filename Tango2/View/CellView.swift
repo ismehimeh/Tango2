@@ -14,7 +14,6 @@ struct CellView: View {
     let cellContent: String?
     let isMarkedAsMistake: Bool
     let isHighlighted: Bool
-    let isDimmed: Bool
     
     private let hihglightColor = Color(red: 50 / 255.0, green: 108 / 255.0, blue: 215 / 255.0)
 
@@ -39,9 +38,6 @@ struct CellView: View {
                 Rectangle()
                     .strokeBorder(style: .init(lineWidth: 3))
                     .foregroundStyle(hihglightColor)
-            }
-            if isDimmed {
-                Color.black.opacity(0.3)
             }
         }
         .background(
@@ -79,8 +75,7 @@ struct Stripes: Shape {
                     backgroundColor: .gray,
                     cellContent: zeroSymbol,
                     isMarkedAsMistake: false,
-                    isHighlighted: false,
-                    isDimmed: false)
+                    isHighlighted: false)
     .frame(width: 50, height: 50)
 }
 
@@ -89,8 +84,7 @@ struct Stripes: Shape {
                     backgroundColor: .gray,
                     cellContent: zeroSymbol,
                     isMarkedAsMistake: true,
-                    isHighlighted: false,
-                    isDimmed: false)
+                    isHighlighted: false)
     .frame(width: 50, height: 50)
 }
 
@@ -99,18 +93,6 @@ struct Stripes: Shape {
                     backgroundColor: .gray,
                     cellContent: zeroSymbol,
                     isMarkedAsMistake: true,
-                    isHighlighted: true,
-                    isDimmed: false)
+                    isHighlighted: true)
     .frame(width: 50, height: 50)
 }
-
-#Preview("Dimmed") {
-    return CellView(row: 0, column: 0,
-                    backgroundColor: .white,
-                    cellContent: zeroSymbol,
-                    isMarkedAsMistake: false,
-                    isHighlighted: false,
-                    isDimmed: true)
-    .frame(width: 50, height: 50)
-}
-
