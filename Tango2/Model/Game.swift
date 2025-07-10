@@ -67,6 +67,18 @@ class Game {
     func column(_ columnIndex: Int) -> [GameCell] {
         return (0..<lineLength).map { gameCells[cellIndex(row: $0, column: columnIndex)] }
     }
+    
+    // Access the solved state rows and columns
+    func solvedRow(_ rowIndex: Int) -> [CellValue] {
+        guard rowIndex < level.solvedCells.count else { return [] }
+        return level.solvedCells[rowIndex]
+    }
+    
+    func solvedColumn(_ columnIndex: Int) -> [CellValue] {
+        guard !level.solvedCells.isEmpty else { return [] }
+        guard columnIndex < level.solvedCells[0].count else { return [] }
+        return (0..<level.solvedCells.count).map { level.solvedCells[$0][columnIndex] }
+    }
 
     func isRowValid(_ row: Int) -> Bool {
         let rowArray = self.row(row)
@@ -252,8 +264,44 @@ extension Game {
         return mistakes
     }
     
-    // MARK: - Private Helper Methods for Mistake Detection
+    func getHint() -> Hint? {
+        for rowIndex in 0..<level.gameCells.count {
+            if let hint = getHint(forRowWithIndex: rowIndex) {
+                return hint
+            }
+        }
+        
+        for columnIndex in 0..<level.gameCells[0].count {
+            if let hint = getHint(forColumnWithIndex: columnIndex) {
+                return hint
+            }
+        }
+        return nil
+    }
     
+    func getHint(forRowWithIndex rowIndex: Int) -> Hint? {
+        let row = row(rowIndex).map { $0.value }
+        if let hint = Game.getIncorrectCellHint(for: row, with: solvedRow(rowIndex)) {
+            return Hint(type: hint.type, 
+                        targetCell: .init(row: rowIndex, column: hint.targetCell.column),
+                        relatedCells: hint.relatedCells)
+        }
+        return nil
+    }
+    
+    func getHint(forColumnWithIndex columnIndex: Int) -> Hint? {
+        let column = column(columnIndex).map { $0.value }
+        if let hint = Game.getIncorrectCellHint(for: column, with: solvedColumn(columnIndex)) {
+            return Hint(type: hint.type, 
+                        targetCell: .init(row: hint.targetCell.column, column: columnIndex),
+                        relatedCells: hint.relatedCells)
+        }
+        return nil
+    }
+}
+
+// MARK: - Private Helper Methods for Mistake Detection
+extension Game {
     /**
      Checks for sign violations between cells based on game conditions.
      
@@ -413,8 +461,7 @@ extension Game {
         return mistakes
     }
 }
-
-// MARK: Hints
+// MARK: Hints detection
 extension Game {
     
     static func getNoMoreThan2Hint(for line: [CellValue?], with conditions: [GameCellCondition]) -> Hint? {

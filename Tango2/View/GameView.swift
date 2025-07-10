@@ -149,6 +149,8 @@ struct GameView: View {
 
             Button {
                 print("Hint!")
+                let hint = game.getHint()
+                print(hint)
             } label: {
                 Text("Hint")
                     .frame(maxWidth: .infinity)
