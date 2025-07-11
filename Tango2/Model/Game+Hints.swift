@@ -51,16 +51,46 @@ extension Game {
 // MARK: Hints detection
 extension Game {
     
-    static func getNoMoreThan2Hint(for line: [CellValue?], with conditions: [GameCellCondition]) -> Hint? {
-        if line.count(where: { $0 == nil }) >= 5 {
-            return nil
+    private static func getNoMoreThan2Hint(of value: CellValue, for line: [CellValue?]) -> Hint? {
+        // cell conditions is not important!
+        // it runs after incorrectCell check - there is no mistake
+        // if the 2-length sequence of one value and around it not nils - go to another value (another sequence of the same value is a mistake, but we have no mistake on this step)
+        let oppositeValue: CellValue = (value == .one) ? .zero : .one
+        if let range = line.firstRange(of: [value, value]) {
+            let startIndex = range.startIndex
+            let endIndex = range.endIndex - 1
+            if startIndex > 0 {
+                if line[range.lowerBound - 1] == nil {
+                    return Hint(type: .noMoreThan2(value: oppositeValue),
+                                targetCell: .init(row: 0, column: startIndex - 1),
+                                relatedCells: [.init(row: 0, column: startIndex),
+                                               .init(row: 0, column: endIndex)])
+                }
+            }
+            
+            if endIndex < line.count - 1 {
+                if line[endIndex + 1] == nil {
+                    return Hint(type: .noMoreThan2(value: oppositeValue),
+                                targetCell: .init(row: 0, column: endIndex + 1),
+                                relatedCells: [.init(row: 0, column: startIndex),
+                                               .init(row: 0, column: endIndex)])
+                }
+            }
         }
-        else {
-            return Hint(type: .noMoreThan2(value: .one),
-                        targetCell: .init(row: 0, column: 2),
-                        relatedCells: [.init(row: 0, column: 0),
-                                      .init(row: 0, column: 1)])
+        return nil
+    }
+    
+    static func getNoMoreThan2Hint(for line: [CellValue?]) -> Hint? {
+        
+        if let hint = getNoMoreThan2Hint(of: .zero, for: line) {
+            return hint
         }
+        
+        if let hint = getNoMoreThan2Hint(of: .one, for: line) {
+            return hint
+        }
+        
+        return nil
     }
     
     static func getIncorrectCellHint(for line: [CellValue?], with correctLine: [CellValue]) -> Hint? {
