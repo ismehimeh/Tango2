@@ -29,27 +29,75 @@ extension Game {
     
     func getHint(forRowWithIndex rowIndex: Int) -> Hint? {
         let row = row(rowIndex).map { $0.value }
+        
         if let hint = Game.getIncorrectCellHint(for: row, with: solvedRow(rowIndex)) {
             return Hint(type: hint.type,
                         targetCell: .init(row: rowIndex, column: hint.targetCell.column),
                         relatedCells: hint.relatedCells)
         }
+        
+        if let hint = Game.getNoMoreThan2Hint(for: row) {
+            return Hint(type: hint.type,
+                        targetCell: .init(row: rowIndex, column: hint.targetCell.column),
+                        relatedCells: hint.relatedCells.map { .init(row: rowIndex, column: $0.column) })
+        }
+        
         return nil
     }
     
     func getHint(forColumnWithIndex columnIndex: Int) -> Hint? {
         let column = column(columnIndex).map { $0.value }
+        
         if let hint = Game.getIncorrectCellHint(for: column, with: solvedColumn(columnIndex)) {
             return Hint(type: hint.type,
                         targetCell: .init(row: hint.targetCell.column, column: columnIndex),
                         relatedCells: hint.relatedCells)
         }
+        
+        if let hint = Game.getNoMoreThan2Hint(for: column) {
+            return Hint(type: hint.type,
+                        targetCell: .init(row: hint.targetCell.column, column: columnIndex),
+                        relatedCells: hint.relatedCells.map { .init(row: $0.column, column: columnIndex) })
+        }
+        
         return nil
     }
 }
 
 // MARK: Hints detection
 extension Game {
+    
+    static func getNoMoreThan2Hint(for line: [CellValue?]) -> Hint? {
+        
+        if let hint = getNoMoreThan2Hint(of: .zero, for: line) {
+            return hint
+        }
+        
+        if let hint = getNoMoreThan2Hint(of: .one, for: line) {
+            return hint
+        }
+        
+        return nil
+    }
+    
+    static func getIncorrectCellHint(for line: [CellValue?], with correctLine: [CellValue]) -> Hint? {
+        guard line.count == correctLine.count else {
+            assertionFailure("Something really wrong! Provided 'line' and 'correctLine' differ in length!")
+            return nil
+        }
+        
+        for i in 0..<line.count {
+            guard let value = line[i] else { continue }
+            if value != correctLine[i] {
+                return Hint(type: .incorrectCell(value: correctLine[i]), targetCell: .init(row: 0, column: i))
+            }
+        }
+        return nil
+    }
+}
+
+// MARK: Private hint detection helpers
+private extension Game {
     
     private static func getNoMoreThan2Hint(of value: CellValue, for line: [CellValue?]) -> Hint? {
         // cell conditions is not important!
@@ -75,34 +123,6 @@ extension Game {
                                 relatedCells: [.init(row: 0, column: startIndex),
                                                .init(row: 0, column: endIndex)])
                 }
-            }
-        }
-        return nil
-    }
-    
-    static func getNoMoreThan2Hint(for line: [CellValue?]) -> Hint? {
-        
-        if let hint = getNoMoreThan2Hint(of: .zero, for: line) {
-            return hint
-        }
-        
-        if let hint = getNoMoreThan2Hint(of: .one, for: line) {
-            return hint
-        }
-        
-        return nil
-    }
-    
-    static func getIncorrectCellHint(for line: [CellValue?], with correctLine: [CellValue]) -> Hint? {
-        guard line.count == correctLine.count else {
-            assertionFailure("Something really wrong! Provided 'line' and 'correctLine' differ in length!")
-            return nil
-        }
-        
-        for i in 0..<line.count {
-            guard let value = line[i] else { continue }
-            if value != correctLine[i] {
-                return Hint(type: .incorrectCell(value: correctLine[i]), targetCell: .init(row: 0, column: i))
             }
         }
         return nil
