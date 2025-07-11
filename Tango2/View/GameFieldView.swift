@@ -16,6 +16,7 @@ struct GameFieldView: View {
     @Binding var showMistake: Bool
     @Binding var showSolved: Bool
     var highlightedCell: CellPosition?
+    var notDimmedCells: [CellPosition]
     
     enum Constants {
         static let cellPrefilledBackgroundColor = Color.init(red: 238 / 255.0, green: 234 / 255.0, blue: 232 / 255.0)
@@ -53,7 +54,7 @@ struct GameFieldView: View {
             }
             .coordinateSpace(name: "grid")
             
-            if highlightedCell != nil {
+            if highlightedCell != nil || !notDimmedCells.isEmpty {
                 cellHighlightMask
             }
 
@@ -115,14 +116,30 @@ struct GameFieldView: View {
                     ZStack {
                         Rectangle()
                         
-                        if let highlightedCell = highlightedCell,
-                           let cellEntry = cellEntries.last(where: { 
-                               $0.row == highlightedCell.row && $0.column == highlightedCell.column
-                           }) {
-                            Rectangle()
-                                .frame(width: cellEntry.rect.width, height: cellEntry.rect.height)
-                                .position(x: cellEntry.rect.midX, y: cellEntry.rect.midY)
-                                .blendMode(.destinationOut)
+                        // Create a Group to cut out all non-dimmed cells
+                        Group {
+                            // Cut out the highlighted cell if present
+                            if let highlightedCell = highlightedCell,
+                               let cellEntry = cellEntries.last(where: { 
+                                   $0.row == highlightedCell.row && $0.column == highlightedCell.column
+                               }) {
+                                Rectangle()
+                                    .frame(width: cellEntry.rect.width, height: cellEntry.rect.height)
+                                    .position(x: cellEntry.rect.midX, y: cellEntry.rect.midY)
+                                    .blendMode(.destinationOut)
+                            }
+                            
+                            // Cut out all cells from notDimmedCells array
+                            ForEach(notDimmedCells, id: \.self) { position in
+                                if let cellEntry = cellEntries.last(where: {
+                                    $0.row == position.row && $0.column == position.column
+                                }) {
+                                    Rectangle()
+                                        .frame(width: cellEntry.rect.width, height: cellEntry.rect.height)
+                                        .position(x: cellEntry.rect.midX, y: cellEntry.rect.midY)
+                                        .blendMode(.destinationOut)
+                                }
+                            }
                         }
                     }
                 }
@@ -135,7 +152,8 @@ struct GameFieldView: View {
     GameFieldView(game: .init(level1),
                   showMistake: .constant(false),
                   showSolved: .constant(false),
-                  highlightedCell: nil)
+                  highlightedCell: nil,
+                  notDimmedCells: [])
         .aspectRatio(1, contentMode: .fit)
         .padding()
 }
@@ -144,7 +162,9 @@ struct GameFieldView: View {
     GameFieldView(game: .init(level1),
                   showMistake: .constant(false),
                   showSolved: .constant(false),
-                  highlightedCell: .init(row: 1, column: 2))
+                  highlightedCell: .init(row: 1, column: 2),
+                  notDimmedCells: [.init(row: 1, column: 3),
+                                   .init(row: 1, column: 4)])
         .aspectRatio(1, contentMode: .fit)
         .padding()
 }

@@ -34,7 +34,8 @@ struct GameView: View {
                 GameFieldView(game: game,
                               showMistake: $showMistake,
                               showSolved: $showingResult,
-                              highlightedCell: hint?.targetCell)
+                              highlightedCell: hint?.targetCell,
+                              notDimmedCells: hint?.relatedCells ?? [])
                 undoAndHintView
                 mistakesListView
                 if hint != nil {
@@ -240,3 +241,4 @@ struct GameView: View {
     GameView(game: game)
         .environment(Router(path: .init()))
 }
+
