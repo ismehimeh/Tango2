@@ -18,15 +18,15 @@ enum HintType: Equatable {
         case .incorrectCell:
             return "The highlighted cell is incorrect"
         case let .oneOptionLeft(lineName, value):
-            return "Each \(lineName) must contain the same number of \(zeroSymbol) and \(oneSymbol).\nThis leaves only one option for the highlighted cell in this \(lineName). Therefore the highlighted cell must be a \(value.symbol)."
+            return "Each \(lineName) must contain the same number of \(zeroSymbol) and \(oneSymbol).\n\nThis leaves only one option for the highlighted cell in this \(lineName).\n\nTherefore the highlighted cell must be a \(value.symbol)."
         case let .forcedThreeWithSameNumber(lineName, wrongValue, value):
-            return "Each \(lineName) must contain the same number of \(zeroSymbol) and \(oneSymbol).\nPlacing a \(wrongValue.symbol) in the highlighted cell would force three \(value.symbol) to be placed together.\nTherefore the highlighted cell must be a \(value.symbol)."
+            return "Each \(lineName) must contain the same number of \(zeroSymbol) and \(oneSymbol).\n\nPlacing a \(wrongValue.symbol) in the highlighted cell would force three \(value.symbol) to be placed together.\n\nTherefore the highlighted cell must be a \(value.symbol)."
         case let .forcedThreeNoMoreThan2(wrongValue, value, sign):
             return "No more than 2 \(zeroSymbol) or \(oneSymbol) may be next to each other, either vertically or horizontally.\n\nPlacing a \(wrongValue.symbol) in the highlighted cell would force three \(value.symbol) to be placed in this row due to the \(sign).\n\nTherefore the highlighted cell must be a \(value.symbol)."
         case let .sign(sign, value):
-            return "Cells separated by an \(sign) sign must be of the same type.\nTherefore the highlighted cell must be a \(value.symbol)."
+            return "Cells separated by an \(sign) sign must be of the same type.\n\nTherefore the highlighted cell must be a \(value.symbol)."
         case let .noMoreThan2(value):
-            return "No more than 2 \(zeroSymbol) or \(oneSymbol) may be next to each other, either vertically or horizontally.\nTherefore the highlighted cell must be a \(value.symbol)."
+            return "No more than 2 \(zeroSymbol) or \(oneSymbol) may be next to each other, either vertically or horizontally.\n\nTherefore the highlighted cell must be a \(value.symbol)."
         }
     }
 }
