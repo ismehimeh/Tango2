@@ -36,12 +36,6 @@ extension Game {
                         relatedCells: hint.relatedCells)
         }
         
-        if let hint = Game.getNoMoreThan2Hint(for: row) {
-            return Hint(type: hint.type,
-                        targetCell: .init(row: rowIndex, column: hint.targetCell.column),
-                        relatedCells: hint.relatedCells.map { .init(row: rowIndex, column: $0.column) })
-        }
-        
         if
             let hint = Game.getOneOptionLeftHint(for: row),
             case let .oneOptionLeft(_, value) = hint.type
@@ -50,7 +44,13 @@ extension Game {
                                                  value: value),
                             targetCell: .init(row: rowIndex,
                                               column: hint.targetCell.column),
-                            relatedCells: hint.relatedCells)
+                            relatedCells: hint.relatedCells.map { .init(row: rowIndex, column: $0.column) })
+        }
+        
+        if let hint = Game.getNoMoreThan2Hint(for: row) {
+            return Hint(type: hint.type,
+                        targetCell: .init(row: rowIndex, column: hint.targetCell.column),
+                        relatedCells: hint.relatedCells.map { .init(row: rowIndex, column: $0.column) })
         }
         
         return nil
@@ -65,12 +65,6 @@ extension Game {
                         relatedCells: hint.relatedCells)
         }
         
-        if let hint = Game.getNoMoreThan2Hint(for: column) {
-            return Hint(type: hint.type,
-                        targetCell: .init(row: hint.targetCell.column, column: columnIndex),
-                        relatedCells: hint.relatedCells.map { .init(row: $0.column, column: columnIndex) })
-        }
-        
         if
             let hint = Game.getOneOptionLeftHint(for: column),
             case let .oneOptionLeft(_, value) = hint.type
@@ -79,7 +73,13 @@ extension Game {
                                                  value: value),
                             targetCell: .init(row: hint.targetCell.row,
                                               column: columnIndex),
-                            relatedCells: hint.relatedCells)
+                            relatedCells: hint.relatedCells.map { .init(row: $0.column, column: columnIndex) })
+        }
+        
+        if let hint = Game.getNoMoreThan2Hint(for: column) {
+            return Hint(type: hint.type,
+                        targetCell: .init(row: hint.targetCell.column, column: columnIndex),
+                        relatedCells: hint.relatedCells.map { .init(row: $0.column, column: columnIndex) })
         }
         
         return nil
