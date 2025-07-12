@@ -11,6 +11,15 @@ struct GameCellCondition: Identifiable, Hashable {
     enum Condition: Hashable {
         case equal
         case opposite
+        
+        var symbol: String {
+            switch self {
+            case .equal:
+                return "="
+            case .opposite:
+                return "X"
+            }
+        }
     }
 
     let id = UUID()

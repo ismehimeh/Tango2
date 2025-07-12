@@ -8,9 +8,12 @@
 import Testing
 @testable import Tango2
 
-struct HintsTests {
-    
-    // MARK: NoMoreThan2 Hint
+typealias Sign = GameCellCondition.Condition
+
+struct HintsTests { }
+
+// MARK: NoMoreThan2 Hint
+extension HintsTests {
     @Test func getNoMoreThan2HintReturnNilForNilLine() async throws {
         let array: [CellValue?] = [nil, nil, nil, nil, nil, nil]
         let expectedResult: Hint? = nil
@@ -98,8 +101,10 @@ struct HintsTests {
         let result = Game.getNoMoreThan2Hint(for: array)
         #expect(result == expectedResult)
     }
-    
-    // - MARK:  incorrectCell hint
+}
+
+// - MARK:  incorrectCell hint
+extension HintsTests {
     @Test func noHintForEmptyLine() async throws {
         let line: [CellValue?] = [nil, nil, nil, nil, nil, nil]
         let correctLine: [CellValue] = [.zero, .one, .zero, .one, .zero, .one]
@@ -140,8 +145,10 @@ struct HintsTests {
                                  targetCell: .init(row: 0, column: 0))
         #expect(result == expectedValue)
     }
-    
-    // MARK: oneOptionLeft Hint
+}
+
+// MARK: oneOptionLeft Hint
+extension HintsTests {
     @Test func noOneOptionLeftHintForEmptyLine() async throws {
         let line: [CellValue?] = [nil, nil, nil, nil, nil, nil]
         let expectedValue: Hint? = nil
@@ -198,6 +205,76 @@ struct HintsTests {
                                             .init(row: 0, column: 5)
                                         ])
         let result = Game.getOneOptionLeftHint(for: line)
+        #expect(result == expectedValue)
+    }
+}
+
+// - MARK: sign hint
+extension HintsTests {
+    
+    @Test func noHintForLineWithNoSign() {
+        let line: [CellValue?] = [nil, nil, nil, nil, nil, nil]
+        let conditions: [GameCellCondition] = [.init(condition: .equal,
+                                                     cellA: .init(row: 0, column: 0),
+                                                     cellB: .init(row: 0, column: 1))]
+        let expectedValue: Hint? = nil
+        let result = Game.getSignHint(for: line, with: conditions)
+        #expect(result == expectedValue)
+    }
+    
+    @Test func noHintForEmptyLineWithSign() {
+        let line: [CellValue?] = [nil, nil, nil, nil, nil, nil]
+        let conditions: [GameCellCondition] = []
+        let expectedValue: Hint? = nil
+        let result = Game.getSignHint(for: line, with: conditions)
+        #expect(result == expectedValue)
+    }
+    
+    @Test func gotSignHintFor0AndOEqual() {
+        let line: [CellValue?] = [.zero, nil, nil, nil, nil, nil]
+        let conditions: [GameCellCondition] = [.init(condition: .equal,
+                                                     cellA: .init(row: 0, column: 0),
+                                                     cellB: .init(row: 0, column: 1))]
+        let expectedValue: Hint? = .init(type: .sign(sign: Sign.equal.symbol, value: .zero),
+                                         targetCell: .init(row: 0, column: 1),
+                                         relatedCells: [.init(row: 0, column: 0)])
+        let result = Game.getSignHint(for: line, with: conditions)
+        #expect(result == expectedValue)
+    }
+    
+    @Test func gotSignHintFor0AndEqualReversed() {
+        let line: [CellValue?] = [nil, .zero, nil, nil, nil, nil]
+        let conditions: [GameCellCondition] = [.init(condition: .equal,
+                                                     cellA: .init(row: 0, column: 0),
+                                                     cellB: .init(row: 0, column: 1))]
+        let expectedValue: Hint? = .init(type: .sign(sign: Sign.equal.symbol, value: .zero),
+                                         targetCell: .init(row: 0, column: 0),
+                                         relatedCells: [.init(row: 0, column: 1)])
+        let result = Game.getSignHint(for: line, with: conditions)
+        #expect(result == expectedValue)
+    }
+    
+    @Test func gotSignHintFor1AndOEqual() {
+        let line: [CellValue?] = [.one, nil, nil, nil, nil, nil]
+        let conditions: [GameCellCondition] = [.init(condition: .equal,
+                                                     cellA: .init(row: 0, column: 0),
+                                                     cellB: .init(row: 0, column: 1))]
+        let expectedValue: Hint? = .init(type: .sign(sign: Sign.equal.symbol, value: .one),
+                                         targetCell: .init(row: 0, column: 1),
+                                         relatedCells: [.init(row: 0, column: 0)])
+        let result = Game.getSignHint(for: line, with: conditions)
+        #expect(result == expectedValue)
+    }
+    
+    @Test func gotSignHintFor1AndEqualReversed() {
+        let line: [CellValue?] = [nil, .one, nil, nil, nil, nil]
+        let conditions: [GameCellCondition] = [.init(condition: .equal,
+                                                     cellA: .init(row: 0, column: 0),
+                                                     cellB: .init(row: 0, column: 1))]
+        let expectedValue: Hint? = .init(type: .sign(sign: Sign.equal.symbol, value: .one),
+                                         targetCell: .init(row: 0, column: 0),
+                                         relatedCells: [.init(row: 0, column: 1)])
+        let result = Game.getSignHint(for: line, with: conditions)
         #expect(result == expectedValue)
     }
 }

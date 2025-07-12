@@ -30,6 +30,15 @@ enum CellValue: Int, Hashable {
             return "🌚"
         }
     }
+    
+    func signed(_ sign: GameCellCondition.Condition) -> CellValue {
+        if sign == .equal {
+            return self
+        }
+        else {
+            return self == .one ? .zero : .one
+        }
+    }
 }
 
 @Observable

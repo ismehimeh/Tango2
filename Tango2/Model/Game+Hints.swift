@@ -53,6 +53,20 @@ extension Game {
                         relatedCells: hint.relatedCells.map { .init(row: rowIndex, column: $0.column) })
         }
         
+        let rowConditions = gameConditions.filter {
+            $0.cellA.column != $0.cellB.column && $0.cellA.row == rowIndex
+        }.map {
+            GameCellCondition(condition: $0.condition,
+                              cellA: .init(row: 0, column: $0.cellA.column),
+                              cellB: .init(row: 0, column: $0.cellB.column))
+        }
+        
+        if let hint = Game.getSignHint(for: row, with: rowConditions) {
+            return Hint(type: hint.type,
+                        targetCell: .init(row: rowIndex, column: hint.targetCell.column),
+                        relatedCells: hint.relatedCells.map { .init(row: rowIndex, column: $0.column) })
+        }
+        
         return nil
     }
     
@@ -71,7 +85,7 @@ extension Game {
         {
                 return Hint(type: .oneOptionLeft(lineName: "column",
                                                  value: value),
-                            targetCell: .init(row: hint.targetCell.row,
+                            targetCell: .init(row: hint.targetCell.column,
                                               column: columnIndex),
                             relatedCells: hint.relatedCells.map { .init(row: $0.column, column: columnIndex) })
         }
@@ -79,6 +93,21 @@ extension Game {
         if let hint = Game.getNoMoreThan2Hint(for: column) {
             return Hint(type: hint.type,
                         targetCell: .init(row: hint.targetCell.column, column: columnIndex),
+                        relatedCells: hint.relatedCells.map { .init(row: $0.column, column: columnIndex) })
+        }
+        
+        let columnConditions = gameConditions.filter {
+            $0.cellA.row != $0.cellB.row && $0.cellA.column == columnIndex
+        }.map {
+            GameCellCondition(condition: $0.condition,
+                              cellA: .init(row: 0, column: $0.cellA.row),
+                              cellB: .init(row: 0, column: $0.cellB.row))
+        }
+        
+        if let hint = Game.getSignHint(for: column, with: columnConditions) {
+            return Hint(type: hint.type,
+                        targetCell: .init(row: hint.targetCell.column,
+                                          column: columnIndex),
                         relatedCells: hint.relatedCells.map { .init(row: $0.column, column: columnIndex) })
         }
         
@@ -134,6 +163,41 @@ extension Game {
         return Hint(type: .oneOptionLeft(lineName: "", value: correctValue),
                     targetCell: .init(row: 0, column: targetIndex),
                     relatedCells: relatedCells)
+    }
+    
+    static func getSignHint(for line: [CellValue?], with conditions: [GameCellCondition]) -> Hint? {
+        for condition in conditions {
+            let first = line[condition.cellA.column]
+            let second = line[condition.cellB.column]
+            
+            // TODO: these 2 ifs could be covered with some logical operator? XOR?
+            if first == nil && second == nil {
+                return nil
+            }
+            
+            if first != nil && second != nil {
+                // don't care about sing violation
+                // it should be covered with incorrectCell hint
+                return nil
+            }
+            
+            if let first {
+                let correctValue = first.signed(condition.condition)
+                return Hint(type: .sign(sign: condition.condition.symbol,
+                                        value: correctValue),
+                            targetCell: condition.cellB,
+                            relatedCells: [condition.cellA])
+            }
+            
+            if let second {
+                let correctValue = second.signed(condition.condition)
+                return Hint(type: .sign(sign: condition.condition.symbol,
+                                        value: correctValue),
+                            targetCell: condition.cellA,
+                            relatedCells: [condition.cellB])
+            }
+        }
+        return nil
     }
 }
 
