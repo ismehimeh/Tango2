@@ -42,6 +42,17 @@ extension Game {
                         relatedCells: hint.relatedCells.map { .init(row: rowIndex, column: $0.column) })
         }
         
+        if
+            let hint = Game.getOneOptionLeftHint(for: row),
+            case let .oneOptionLeft(_, value) = hint.type
+        {
+                return Hint(type: .oneOptionLeft(lineName: "row",
+                                                 value: value),
+                            targetCell: .init(row: rowIndex,
+                                              column: hint.targetCell.column),
+                            relatedCells: hint.relatedCells)
+        }
+        
         return nil
     }
     
@@ -58,6 +69,17 @@ extension Game {
             return Hint(type: hint.type,
                         targetCell: .init(row: hint.targetCell.column, column: columnIndex),
                         relatedCells: hint.relatedCells.map { .init(row: $0.column, column: columnIndex) })
+        }
+        
+        if
+            let hint = Game.getOneOptionLeftHint(for: column),
+            case let .oneOptionLeft(_, value) = hint.type
+        {
+                return Hint(type: .oneOptionLeft(lineName: "column",
+                                                 value: value),
+                            targetCell: .init(row: hint.targetCell.row,
+                                              column: columnIndex),
+                            relatedCells: hint.relatedCells)
         }
         
         return nil
@@ -93,6 +115,25 @@ extension Game {
             }
         }
         return nil
+    }
+    
+    static func getOneOptionLeftHint(for line: [CellValue?]) -> Hint? {
+        
+        guard
+            line.count(where: { $0 != nil}) == 5,
+            let targetIndex = line.firstIndex(of: nil)
+        else {
+            return nil
+        }
+        
+        let zerosCount = line.count { $0 == .zero }
+        let onesCount = line.count { $0 == .one }
+        let relatedCells = (0..<line.count).map { CellPosition(row: 0, column: $0) }.filter { $0.column != targetIndex }
+        let correctValue: CellValue = zerosCount > onesCount ? .one : .zero
+        
+        return Hint(type: .oneOptionLeft(lineName: "", value: correctValue),
+                    targetCell: .init(row: 0, column: targetIndex),
+                    relatedCells: relatedCells)
     }
 }
 

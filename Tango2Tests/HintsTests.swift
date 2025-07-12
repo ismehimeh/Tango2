@@ -140,4 +140,64 @@ struct HintsTests {
                                  targetCell: .init(row: 0, column: 0))
         #expect(result == expectedValue)
     }
+    
+    // MARK: oneOptionLeft Hint
+    @Test func noOneOptionLeftHintForEmptyLine() async throws {
+        let line: [CellValue?] = [nil, nil, nil, nil, nil, nil]
+        let expectedValue: Hint? = nil
+        let result = Game.getOneOptionLeftHint(for: line)
+        #expect(result == expectedValue)
+    }
+    
+    @Test func noOneOptionLeftHintFor0011NN() async throws {
+        let line: [CellValue?] = [.zero, .zero, .one, .one, nil, nil]
+        let expectedValue: Hint? = nil
+        let result = Game.getOneOptionLeftHint(for: line)
+        #expect(result == expectedValue)
+    }
+    
+    @Test func receivedCorrectOneOptionLeftHintFor00110N() async throws {
+        let line: [CellValue?] = [.zero, .zero, .one, .one, .zero, nil]
+        let expectedValue: Hint? = Hint(type: .oneOptionLeft(lineName: "", value: .one),
+                                        targetCell: .init(row: 0, column: 5),
+                                        relatedCells: [
+                                            .init(row: 0, column: 0),
+                                            .init(row: 0, column: 1),
+                                            .init(row: 0, column: 2),
+                                            .init(row: 0, column: 3),
+                                            .init(row: 0, column: 4)
+                                        ])
+        let result = Game.getOneOptionLeftHint(for: line)
+        #expect(result == expectedValue)
+    }
+    
+    @Test func receivedCorrectOneOptionLeftHintFor11001N() async throws {
+        let line: [CellValue?] = [.one, .one, .zero, .zero, .one, nil]
+        let expectedValue: Hint? = Hint(type: .oneOptionLeft(lineName: "", value: .zero),
+                                        targetCell: .init(row: 0, column: 5),
+                                        relatedCells: [
+                                            .init(row: 0, column: 0),
+                                            .init(row: 0, column: 1),
+                                            .init(row: 0, column: 2),
+                                            .init(row: 0, column: 3),
+                                            .init(row: 0, column: 4)
+                                        ])
+        let result = Game.getOneOptionLeftHint(for: line)
+        #expect(result == expectedValue)
+    }
+    
+    @Test func receivedCorrectOneOptionLeftHintFor11N011() async throws {
+        let line: [CellValue?] = [.one, .one, nil, .zero, .one, .one]
+        let expectedValue: Hint? = Hint(type: .oneOptionLeft(lineName: "", value: .zero),
+                                        targetCell: .init(row: 0, column: 2),
+                                        relatedCells: [
+                                            .init(row: 0, column: 0),
+                                            .init(row: 0, column: 1),
+                                            .init(row: 0, column: 3),
+                                            .init(row: 0, column: 4),
+                                            .init(row: 0, column: 5)
+                                        ])
+        let result = Game.getOneOptionLeftHint(for: line)
+        #expect(result == expectedValue)
+    }
 }
