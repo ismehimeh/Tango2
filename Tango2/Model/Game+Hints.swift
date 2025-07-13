@@ -78,13 +78,14 @@ extension Game {
         
         // 2. Check for one option left hints
         if let hint = Game.getOneOptionLeftHint(for: lineValues),
-           case let .oneOptionLeft(_, value) = hint.type {
+           case let .oneOptionLeft(_, value) = hint.type
+        {
             
             return Hint(type: .oneOptionLeft(
-                        lineName: lineType.name,
-                        value: value),
-                    targetCell: transformCellPosition(hint.targetCell, for: lineType),
-                    relatedCells: hint.relatedCells.map { transformCellPosition($0, for: lineType) })
+                lineName: lineType.name,
+                value: value),
+                        targetCell: transformCellPosition(hint.targetCell, for: lineType),
+                        relatedCells: hint.relatedCells.map { transformCellPosition($0, for: lineType) })
         }
         
         // 3. Check for no more than 2 hints
@@ -96,6 +97,15 @@ extension Game {
         let conditions = getFilteredConditions(for: lineType)
         if let hint = Game.getSignHint(for: lineValues, with: conditions) {
             return transformHint(hint, for: lineType)
+        }
+        
+        // 5. Check for forced 3 with same number hint
+        if let hint = Game.getForcedThreeWithSameNumberHint(for: lineValues),
+            case let .forcedThreeWithSameNumber(_, value) = hint.type
+        {
+            return Hint(type: .forcedThreeWithSameNumber(lineName: lineType.name, value: value),
+                        targetCell: transformCellPosition(hint.targetCell, for: lineType),
+                        relatedCells: hint.relatedCells.map { transformCellPosition($0, for: lineType) })
         }
         
         return nil
@@ -186,19 +196,70 @@ extension Game {
         }
         return nil
     }
+    
+    static func getForcedThreeWithSameNumberHint(for line: [CellValue?]) -> Hint? {
+        if let hint = getForcedThreeWithSameNumberHint(of: .zero, in: line) {
+            return hint
+        }
+        
+        if let hint = getForcedThreeWithSameNumberHint(of: .one, in: line) {
+            return hint
+        }
+        return nil
+    }
+    
+    private static func getForcedThreeWithSameNumberHint(of value: CellValue,
+                                                         in line: [CellValue?]) -> Hint?
+    {
+        // TODO: Improve relatedCells selection
+        
+        // This hint suggests that by placing value, we will reach limit of that value
+        // and that we will force three of opposite values be placed together
+        // it means that if line doesn't have 2 same value - we can skip it
+        guard line.count(where: { $0 == value }) == 2 else { return nil }
+        
+        // okay, not let's just iterate over every index
+        // and replace nil with value
+        // and check will it lead to placing 3 opposite values in the cells left
+        for i in line.indices {
+            guard line[i] == nil else { continue }
+            var lineCopy = line
+            lineCopy[i] = value
+            
+            // it looks like this situation happens when we have one or zero appearences of opposite value
+            // and there are 4 combinations of problematic sequences which are not include value
+            // NNN, NN1, N1N, 1NN
+            // let's look for them
+            let opposite = value.opposite
+            let problematicSequences: [[CellValue?]] = [
+                [nil, nil, nil],
+                [nil, nil, opposite],
+                [nil, opposite, nil],
+                [opposite, nil, nil],
+            ]
+            
+            let rangesOfProblematicSequence = problematicSequences.compactMap { sequence in
+                lineCopy.firstRange(of: sequence)
+            }
+            
+            if rangesOfProblematicSequence.isEmpty {
+                // no problematic possible sequences found
+                continue
+            }
+            
+            let valuesIndices: [Int] = line.enumerated().compactMap { $0.element != nil ? $0.offset : nil }
+            return Hint(type: .forcedThreeWithSameNumber(lineName: "", value: value.opposite),
+                        targetCell: .init(row: 0, column: i),
+                        relatedCells: valuesIndices.map { .init(row: 0, column: $0) })
+        }
+        
+        return nil
+    }
 }
 
 private extension Game {
     
     // MARK: No more than 2
-    static func getForcedThreeWithSameNumberHint(for line: [CellValue?]) -> Hint? {
-        // looks like sign is ignored!
-        // there could be 2/3/4 nils in the row, but it is not the 100% criteria
-        // i have 4 examples in notebook and all them propose .one as correct value...
-        // Also in all example we have in line 2 values of the same type
-        return nil
-    }
-    
     private static func getNoMoreThan2Hint(of value: CellValue, for line: [CellValue?]) -> Hint? {
         // cell conditions is not important!
         // it runs after incorrectCell check - there is no mistake
