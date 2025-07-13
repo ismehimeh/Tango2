@@ -146,7 +146,7 @@ extension Game {
     static func getOneOptionLeftHint(for line: [CellValue?]) -> Hint? {
         
         guard
-            line.count(where: { $0 != nil}) == 5,
+            line.count(where: { $0 != nil}) >= 4,
             let targetIndex = line.firstIndex(of: nil)
         else {
             return nil
@@ -154,7 +154,10 @@ extension Game {
         
         let zerosCount = line.count { $0 == .zero }
         let onesCount = line.count { $0 == .one }
-        let relatedCells = (0..<line.count).map { CellPosition(row: 0, column: $0) }.filter { $0.column != targetIndex }
+        let relatedCells: [CellPosition] = (0..<line.count).compactMap {
+            guard line[$0] != nil else { return nil }
+            return CellPosition(row: 0, column: $0)
+        }
         let correctValue: CellValue = zerosCount > onesCount ? .one : .zero
         
         return Hint(type: .oneOptionLeft(lineName: "", value: correctValue),
@@ -197,6 +200,7 @@ extension Game {
         return nil
     }
     
+    // MARK: ForcedThreeWithSameNumber
     static func getForcedThreeWithSameNumberHint(for line: [CellValue?]) -> Hint? {
         if let hint = getForcedThreeWithSameNumberHint(of: .zero, in: line) {
             return hint
