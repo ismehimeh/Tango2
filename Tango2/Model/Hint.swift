@@ -12,6 +12,7 @@ enum HintType: Equatable {
     case forcedThreeNoMoreThan2(wrongValue: CellValue, value: CellValue, sign: String)
     case sign(sign: String, value: CellValue)
     case noMoreThan2(value: CellValue)
+    case finalSign(lineName: String, value: CellValue, sign: String)
     
     var description: String {
         switch self {
@@ -27,6 +28,9 @@ enum HintType: Equatable {
             return "Cells separated by an \(sign) sign must be of the same type.\n\nTherefore the highlighted cell must be a \(value.symbol)."
         case let .noMoreThan2(value):
             return "No more than 2 \(zeroSymbol) or \(oneSymbol) may be next to each other, either vertically or horizontally.\n\nTherefore the highlighted cell must be a \(value.symbol)."
+        // Level 7: NxNxN101
+        case let .finalSign(lineName, value, sign):
+            return "Each \(lineName) must contain the same number of \(zeroSymbol) and \(oneSymbol)./n/nThe final \(value.symbol) in this row must be elsewhere due to the remaining \(sign).\n\nTherefore the highlighted cell must be a \(value.symbol)."
         }
     }
 }
