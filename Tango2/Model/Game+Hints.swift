@@ -30,21 +30,16 @@ enum LineType {
 extension Game {
     
     func getHint() -> Hint? {
-        
-        // First check exclusively for incorrectCell hints
-        for rowIndex in 0..<level.gameCells.count {
-            if let hint = getHint(forRowWithIndex: rowIndex) {
+        // we assume that game field is N x N
+        for i in 0..<level.gameCells.count {
+            if let hint = getHint(forRowWithIndex: i) {
+                return hint
+            }
+            if let hint = getHint(forColumnWithIndex: i) {
                 return hint
             }
         }
         
-        for columnIndex in 0..<level.gameCells[0].count {
-            if let hint = getHint(forColumnWithIndex: columnIndex) {
-                return hint
-            }
-        }
-        
-        // Start checking getNoMoreThan2Hint
         return nil
     }
     
@@ -76,7 +71,18 @@ extension Game {
             return transformHint(hint, for: lineType)
         }
         
-        // 2. Check for one option left hints
+        // 2. Check for no more than 2 hints
+        if let hint = Game.getNoMoreThan2Hint(for: lineValues) {
+            return transformHint(hint, for: lineType)
+        }
+        
+        // 3. Check for sign hints
+        let conditions = getFilteredConditions(for: lineType)
+        if let hint = Game.getSignHint(for: lineValues, with: conditions) {
+            return transformHint(hint, for: lineType)
+        }
+        
+        // 4. Check for one option left hints
         if let hint = Game.getOneOptionLeftHint(for: lineValues),
            case let .oneOptionLeft(_, value) = hint.type
         {
@@ -86,17 +92,6 @@ extension Game {
                 value: value),
                         targetCell: transformCellPosition(hint.targetCell, for: lineType),
                         relatedCells: hint.relatedCells.map { transformCellPosition($0, for: lineType) })
-        }
-        
-        // 3. Check for no more than 2 hints
-        if let hint = Game.getNoMoreThan2Hint(for: lineValues) {
-            return transformHint(hint, for: lineType)
-        }
-        
-        // 4. Check for sign hints
-        let conditions = getFilteredConditions(for: lineType)
-        if let hint = Game.getSignHint(for: lineValues, with: conditions) {
-            return transformHint(hint, for: lineType)
         }
         
         // 5. Check for forced 3 with same number hint
