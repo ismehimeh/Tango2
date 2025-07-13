@@ -6,6 +6,27 @@
 //
 
 // - MARK: Mistakes
+
+/// Represents the type of line being processed (row or column)
+enum LineType {
+    case row(index: Int)
+    case column(index: Int)
+    
+    var index: Int {
+        switch self {
+        case .row(let index), .column(let index):
+            return index
+        }
+    }
+    
+    var name: String {
+        switch self {
+        case .row: return "row"
+        case .column: return "column"
+        }
+    }
+}
+
 extension Game {
     
     func getHint() -> Hint? {
@@ -28,87 +49,53 @@ extension Game {
     }
     
     func getHint(forRowWithIndex rowIndex: Int) -> Hint? {
-        let row = row(rowIndex).map { $0.value }
-        
-        if let hint = Game.getIncorrectCellHint(for: row, with: solvedRow(rowIndex)) {
-            return Hint(type: hint.type,
-                        targetCell: .init(row: rowIndex, column: hint.targetCell.column),
-                        relatedCells: hint.relatedCells)
-        }
-        
-        if
-            let hint = Game.getOneOptionLeftHint(for: row),
-            case let .oneOptionLeft(_, value) = hint.type
-        {
-                return Hint(type: .oneOptionLeft(lineName: "row",
-                                                 value: value),
-                            targetCell: .init(row: rowIndex,
-                                              column: hint.targetCell.column),
-                            relatedCells: hint.relatedCells.map { .init(row: rowIndex, column: $0.column) })
-        }
-        
-        if let hint = Game.getNoMoreThan2Hint(for: row) {
-            return Hint(type: hint.type,
-                        targetCell: .init(row: rowIndex, column: hint.targetCell.column),
-                        relatedCells: hint.relatedCells.map { .init(row: rowIndex, column: $0.column) })
-        }
-        
-        let rowConditions = gameConditions.filter {
-            $0.cellA.column != $0.cellB.column && $0.cellA.row == rowIndex
-        }.map {
-            GameCellCondition(condition: $0.condition,
-                              cellA: .init(row: 0, column: $0.cellA.column),
-                              cellB: .init(row: 0, column: $0.cellB.column))
-        }
-        
-        if let hint = Game.getSignHint(for: row, with: rowConditions) {
-            return Hint(type: hint.type,
-                        targetCell: .init(row: rowIndex, column: hint.targetCell.column),
-                        relatedCells: hint.relatedCells.map { .init(row: rowIndex, column: $0.column) })
-        }
-        
-        return nil
+        return getHint(for: .row(index: rowIndex))
     }
     
     func getHint(forColumnWithIndex columnIndex: Int) -> Hint? {
-        let column = column(columnIndex).map { $0.value }
+        return getHint(for: .column(index: columnIndex))
+    }
+    
+    /// Common method to get hints for either rows or columns
+    private func getHint(for lineType: LineType) -> Hint? {
+        let lineValues: [CellValue?]
+        let solvedValues: [CellValue]
         
-        if let hint = Game.getIncorrectCellHint(for: column, with: solvedColumn(columnIndex)) {
-            return Hint(type: hint.type,
-                        targetCell: .init(row: hint.targetCell.column, column: columnIndex),
-                        relatedCells: hint.relatedCells)
+        // Get the appropriate line values and solved values
+        switch lineType {
+        case .row(let index):
+            lineValues = row(index).map { $0.value }
+            solvedValues = solvedRow(index)
+        case .column(let index):
+            lineValues = column(index).map { $0.value }
+            solvedValues = solvedColumn(index)
         }
         
-        if
-            let hint = Game.getOneOptionLeftHint(for: column),
-            case let .oneOptionLeft(_, value) = hint.type
-        {
-                return Hint(type: .oneOptionLeft(lineName: "column",
-                                                 value: value),
-                            targetCell: .init(row: hint.targetCell.column,
-                                              column: columnIndex),
-                            relatedCells: hint.relatedCells.map { .init(row: $0.column, column: columnIndex) })
+        // 1. Check for incorrect cell hints
+        if let hint = Game.getIncorrectCellHint(for: lineValues, with: solvedValues) {
+            return transformHint(hint, for: lineType)
         }
         
-        if let hint = Game.getNoMoreThan2Hint(for: column) {
-            return Hint(type: hint.type,
-                        targetCell: .init(row: hint.targetCell.column, column: columnIndex),
-                        relatedCells: hint.relatedCells.map { .init(row: $0.column, column: columnIndex) })
+        // 2. Check for one option left hints
+        if let hint = Game.getOneOptionLeftHint(for: lineValues),
+           case let .oneOptionLeft(_, value) = hint.type {
+            
+            return Hint(type: .oneOptionLeft(
+                        lineName: lineType.name,
+                        value: value),
+                    targetCell: transformCellPosition(hint.targetCell, for: lineType),
+                    relatedCells: hint.relatedCells.map { transformCellPosition($0, for: lineType) })
         }
         
-        let columnConditions = gameConditions.filter {
-            $0.cellA.row != $0.cellB.row && $0.cellA.column == columnIndex
-        }.map {
-            GameCellCondition(condition: $0.condition,
-                              cellA: .init(row: 0, column: $0.cellA.row),
-                              cellB: .init(row: 0, column: $0.cellB.row))
+        // 3. Check for no more than 2 hints
+        if let hint = Game.getNoMoreThan2Hint(for: lineValues) {
+            return transformHint(hint, for: lineType)
         }
         
-        if let hint = Game.getSignHint(for: column, with: columnConditions) {
-            return Hint(type: hint.type,
-                        targetCell: .init(row: hint.targetCell.column,
-                                          column: columnIndex),
-                        relatedCells: hint.relatedCells.map { .init(row: $0.column, column: columnIndex) })
+        // 4. Check for sign hints
+        let conditions = getFilteredConditions(for: lineType)
+        if let hint = Game.getSignHint(for: lineValues, with: conditions) {
+            return transformHint(hint, for: lineType)
         }
         
         return nil
@@ -231,5 +218,53 @@ private extension Game {
             }
         }
         return nil
+    }
+}
+
+// MARK: Private helpers
+private extension Game {
+    
+    /// Gets the filtered conditions relevant for the given line type
+    private func getFilteredConditions(for lineType: LineType) -> [GameCellCondition] {
+        switch lineType {
+        case .row(let index):
+            return gameConditions.filter {
+                $0.cellA.column != $0.cellB.column && $0.cellA.row == index
+            }.map {
+                GameCellCondition(
+                    condition: $0.condition,
+                    cellA: .init(row: 0, column: $0.cellA.column),
+                    cellB: .init(row: 0, column: $0.cellB.column))
+            }
+            
+        case .column(let index):
+            return gameConditions.filter {
+                $0.cellA.row != $0.cellB.row && $0.cellA.column == index
+            }.map {
+                GameCellCondition(
+                    condition: $0.condition,
+                    cellA: .init(row: 0, column: $0.cellA.row),
+                    cellB: .init(row: 0, column: $0.cellB.row))
+            }
+        }
+    }
+    
+    /// Transforms a cell position from line coordinates to game board coordinates
+    private func transformCellPosition(_ position: CellPosition, for lineType: LineType) -> CellPosition {
+        switch lineType {
+        case .row(let rowIndex):
+            return .init(row: rowIndex, column: position.column)
+        case .column(let columnIndex):
+            return .init(row: position.column, column: columnIndex)
+        }
+    }
+    
+    /// Transforms a hint from line coordinates to game board coordinates
+    private func transformHint(_ hint: Hint, for lineType: LineType) -> Hint {
+        return Hint(
+            type: hint.type,
+            targetCell: transformCellPosition(hint.targetCell, for: lineType),
+            relatedCells: hint.relatedCells.map { transformCellPosition($0, for: lineType) }
+        )
     }
 }
