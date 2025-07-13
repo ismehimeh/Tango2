@@ -188,20 +188,21 @@ extension Game {
     }
 }
 
-// MARK: Private hint detection helpers
 private extension Game {
     
+    // MARK: No more than 2
     private static func getNoMoreThan2Hint(of value: CellValue, for line: [CellValue?]) -> Hint? {
         // cell conditions is not important!
         // it runs after incorrectCell check - there is no mistake
         // if the 2-length sequence of one value and around it not nils - go to another value (another sequence of the same value is a mistake, but we have no mistake on this step)
-        let oppositeValue: CellValue = (value == .one) ? .zero : .one
+        
+        // looking for 2 symbols after each other
         if let range = line.firstRange(of: [value, value]) {
             let startIndex = range.startIndex
             let endIndex = range.endIndex - 1
             if startIndex > 0 {
                 if line[range.lowerBound - 1] == nil {
-                    return Hint(type: .noMoreThan2(value: oppositeValue),
+                    return Hint(type: .noMoreThan2(value: value.opposite),
                                 targetCell: .init(row: 0, column: startIndex - 1),
                                 relatedCells: [.init(row: 0, column: startIndex),
                                                .init(row: 0, column: endIndex)])
@@ -210,12 +211,22 @@ private extension Game {
             
             if endIndex < line.count - 1 {
                 if line[endIndex + 1] == nil {
-                    return Hint(type: .noMoreThan2(value: oppositeValue),
+                    return Hint(type: .noMoreThan2(value: value.opposite),
                                 targetCell: .init(row: 0, column: endIndex + 1),
                                 relatedCells: [.init(row: 0, column: startIndex),
                                                .init(row: 0, column: endIndex)])
                 }
             }
+        }
+        
+        // looking for symbol-nil-symbol
+        if let range = line.firstRange(of: [value, nil, value]) {
+            let startIndex = range.startIndex
+            let endIndex = range.endIndex - 1
+            return Hint(type: .noMoreThan2(value: value.opposite),
+                        targetCell: .init(row: 0, column: startIndex + 1),
+                        relatedCells: [.init(row: 0, column: startIndex),
+                                       .init(row: 0, column: endIndex)])
         }
         return nil
     }

@@ -101,6 +101,16 @@ extension HintsTests {
         let result = Game.getNoMoreThan2Hint(for: array)
         #expect(result == expectedResult)
     }
+    
+    @Test func getNoMoreThan2HintFor1N1NNN() async throws {
+        let array: [CellValue?] = [.one, nil, .one, nil, nil, nil]
+        let expectedResult: Hint? = Hint(type: .noMoreThan2(value: .zero),
+                                         targetCell: .init(row: 0, column: 1),
+                                         relatedCells: [.init(row: 0, column: 0),
+                                            .init(row: 0, column: 2)])
+        let result = Game.getNoMoreThan2Hint(for: array)
+        #expect(result == expectedResult)
+    }
 }
 
 // - MARK:  incorrectCell hint
