@@ -292,6 +292,21 @@ extension HintsTests {
         #expect(result == expectedValue)
     }
     
+    @Test func gotSignHintFor0And2Conditions() {
+        let line: [CellValue?] = [nil, nil, nil, nil, .zero, nil]
+        let conditions: [GameCellCondition] = [.init(condition: .equal,
+                                                     cellA: .init(row: 0, column: 2),
+                                                     cellB: .init(row: 0, column: 3)),
+                                               .init(condition: .opposite,
+                                                     cellA: .init(row: 0, column: 4),
+                                                     cellB: .init(row: 0, column: 5))]
+        let expectedValue: Hint? = .init(type: .sign(sign: Sign.opposite.symbol, value: .one),
+                                         targetCell: .init(row: 0, column: 5),
+                                         relatedCells: [.init(row: 0, column: 4)])
+        let result = Game.getSignHint(for: line, with: conditions)
+        #expect(result == expectedValue)
+    }
+    
     // - MARK: forcedThreeWithSameNumber
     @Test func gotHintForForcedThreeWithSameNumberNNN100() {
         let line: [CellValue?] = [nil, nil, nil, .one, .zero, .zero]

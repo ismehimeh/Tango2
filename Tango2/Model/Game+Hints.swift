@@ -168,13 +168,13 @@ extension Game {
             
             // TODO: these 2 ifs could be covered with some logical operator? XOR?
             if first == nil && second == nil {
-                return nil
+                continue
             }
             
             if first != nil && second != nil {
                 // don't care about sing violation
                 // it should be covered with incorrectCell hint
-                return nil
+                continue
             }
             
             if let first {
@@ -193,6 +193,7 @@ extension Game {
                             relatedCells: [condition.cellB])
             }
         }
+        
         return nil
     }
     
