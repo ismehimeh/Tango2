@@ -185,6 +185,35 @@ let level6 = Level.create(
         [.zero, .one, .zero, .zero, .one, .one],
     ])
 
+// Difficulty: HARD
+let level7 = Level.create(
+    title: "7",
+    boardDefinition: [
+        [.zero, .one, .one, nil, nil, nil],
+        [nil, .zero, nil, nil, nil, nil],
+        [nil, .one, nil, nil, nil, nil],
+        [nil, nil, nil, nil, .zero, nil],
+        [nil, nil, nil, nil, .zero, nil],
+        [nil, nil, nil, .zero, .one, .zero],
+    ],
+    conditions: [
+        (.opposite, (1, 3), (1, 4)),
+        (.opposite, (1, 4), (1, 5)),
+        (.opposite, (4, 0), (4, 1)),
+        (.opposite, (4, 1), (4, 2)),
+        (.equal, (3, 0), (4, 0)),
+        (.opposite, (4, 0), (5, 0)),
+        (.opposite, (1, 5), (2, 5)),
+    ],
+    solvedCells: [
+        [.zero, .one, .one, .zero, .one, .zero],
+        [.one, .zero, .zero, .one, .zero, .one],
+        [.one, .one, .zero, .zero, .one, .zero],
+        [.zero, .zero, .one, .one, .zero, .one],
+        [.zero, .one, .zero, .one, .zero, .one],
+        [.one, .zero, .one, .zero, .one, .zero],
+    ])
+
 let testLevel1 = Level.create(
     title: "n/a",
     boardDefinition: [

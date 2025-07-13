@@ -9,7 +9,7 @@ import SwiftUI
 
 @Observable
 final class AppState {
-    let levels: [Level] = [level1, level2, level3, level4, level5, level6]
+    let levels: [Level] = [level1, level2, level3, level4, level5, level6, level7]
     var games: [Level.ID: Game] = [:]
     private var levelIndex: Int = 0
     
