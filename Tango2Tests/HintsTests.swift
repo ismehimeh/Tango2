@@ -170,10 +170,14 @@ extension HintsTests {
         let line: [CellValue?] = [.zero, .zero, .one, .one, nil, nil]
         let expectedValue: Hint? = nil
         let result = Game.getOneOptionLeftHint(for: line)
-        withKnownIssue("Failing of this test itself questioning the correctness of the implementation, but it works fine in practice") {
-            // also this situation would be first covered with .noMoreThan2
-            #expect(result == expectedValue)
-        }
+        #expect(result == expectedValue)
+    }
+    
+    @Test func noOneOptionLeftHintFor0110NN() async throws {
+        let line: [CellValue?] = [.zero, .one, .one, .zero, nil, nil]
+        let expectedValue: Hint? = nil
+        let result = Game.getOneOptionLeftHint(for: line)
+        #expect(result == expectedValue)
     }
     
     @Test func receivedCorrectOneOptionLeftHintFor00110N() async throws {
@@ -201,21 +205,6 @@ extension HintsTests {
                                             .init(row: 0, column: 2),
                                             .init(row: 0, column: 3),
                                             .init(row: 0, column: 4)
-                                        ])
-        let result = Game.getOneOptionLeftHint(for: line)
-        #expect(result == expectedValue)
-    }
-    
-    @Test func receivedCorrectOneOptionLeftHintFor11N011() async throws {
-        let line: [CellValue?] = [.one, .one, nil, .zero, .one, .one]
-        let expectedValue: Hint? = Hint(type: .oneOptionLeft(lineName: "", value: .zero),
-                                        targetCell: .init(row: 0, column: 2),
-                                        relatedCells: [
-                                            .init(row: 0, column: 0),
-                                            .init(row: 0, column: 1),
-                                            .init(row: 0, column: 3),
-                                            .init(row: 0, column: 4),
-                                            .init(row: 0, column: 5)
                                         ])
         let result = Game.getOneOptionLeftHint(for: line)
         #expect(result == expectedValue)
