@@ -355,3 +355,66 @@ extension HintsTests {
         #expect(result == expectedValue)
     }
 }
+
+// MARK: - Tripple Opposite tests
+extension HintsTests {
+    
+    @Test func gotHintForTrippleOpposite() {
+        let line1: [CellValue?] = [nil, nil, nil, .zero, .one, .zero]
+        let line2: [CellValue?] = [nil, nil, nil, .one, .zero, .one]
+        
+        let conditions1: [GameCellCondition] = [.init(condition: .opposite,
+                                                     cellA: .init(row: 0, column: 0),
+                                                     cellB: .init(row: 0, column: 1)),
+                                               .init(condition: .opposite,
+                                                     cellA: .init(row: 0, column: 1),
+                                                     cellB: .init(row: 0, column: 2))]
+        
+        let expectedValue1: Hint? = .init(type: .tripleOpposite(lineName: "",
+                                                                value: .one),
+                                         targetCell: .init(row: 0, column: 2),
+                                         relatedCells: [.init(row: 0, column: 3),
+                                                        .init(row: 0, column: 4),
+                                                        .init(row: 0, column: 5)])
+        let result1 = Game.getTripleOppositeHint(in: line1, with: conditions1)
+        #expect(result1 == expectedValue1)
+        
+        let expectedValue2: Hint? = .init(type: .tripleOpposite(lineName: "",
+                                                                value: .zero),
+                                         targetCell: .init(row: 0, column: 2),
+                                         relatedCells: [.init(row: 0, column: 3),
+                                                        .init(row: 0, column: 4),
+                                                        .init(row: 0, column: 5)])
+        let result2 = Game.getTripleOppositeHint(in: line2, with: conditions1)
+        #expect(result2 == expectedValue2)
+        
+        let line3: [CellValue?] = [.zero, .one, .zero, nil, nil, nil]
+        let line4: [CellValue?] = [.one, .zero, .one, nil, nil, nil]
+        
+        let conditions2: [GameCellCondition] = [.init(condition: .opposite,
+                                                     cellA: .init(row: 0, column: 3),
+                                                     cellB: .init(row: 0, column: 4)),
+                                               .init(condition: .opposite,
+                                                     cellA: .init(row: 0, column: 4),
+                                                     cellB: .init(row: 0, column: 5))
+        ]
+        
+        let expectedValue3: Hint? = .init(type: .tripleOpposite(lineName: "",
+                                                                value: .one),
+                                         targetCell: .init(row: 0, column: 3),
+                                         relatedCells: [.init(row: 0, column: 0),
+                                                        .init(row: 0, column: 1),
+                                                        .init(row: 0, column: 2)])
+        let result3 = Game.getTripleOppositeHint(in: line3, with: conditions2)
+        #expect(result3 == expectedValue3)
+        
+        let expectedValue4: Hint? = .init(type: .tripleOpposite(lineName: "",
+                                                                value: .zero),
+                                         targetCell: .init(row: 0, column: 3),
+                                         relatedCells: [.init(row: 0, column: 0),
+                                                        .init(row: 0, column: 1),
+                                                        .init(row: 0, column: 2)])
+        let result4 = Game.getTripleOppositeHint(in: line4, with: conditions2)
+        #expect(result4 == expectedValue4)
+    }
+}

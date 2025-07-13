@@ -103,6 +103,17 @@ extension Game {
                         relatedCells: hint.relatedCells.map { transformCellPosition($0, for: lineType) })
         }
         
+        // 6. Check for tripple opposite special case
+        // TODO: it should be last!
+        if
+            let hint = Game.getTripleOppositeHint(in: lineValues, with: conditions),
+            case let .tripleOpposite(_, value) = hint.type
+        {
+            return Hint(type: .tripleOpposite(lineName: lineType.name, value: value),
+                        targetCell: transformCellPosition(hint.targetCell, for: lineType),
+                        relatedCells: hint.relatedCells.map { transformCellPosition($0, for: lineType) })
+        }
+        
         return nil
     }
 }
@@ -255,6 +266,54 @@ extension Game {
         }
         
         return nil
+    }
+    
+    static func getTripleOppositeHint(in line: [CellValue?],
+                                      with conditions: [GameCellCondition]) -> Hint?
+    {
+        let nilSequence: [CellValue?] = [nil, nil, nil]
+        guard let nilSequenceRange = line.firstRange(of: nilSequence) else { return nil }
+        
+        let notNilSequences: [[CellValue?]] = [
+            [.zero, .one, .zero],
+            [.one, .zero, .one]
+        ]
+        
+        let containsFirstSequence = line.contains(notNilSequences[0])
+        guard containsFirstSequence ||  line.contains(notNilSequences[1]) else { return nil }
+        
+        let conditions1: [GameCellCondition] = [.init(condition: .opposite,
+                                                     cellA: .init(row: 0, column: 0),
+                                                     cellB: .init(row: 0, column: 1)),
+                                               .init(condition: .opposite,
+                                                     cellA: .init(row: 0, column: 1),
+                                                     cellB: .init(row: 0, column: 2)),
+        ]
+        
+        let conditions2: [GameCellCondition] = [.init(condition: .opposite,
+                                                     cellA: .init(row: 0, column: 3),
+                                                     cellB: .init(row: 0, column: 4)),
+                                               .init(condition: .opposite,
+                                                     cellA: .init(row: 0, column: 4),
+                                                     cellB: .init(row: 0, column: 5))
+        ]
+        guard conditions.contains(conditions1) || conditions.contains(conditions2) else { return nil }
+        
+        let value: CellValue = containsFirstSequence ? .one : .zero
+        
+        let targetCell: CellPosition
+        if nilSequenceRange.startIndex == 0 {
+            targetCell = .init(row: 0, column: 2)
+        }
+        else {
+            targetCell = .init(row: 0, column: 3)
+        }
+        
+        let relatedCells = (0..<line.count)
+            .filter { !nilSequenceRange.contains($0) }
+            .map { CellPosition(row: 0, column: $0) }
+        
+        return Hint(type: .tripleOpposite(lineName: "", value: value), targetCell: targetCell, relatedCells: relatedCells)
     }
 }
 
