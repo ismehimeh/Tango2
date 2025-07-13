@@ -8,7 +8,7 @@
 enum HintType: Equatable {
     case incorrectCell(value: CellValue)
     case oneOptionLeft(lineName: String, value: CellValue)
-    case forcedThreeWithSameNumber(lineName: String, wrongValue: CellValue, value: CellValue)
+    case forcedThreeWithSameNumber(lineName: String, value: CellValue)
     case forcedThreeNoMoreThan2(wrongValue: CellValue, value: CellValue, sign: String)
     case sign(sign: String, value: CellValue)
     case noMoreThan2(value: CellValue)
@@ -20,8 +20,8 @@ enum HintType: Equatable {
             return "The highlighted cell is incorrect"
         case let .oneOptionLeft(lineName, value):
             return "Each \(lineName) must contain the same number of \(zeroSymbol) and \(oneSymbol).\n\nThis leaves only one option for the highlighted cell in this \(lineName).\n\nTherefore the highlighted cell must be a \(value.symbol)."
-        case let .forcedThreeWithSameNumber(lineName, wrongValue, value):
-            return "Each \(lineName) must contain the same number of \(zeroSymbol) and \(oneSymbol).\n\nPlacing a \(wrongValue.symbol) in the highlighted cell would force three \(value.symbol) to be placed together.\n\nTherefore the highlighted cell must be a \(value.symbol)."
+        case let .forcedThreeWithSameNumber(lineName, value):
+            return "Each \(lineName) must contain the same number of \(zeroSymbol) and \(oneSymbol).\n\nPlacing a \(value.opposite.symbol) in the highlighted cell would force three \(value.symbol) to be placed together.\n\nTherefore the highlighted cell must be a \(value.symbol)."
         case let .forcedThreeNoMoreThan2(wrongValue, value, sign):
             return "No more than 2 \(zeroSymbol) or \(oneSymbol) may be next to each other, either vertically or horizontally.\n\nPlacing a \(wrongValue.symbol) in the highlighted cell would force three \(value.symbol) to be placed in this row due to the \(sign).\n\nTherefore the highlighted cell must be a \(value.symbol)."
         case let .sign(sign, value):

@@ -191,6 +191,14 @@ extension Game {
 private extension Game {
     
     // MARK: No more than 2
+    static func getForcedThreeWithSameNumberHint(for line: [CellValue?]) -> Hint? {
+        // looks like sign is ignored!
+        // there could be 2/3/4 nils in the row, but it is not the 100% criteria
+        // i have 4 examples in notebook and all them propose .one as correct value...
+        // Also in all example we have in line 2 values of the same type
+        return nil
+    }
+    
     private static func getNoMoreThan2Hint(of value: CellValue, for line: [CellValue?]) -> Hint? {
         // cell conditions is not important!
         // it runs after incorrectCell check - there is no mistake

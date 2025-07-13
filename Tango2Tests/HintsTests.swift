@@ -287,4 +287,52 @@ extension HintsTests {
         let result = Game.getSignHint(for: line, with: conditions)
         #expect(result == expectedValue)
     }
+    
+    // - MARK: forcedThreeWithSameNumber
+    @Test func gotHintForForcedThreeWithSameNumberNNN100() {
+        let line: [CellValue?] = [nil, nil, nil, .one, .zero, .zero]
+        let expectedValue: Hint? = .init(type: .forcedThreeWithSameNumber(lineName: "",
+                                                                          value: .one),
+                                         targetCell: .init(row: 0, column: 0),
+                                         relatedCells: [.init(row: 0, column: 3),
+                                                        .init(row: 0, column: 4),
+                                                        .init(row: 0, column: 5)])
+        let result = Game.getForcedThreeWithSameNumberHint(for: line)
+        #expect(result == expectedValue)
+    }
+    
+    @Test func gotHintForForcedThreeWithSameNumber01NNN0() {
+        let line: [CellValue?] = [.zero, .one, nil, nil, nil, .zero]
+        let expectedValue: Hint? = .init(type: .forcedThreeWithSameNumber(lineName: "",
+                                                                          value: .one),
+                                         targetCell: .init(row: 0, column: 4),
+                                         relatedCells: [.init(row: 0, column: 0),
+                                                        .init(row: 0, column: 1),
+                                                        .init(row: 0, column: 5)])
+        let result = Game.getForcedThreeWithSameNumberHint(for: line)
+        #expect(result == expectedValue)
+    }
+    
+    @Test func gotHintForForcedThreeWithSameNumber0NNNN0() {
+        let line: [CellValue?] = [.zero, nil, nil, nil, nil, .zero]
+        let expectedValue: Hint? = .init(type: .forcedThreeWithSameNumber(lineName: "",
+                                                                          value: .one),
+                                         targetCell: .init(row: 0, column: 1),
+                                         relatedCells: [.init(row: 0, column: 0),
+                                                        .init(row: 0, column: 5)])
+        let result = Game.getForcedThreeWithSameNumberHint(for: line)
+        #expect(result == expectedValue)
+    }
+    
+    @Test func gotHintForForcedThreeWithSameNumber001NNN() {
+        let line: [CellValue?] = [.zero, .zero, .one, nil, nil, nil]
+        let expectedValue: Hint? = .init(type: .forcedThreeWithSameNumber(lineName: "",
+                                                                          value: .one),
+                                         targetCell: .init(row: 0, column: 5),
+                                         relatedCells: [.init(row: 0, column: 0),
+                                                        .init(row: 0, column: 1),
+                                                        .init(row: 0, column: 2)])
+        let result = Game.getForcedThreeWithSameNumberHint(for: line)
+        #expect(result == expectedValue)
+    }
 }
