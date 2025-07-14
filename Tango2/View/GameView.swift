@@ -165,20 +165,25 @@ struct GameView: View {
             .buttonStyle(.bordered)
             .buttonBorderShape(.capsule)
 
-            Button {
-                print("Hint!")
-                if hint == nil {
-                    hint = game.getHint()
+            ProgressButton() { isProgressing in
+                if isProgressing {
+                    if hint != nil {
+                        hint = nil
+                    }
+                    else {
+                        print("Hint not ready yet. Think harder!")
+                    }
                 }
                 else {
-                    hint = nil
+                    if hint == nil {
+                        hint = game.getHint()
+                    }
+                    else {
+                        hint = nil
+                    }
                 }
-            } label: {
-                Text("Hint")
-                    .frame(maxWidth: .infinity)
+                
             }
-            .buttonStyle(.bordered)
-            .buttonBorderShape(.capsule)
         }
     }
     
