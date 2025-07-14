@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ProgressButton: View {
     @State private var progress: CGFloat = 0
+    var duration: TimeInterval
     var action: (Bool) -> Void
     var body: some View {
         Button {
@@ -34,7 +35,7 @@ struct ProgressButton: View {
         .onTapGesture {
             action(progress != 0)
             guard progress == 0 else { return }
-            withAnimation(.linear(duration: 5)) {
+            withAnimation(.linear(duration: duration)) {
                 progress = 1
             } completion: {
                 progress = 0
@@ -44,5 +45,5 @@ struct ProgressButton: View {
 }
 
 #Preview {
-    ProgressButton() { _ in }
+    ProgressButton(duration: 5) { _ in }
 }

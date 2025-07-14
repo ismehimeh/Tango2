@@ -17,6 +17,7 @@ struct GameView: View {
     @State private var viewModel = GameViewModel()
     @AppStorage(GameSettings.mistakeHighlightKey) private var isMistakeVisible = GameSettings.defaultMistakeHighlight
     @AppStorage(GameSettings.redoVisibilityKey) private var isRedoVisible = GameSettings.defaultRedoVisibility
+    @AppStorage(GameSettings.hintDelayKey) private var hintDelay = GameSettings.defaultHintDelay
     @State private var showMistake = false
     @State var mistakeValidationID: UUID?
     @State private var isControlsDisabled = false
@@ -165,7 +166,7 @@ struct GameView: View {
             .buttonStyle(.bordered)
             .buttonBorderShape(.capsule)
 
-            ProgressButton() { isProgressing in
+            ProgressButton(duration: hintDelay) { isProgressing in
                 if isProgressing {
                     if hint != nil {
                         hint = nil
