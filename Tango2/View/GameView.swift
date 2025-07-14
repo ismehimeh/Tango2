@@ -48,10 +48,14 @@ struct GameView: View {
                 undoAndHintView
                 mistakesListView
                 if hint != nil {
-                    HintsView(description: hint?.type.description ?? "",
+                    HintView(description: hint?.type.description ?? "",
                               shakes: $shakes)
                     {
                         hint = nil
+                    } showMeTapped: {
+                        guard let hint else { return }
+                        game.setCellValue(at: hint.targetCell.row, column: hint.targetCell.column, value: hint.type.value)
+                        self.hint = nil
                     }
                 }
                 HowToPlayView()
