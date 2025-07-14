@@ -88,6 +88,7 @@ struct GameView: View {
         .alert("You sure?", isPresented: $showingClearAlert) {
             Button("Yes", role: .destructive) {
                 game.clearField()
+                hint = nil
             }
             Button("No", role: .cancel) { }
         }
