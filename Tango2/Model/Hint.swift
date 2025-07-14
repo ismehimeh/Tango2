@@ -23,7 +23,7 @@ enum HintType: Equatable {
         case let .forcedThreeWithSameNumber(lineName, value):
             return "Each \(lineName) must contain the same number of \(zeroSymbol) and \(oneSymbol).\n\nPlacing a \(value.opposite.symbol) in the highlighted cell would force three \(value.symbol) to be placed together.\n\nTherefore the highlighted cell must be a \(value.symbol)."
         case let .forcedThreeNoMoreThan2(value, sign):
-            return "No more than 2 \(zeroSymbol) or \(oneSymbol) may be next to each other, either vertically or horizontally.\n\nPlacing a \(value.opposite.symbol) in the highlighted cell would force three \(value.symbol) to be placed in this row due to the \(sign).\n\nTherefore the highlighted cell must be a \(value.symbol)."
+            return "No more than 2 \(zeroSymbol) or \(oneSymbol) may be next to each other, either vertically or horizontally.\n\nPlacing a \(value.symbol) in the highlighted cell would force three \(value.symbol) to be placed in this row due to the \(sign).\n\nTherefore the highlighted cell must be a \(value.symbol)."
         case let .sign(sign, value):
             return "Cells separated by an \(sign) sign must be of the same type.\n\nTherefore the highlighted cell must be a \(value.symbol)."
         case let .noMoreThan2(value):

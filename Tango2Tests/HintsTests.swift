@@ -434,7 +434,6 @@ extension HintsTests {
         let expectedResult = Hint(type: .forcedThreeNoMoreThan2(value: .one, sign: Sign.equal.symbol),
                                   targetCell: .init(row: 0, column: 3),
                                   relatedCells: [.init(row: 0, column: 2),
-                                                 .init(row: 0, column: 3),
                                                  .init(row: 0, column: 4)])
         
         let result = Game.getForcedThreeNoMoreThan2Hint(in: line, with: conditions)
@@ -468,10 +467,9 @@ extension HintsTests {
                                                     cellB: .init(row: 0, column: 2))]
         
         let expectedResult = Hint(type: .forcedThreeNoMoreThan2(value: .zero, sign: Sign.equal.symbol),
-                                  targetCell: .init(row: 0, column: 0),
-                                  relatedCells: [.init(row: 0, column: 2),
-                                                .init(row: 0, column: 1),
-                                                .init(row: 0, column: 3)])
+                                  targetCell: .init(row: 0, column: 2),
+                                  relatedCells: [.init(row: 0, column: 1),
+                                                 .init(row: 0, column: 3)])
         
         let result = Game.getForcedThreeNoMoreThan2Hint(in: line, with: conditions)
         #expect(result == expectedResult)

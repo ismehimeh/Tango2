@@ -7,6 +7,8 @@
 
 // - MARK: Mistakes
 
+typealias Sign = GameCellCondition.Condition
+
 /// Represents the type of line being processed (row or column)
 enum LineType {
     case row(index: Int)
@@ -101,6 +103,11 @@ extension Game {
             return Hint(type: .forcedThreeWithSameNumber(lineName: lineType.name, value: value),
                         targetCell: transformCellPosition(hint.targetCell, for: lineType),
                         relatedCells: hint.relatedCells.map { transformCellPosition($0, for: lineType) })
+        }
+        
+        // 6. Check for forcedThreeNoMoreThan2Hint
+        if let hint = Game.getForcedThreeNoMoreThan2Hint(in: lineValues, with: conditions) {
+            return transformHint(hint, for: lineType)
         }
         
         // 6. Check for tripple opposite special case
@@ -320,6 +327,34 @@ extension Game {
     static func getForcedThreeNoMoreThan2Hint(in line: [CellValue?],
                                               with conditions: [GameCellCondition]) -> Hint?
     {
+        // looks like this hint is all about equal sign and 2 empty cell around
+        
+        let equalConditionWithNils = conditions.first { $0.condition == .equal &&
+                                                        line[$0.cellA.column] == nil &&
+                                                        line[$0.cellB.column] == nil }
+        
+        guard let equal = equalConditionWithNils else { return nil }
+        
+        if
+            equal.cellA.column > 0,
+            let value = line[equal.cellA.column - 1]
+        {
+            return Hint(type: .forcedThreeNoMoreThan2(value: value.opposite, sign: Sign.equal.symbol),
+                        targetCell: equal.cellA,
+                        relatedCells: [equal.cellB,
+                                       .init(row: 0, column: equal.cellA.column - 1)])
+        }
+        
+        if
+            equal.cellB.column < line.count - 1,
+            let value = line[equal.cellB.column + 1]
+        {
+            return Hint(type: .forcedThreeNoMoreThan2(value: value.opposite, sign: Sign.equal.symbol),
+                        targetCell: equal.cellB,
+                        relatedCells: [equal.cellA,
+                                       .init(row: 0, column: equal.cellB.column + 1)])
+        }
+        
         return nil
     }
 }
