@@ -29,7 +29,8 @@ enum HintType: Equatable {
         case let .noMoreThan2(value):
             return "No more than 2 \(zeroSymbol) or \(oneSymbol) may be next to each other, either vertically or horizontally.\n\nTherefore the highlighted cell must be a \(value.symbol)."
         case let .tripleOpposite(lineName, value):
-            // N=NN010 - tripple opposite?
+            // N=NN010 - tripple opposite? Yes, exactly
+            // TODO: then we need other naming
             // I consider it special case, because saw it only once
             //NxNxN101
             //NxNxN010

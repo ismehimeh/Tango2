@@ -417,6 +417,26 @@ extension HintsTests {
         let result4 = Game.getTripleOppositeHint(in: line4, with: conditions2)
         #expect(result4 == expectedValue4)
     }
+    
+    @Test func getTrippleOppositeNEqualsNN010() {
+        // N=NN010
+        let line: [CellValue?] = [nil, nil, nil, .zero, .one, .zero]
+        
+        let conditions: [GameCellCondition] = [.init(condition: .equal,
+                                                     cellA: .init(row: 0, column: 0),
+                                                     cellB: .init(row: 0, column: 1))]
+        
+        let expectedValue: Hint? = .init(type: .tripleOpposite(lineName: "",
+                                                               value: .one),
+                                         targetCell: .init(row: 0, column: 0),
+                                         relatedCells: [.init(row: 0, column: 1),
+                                                        .init(row: 0, column: 3),
+                                                        .init(row: 0, column: 5)])
+        let result = Game.getTripleOppositeHint(in: line, with: conditions)
+        withKnownIssue("Would be updated") {
+            #expect(result == expectedValue)
+        }
+    }
 }
 
 // MARK: forcedThreeNoMoreThan2 
