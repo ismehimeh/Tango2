@@ -7,16 +7,31 @@
 
 import Foundation
 
-struct GameCellCondition: Identifiable, Hashable {
+struct GameCellCondition: Identifiable, Hashable, Equatable {
     enum Condition: Hashable {
         case equal
         case opposite
+        
+        var symbol: String {
+            switch self {
+            case .equal:
+                return "="
+            case .opposite:
+                return "X"
+            }
+        }
     }
 
     let id = UUID()
     let condition: Condition
     let cellA: CellPosition
     let cellB: CellPosition
+    
+    static func == (lhs: GameCellCondition, rhs: GameCellCondition) -> Bool {
+        lhs.condition == rhs.condition &&
+        lhs.cellA == rhs.cellA &&
+        lhs.cellB == rhs.cellB
+    }
 }
 
 struct CellPosition: Equatable, Hashable {

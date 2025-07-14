@@ -21,6 +21,33 @@ let level1 = Level.create(
         (.opposite, (0, 5), (1, 5)),
         (.equal, (4, 0), (5, 0)),
         (.equal, (5, 0), (5, 1))
+    ],
+    solvedCells: [
+        [.one, .zero, .zero, .one, .one, .zero],
+        [.zero, .one, .one, .zero, .zero, .one],
+        [.one, .one, .zero, .one, .zero, .zero],
+        [.one, .zero, .one, .zero, .one, .zero],
+        [.zero, .one, .zero, .one, .zero, .one],
+        [.zero, .zero, .one, .zero, .one, .one],
+    ]
+)
+
+// Level 1 with mistake
+let level1WithMistake = Level.create(
+    title: "1",
+    boardDefinition: [
+        [nil, nil, .zero, nil, nil, nil],
+        [nil, .one, .one, nil, nil, nil],
+        [.one, .one, .one, nil, nil, nil],
+        [nil, nil, nil, nil, .one, .zero],
+        [nil, nil, nil, .one, .zero, nil],
+        [nil, nil, nil, .zero, nil, nil]
+    ],
+    conditions: [
+        (.opposite, (0, 4), (0, 5)),
+        (.opposite, (0, 5), (1, 5)),
+        (.equal, (4, 0), (5, 0)),
+        (.equal, (5, 0), (5, 1))
     ]
 )
 
@@ -42,6 +69,14 @@ let level2 = Level.create(
         (.equal, (3, 5), (4, 5)),
         (.equal, (5, 0), (5, 1)),
         (.opposite, (5, 2), (5, 3))
+    ],
+    solvedCells: [
+        [.zero, .zero, .one, .one, .zero, .one],
+        [.one, .one, .zero, .zero, .one, .zero],
+        [.zero, .zero, .one, .zero, .one, .one],
+        [.one, .one, .zero, .one, .zero, .zero],
+        [.one, .one, .zero, .one, .zero, .zero],
+        [.zero, .zero, .one, .zero, .one, .one],
     ]
 )
 
@@ -63,6 +98,14 @@ let level3 = Level.create(
         (.opposite, (0, 5), (1, 5)),
         (.equal, (4, 0), (5, 0)),
         (.equal, (5, 0), (5, 1))
+    ],
+    solvedCells: [
+        [.one, .zero, .zero, .one, .one, .zero],
+        [.zero, .one, .one, .zero, .zero, .one],
+        [.one, .one, .zero, .one, .zero, .zero],
+        [.one, .zero, .one, .zero, .one, .zero],
+        [.zero, .one, .zero, .one, .zero, .one],
+        [.zero, .zero, .one, .zero, .one, .one],
     ])
 
 // Difficulty: HARD
@@ -80,6 +123,118 @@ let level4 = Level.create(
         (.opposite, (4, 3), (4, 4)),
         (.equal, (0, 5), (1, 5)),
         (.opposite, (4, 0), (5, 0))
+    ],
+    solvedCells: [
+        [.zero, .one, .one, .zero, .zero, .one],
+        [.one, .zero, .zero, .one, .zero, .one],
+        [.one, .zero, .one, .zero, .one, .zero],
+        [.zero, .one, .zero, .one, .one, .zero],
+        [.zero, .zero, .one, .one, .zero, .one],
+        [.one, .one, .zero, .zero, .one, .zero],
+    ])
+
+let level5 = Level.create(
+    title: "5",
+    boardDefinition: [
+        [.zero, .zero, nil, nil, nil, nil],
+        [.one, .one, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, .one, .zero],
+        [nil, nil, nil, nil, .zero, .zero],
+    ], conditions: [
+        (.opposite, (0, 2), (0, 3)),
+        (.equal, (1, 2), (1, 3)),
+        (.equal, (4, 2), (4, 3)),
+        (.opposite, (5, 2), (5, 3)),
+    ],
+    solvedCells: [
+        [.zero, .zero, .one, .zero, .one, .one],
+        [.one, .one, .zero, .zero, .one, .zero],
+        [.zero, .zero, .one, .one, .zero, .one],
+        [.zero, .zero, .one, .one, .zero, .one],
+        [.one, .one, .zero, .zero, .one, .zero],
+        [.one, .one, .zero, .one, .zero, .zero],
+    ])
+
+// Difficulty: HARD
+let level6 = Level.create(
+    title: "6",
+    boardDefinition: [
+        [.zero, .zero, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, .zero, .one, nil],
+        [nil, .zero, .one, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, .one, .one],
+    ],
+    conditions: [
+        (.opposite, (0, 4), (0, 5)),
+        (.opposite, (5, 0), (5, 1)),
+        (.opposite, (1, 1), (2, 1)),
+        (.equal, (1, 5), (2, 5)),
+        (.equal, (3, 0), (4, 0)),
+        (.equal, (3, 4), (4, 4)),
+    ],
+    solvedCells: [
+        [.zero, .zero, .one, .one, .zero, .one],
+        [.one, .zero, .zero, .one, .one, .zero],
+        [.zero, .one, .one, .zero, .one, .zero],
+        [.one, .zero, .one, .zero, .zero, .one],
+        [.one, .one, .zero, .one, .zero, .zero],
+        [.zero, .one, .zero, .zero, .one, .one],
+    ])
+
+// Difficulty: HARD
+let level7 = Level.create(
+    title: "7",
+    boardDefinition: [
+        [.zero, .one, .one, nil, nil, nil],
+        [nil, .zero, nil, nil, nil, nil],
+        [nil, .one, nil, nil, nil, nil],
+        [nil, nil, nil, nil, .zero, nil],
+        [nil, nil, nil, nil, .zero, nil],
+        [nil, nil, nil, .zero, .one, .zero],
+    ],
+    conditions: [
+        (.opposite, (1, 3), (1, 4)),
+        (.opposite, (1, 4), (1, 5)),
+        (.opposite, (4, 0), (4, 1)),
+        (.opposite, (4, 1), (4, 2)),
+        (.equal, (3, 0), (4, 0)),
+        (.opposite, (4, 0), (5, 0)),
+        (.opposite, (1, 5), (2, 5)),
+    ],
+    solvedCells: [
+        [.zero, .one, .one, .zero, .one, .zero],
+        [.one, .zero, .zero, .one, .zero, .one],
+        [.one, .one, .zero, .zero, .one, .zero],
+        [.zero, .zero, .one, .one, .zero, .one],
+        [.zero, .one, .zero, .one, .zero, .one],
+        [.one, .zero, .one, .zero, .one, .zero],
+    ])
+
+let level8 = Level.create(
+    title: "8",
+    boardDefinition: [
+        [nil, nil, .zero, .zero, nil, nil],
+        [.one, .zero, nil, nil, .zero, .zero],
+        [nil, nil, .one, .zero, nil, nil],
+        [.zero, nil, nil, nil, nil, .one],
+        [nil, .one, nil, nil, .zero, nil],
+        [nil, nil, .zero, .one, nil, nil],
+    ],
+    conditions: [
+        (.opposite, (3, 2), (4, 2)),
+        (.opposite, (3, 3), (4, 3))
+    ],
+    solvedCells: [
+        [.zero, .one, .zero, .zero, .one, .one],
+        [.one, .zero, .one, .one, .zero, .zero],
+        [.one, .zero, .one, .zero, .one, .zero],
+        [.zero, .one, .zero, .one, .zero, .one],
+        [.zero, .one, .one, .zero, .zero, .one],
+        [.one, .zero, .zero, .one, .one, .zero],
     ])
 
 let testLevel1 = Level.create(

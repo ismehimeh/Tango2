@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+let zeroSymbol = CellValue.zero.symbol
+let oneSymbol = CellValue.one.symbol
+
 enum CellValue: Int, Hashable {
     case zero = 0
     case one = 1
@@ -16,6 +19,28 @@ enum CellValue: Int, Hashable {
         case 0: self = .zero
         case 1: self = .one
         default: return nil
+        }
+    }
+    
+    var symbol: String {
+        switch self {
+        case .zero:
+            return "🌞"
+        case .one:
+            return "🌚"
+        }
+    }
+    
+    var opposite: CellValue {
+        self == .zero ? .one : .zero
+    }
+    
+    func signed(_ sign: GameCellCondition.Condition) -> CellValue {
+        if sign == .equal {
+            return self
+        }
+        else {
+            return self == .one ? .zero : .one
         }
     }
 }

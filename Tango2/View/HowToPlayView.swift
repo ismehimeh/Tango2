@@ -14,33 +14,33 @@ struct HowToPlayView: View {
                 HStack {
                     Text("•")
                     Text(
-                        "Fill the grid so that each cell contains either a 🌞 or a 🌚."
+                        "Fill the grid so that each cell contains either a \(zeroSymbol) or a \(oneSymbol)."
                     )
                 }
 
                 HStack {
                     Text("•")
                     Text(
-                        "No more than 2 🌞 or 🌚 may be next to each other, either vertically or horizontally."
+                        "No more than 2 \(zeroSymbol) or \(oneSymbol) may be next to each other, either vertically or horizontally."
                     )
                 }
 
                 HStack {
                     Text("•")
-                    Text("🌞🌞✅")
+                    Text("\(zeroSymbol)\(zeroSymbol)✅")
                 }
                 .padding(.leading, 20)
 
                 HStack {
                     Text("•")
-                    Text("🌞🌞🌞❌")
+                    Text("\(zeroSymbol)\(zeroSymbol)\(zeroSymbol)❌")
                 }
                 .padding(.leading, 20)
 
                 HStack {
                     Text("•")
                     Text(
-                        "Each row (and column) must contain the same number of 🌞 and 🌚 ."
+                        "Each row (and column) must contain the same number of \(zeroSymbol) and \(oneSymbol) ."
                     )
                 }
 

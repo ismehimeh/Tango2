@@ -21,7 +21,7 @@ extension MistakeType {
     var description: String {
         switch self {
         case .noMoreThan2:
-            return "No more than 2 🌞 and 🌚 may be next to each other, either vertically or horizontally"
+            return "No more than 2 \(zeroSymbol) and \(oneSymbol) may be next to each other, either vertically or horizontally"
         case .signViolation(let condition):
             switch condition {
             case .equal:
@@ -30,7 +30,7 @@ extension MistakeType {
                 return "Cell separated by X sign must be of the opposite type"
             }
         case .sameNumberValues:
-            return "Each row (and column) must contain the same number of 🌞 and 🌚"
+            return "Each row (and column) must contain the same number of \(zeroSymbol) and \(oneSymbol)"
         }
     }
 }

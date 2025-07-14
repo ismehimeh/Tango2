@@ -30,11 +30,8 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:Tango2Tests/TestPlan.xctestplan"
+            reference = "container:TestPlan.xctestplan"
             default = "YES">
-         </TestPlanReference>
-         <TestPlanReference
-            reference = "container:Tango2Tests/TestPlan.xctestplan">
          </TestPlanReference>
       </TestPlans>
       <Testables>
@@ -43,7 +40,7 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BADF18812E108BC700B242BA"
+               BlueprintIdentifier = "BAFF9A262E1BF61600D83D69"
                BuildableName = "Tango2Tests.xctest"
                BlueprintName = "Tango2Tests"
                ReferencedContainer = "container:Tango2.xcodeproj">

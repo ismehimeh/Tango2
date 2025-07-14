@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "D9E260E7-824E-4F0D-978A-BD86034CB336",
+      "id" : "9539E586-B2F8-4FF7-BE68-AF6A23DD2D9D",
       "name" : "Configuration 1",
       "options" : {
 
@@ -15,7 +15,7 @@
     {
       "target" : {
         "containerPath" : "container:Tango2.xcodeproj",
-        "identifier" : "BADF18812E108BC700B242BA",
+        "identifier" : "BAFF9A262E1BF61600D83D69",
         "name" : "Tango2Tests"
       }
     }

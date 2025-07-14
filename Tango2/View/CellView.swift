@@ -13,6 +13,9 @@ struct CellView: View {
     let backgroundColor: Color
     let cellContent: String?
     let isMarkedAsMistake: Bool
+    let isHighlighted: Bool
+    
+    private let hihglightColor = Color(red: 50 / 255.0, green: 108 / 255.0, blue: 215 / 255.0)
 
     var body: some View {
         ZStack {
@@ -30,6 +33,11 @@ struct CellView: View {
             if let text = cellContent {
                 Text(text)
                     .font(.title)
+            }
+            if isHighlighted {
+                Rectangle()
+                    .strokeBorder(style: .init(lineWidth: 3))
+                    .foregroundStyle(hihglightColor)
             }
         }
         .background(
@@ -65,15 +73,26 @@ struct Stripes: Shape {
 #Preview {
     return CellView(row: 0, column: 0,
                     backgroundColor: .gray,
-                    cellContent: "🌞",
-                    isMarkedAsMistake: false)
+                    cellContent: zeroSymbol,
+                    isMarkedAsMistake: false,
+                    isHighlighted: false)
     .frame(width: 50, height: 50)
 }
 
 #Preview("Mistaken") {
     return CellView(row: 0, column: 0,
                     backgroundColor: .gray,
-                    cellContent: "🌞",
-                    isMarkedAsMistake: true)
+                    cellContent: zeroSymbol,
+                    isMarkedAsMistake: true,
+                    isHighlighted: false)
+    .frame(width: 50, height: 50)
+}
+
+#Preview("Highlighted") {
+    return CellView(row: 0, column: 0,
+                    backgroundColor: .gray,
+                    cellContent: zeroSymbol,
+                    isMarkedAsMistake: true,
+                    isHighlighted: true)
     .frame(width: 50, height: 50)
 }

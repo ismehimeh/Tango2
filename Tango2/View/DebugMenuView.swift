@@ -11,6 +11,7 @@ struct DebugMenuView: View {
     
     @Environment(AppState.self) private var state
     @AppStorage(GameSettings.redoVisibilityKey) var isRedoVisible = GameSettings.defaultRedoVisibility
+    @AppStorage(GameSettings.hintDelayKey) var hintDelay = GameSettings.defaultHintDelay
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -20,6 +21,14 @@ struct DebugMenuView: View {
             Button(isRedoVisible ? "Make Redo invisible" : "Make Redo visible") {
                 isRedoVisible.toggle()
             }
+            
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Hint Delay: \(String(format: "%.1f", hintDelay)) seconds")
+                Slider(value: $hintDelay, in: 0...30, step: 0.5) {
+                    Text("Hint Delay")
+                }
+            }
+            
             Spacer()
         }
         .buttonStyle(.bordered)

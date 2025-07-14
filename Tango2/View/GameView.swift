@@ -17,11 +17,17 @@ struct GameView: View {
     @State private var viewModel = GameViewModel()
     @AppStorage(GameSettings.mistakeHighlightKey) private var isMistakeVisible = GameSettings.defaultMistakeHighlight
     @AppStorage(GameSettings.redoVisibilityKey) private var isRedoVisible = GameSettings.defaultRedoVisibility
+    @AppStorage(GameSettings.hintDelayKey) private var hintDelay = GameSettings.defaultHintDelay
     @State private var showMistake = false
     @State var mistakeValidationID: UUID?
     @State private var isControlsDisabled = false
+    @State var hint: Hint?
+    @State private var shakes: Int = 0
+    @State var showNotReadyHint = false
+    @State private var hintNotificationTask: Task<Void, Error>?
     
     private let winningDelay = 0.1
+    private let notificationDuration = 5.0
     
     var game: Game
     
@@ -30,9 +36,36 @@ struct GameView: View {
         ScrollView {
             VStack {
                 topView
-                GameFieldView(game: game, showMistake: $showMistake, showSolved: $showingResult)
+                GameFieldView(game: game,
+                              showMistake: $showMistake,
+                              showSolved: $showingResult,
+                              highlightedCell: hint?.targetCell,
+                              notDimmedCells: hint?.relatedCells ?? [],
+                              shakes: $shakes)
+                { newValue in
+                    guard let hint else { return }
+                    if newValue == hint.type.value {
+                        self.hint = nil
+                    }
+                }
                 undoAndHintView
                 mistakesListView
+                
+                if showNotReadyHint {
+                    hintNotReadyView
+                }
+                
+                if hint != nil {
+                    HintView(description: hint?.type.description ?? "",
+                              shakes: $shakes)
+                    {
+                        hint = nil
+                    } showMeTapped: {
+                        guard let hint else { return }
+                        game.setCellValue(at: hint.targetCell.row, column: hint.targetCell.column, value: hint.type.value)
+                        self.hint = nil
+                    }
+                }
                 HowToPlayView()
                     .frame(width: 300)
             }
@@ -68,6 +101,7 @@ struct GameView: View {
         .alert("You sure?", isPresented: $showingClearAlert) {
             Button("Yes", role: .destructive) {
                 game.clearField()
+                hint = nil
             }
             Button("No", role: .cancel) { }
         }
@@ -89,8 +123,6 @@ struct GameView: View {
                     }
                 }
             }
-            
-            
             
             // run glimmer animations
             // scale a littble bit every cell?
@@ -121,7 +153,6 @@ struct GameView: View {
 
     var undoAndHintView: some View {
         HStack {
-            
             VStack {
                 Button {
                     undoManager?.undo()
@@ -144,14 +175,25 @@ struct GameView: View {
             .buttonStyle(.bordered)
             .buttonBorderShape(.capsule)
 
-            Button {
-                print("Hint!")
-            } label: {
-                Text("Hint")
-                    .frame(maxWidth: .infinity)
+            ProgressButton(duration: hintDelay) { isProgressing in
+                if isProgressing {
+                    if hint != nil {
+                        hint = nil
+                    }
+                    else {
+                        showHintNotification()
+                    }
+                }
+                else {
+                    if hint == nil {
+                        hint = game.getHint()
+                    }
+                    else {
+                        hint = nil
+                    }
+                }
+                
             }
-            .buttonStyle(.bordered)
-            .buttonBorderShape(.capsule)
         }
     }
     
@@ -165,9 +207,24 @@ struct GameView: View {
             .padding(16)
             .background(
                 RoundedRectangle(cornerRadius: 4)
-                    .stroke(.red)
+                    .stroke(.red.opacity(0.2))
             )
         }
+    }
+    
+    var hintNotReadyView: some View {
+        HStack {
+            Text("Hint not ready yet. Think harder!")
+                .multilineTextAlignment(.leading)
+            Spacer()
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 4)
+                .stroke(.gray.opacity(0.3))
+        )
+        .transition(.opacity)
+        .id(showNotReadyHint) // Force view recreation when state changes
     }
     
     private func processMistake(_ newValue: Bool) {
@@ -189,20 +246,49 @@ struct GameView: View {
         guard id == mistakeValidationID else { return }
         showMistake = game.isMistake && isMistakeVisible
     }
+    
+    private func showHintNotification() {
+        // Cancel any existing task
+        hintNotificationTask?.cancel()
+        
+        // Show the notification
+        showNotReadyHint = true
+        
+        // Create a new task to hide the notification after the duration
+        hintNotificationTask = Task { @MainActor in
+            do {
+                try await Task.sleep(for: .seconds(notificationDuration))
+                if !Task.isCancelled {
+                    showNotReadyHint = false
+                }
+            } catch {
+                // Task was cancelled, which is expected when resetting the timer
+            }
+        }
+    }
 }
 
 #Preview {
     @Previewable @State var game = Game(level1)
     GameView(game: game)
+        .environment(Router(path: .init()))
 }
 
-//#Preview("Mistakes") {
-//    @Previewable @State var game = Game(mistakesTestLevel)
-//    GameView(game: game)
-//}
+#Preview("Mistake") {
+    @Previewable @State var game = Game(level1WithMistake)
+    GameView(game: game)
+        .environment(Router(path: .init()))
+}
 
 #Preview("Almost solved") {
     @Previewable @State var game = Game(level3)
     GameView(game: game)
         .environment(Router(path: .init()))
 }
+
+#Preview("Hint") {
+    @Previewable @State var game = Game(level1)
+    GameView(game: game)
+        .environment(Router(path: .init()))
+}
+

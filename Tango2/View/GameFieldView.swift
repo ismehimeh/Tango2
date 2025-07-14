@@ -15,6 +15,10 @@ struct GameFieldView: View {
     var game: Game
     @Binding var showMistake: Bool
     @Binding var showSolved: Bool
+    var highlightedCell: CellPosition?
+    var notDimmedCells: [CellPosition]
+    @Binding var shakes: Int
+    var onTargetCellTapped: ((CellValue?) -> Void)?
     
     enum Constants {
         static let cellPrefilledBackgroundColor = Color.init(red: 238 / 255.0, green: 234 / 255.0, blue: 232 / 255.0)
@@ -36,10 +40,28 @@ struct GameFieldView: View {
                                          column: j,
                                          backgroundColor: cellBackgroundColor(i, j),
                                          cellContent: cellValue(i, j),
-                                         isMarkedAsMistake: isCellWithMistake(i, j))
+                                         isMarkedAsMistake: isCellWithMistake(i, j), 
+                                         isHighlighted: isCellHighlighted(i, j))
                             }
                             .onTapGesture {
-                                tapCell(i, j)
+                                if let highlightedCell {
+                                    if
+                                        i == highlightedCell.row &&
+                                        j == highlightedCell.column
+                                    {
+                                        tapCell(i, j)
+                                        // Call the callback when target cell is tapped
+                                        onTargetCellTapped?(game.cell(at: i, column: j).value)
+                                    }
+                                    else {
+                                        withAnimation(.linear) {
+                                            shakes += 1
+                                        }
+                                    }
+                                }
+                                else {
+                                    tapCell(i, j)
+                                }
                             }
                         }
                     }
@@ -63,6 +85,10 @@ struct GameFieldView: View {
                     }
                 }
             }
+            
+            if highlightedCell != nil || !notDimmedCells.isEmpty {
+                cellHighlightMask
+            }
         }
         .overlay {
             if showSolved {
@@ -72,6 +98,11 @@ struct GameFieldView: View {
         }
     }
     
+    func isCellHighlighted(_ i: Int, _ j: Int) -> Bool {
+        guard let position = highlightedCell else { return false }
+        return position.row == i && position.column == j
+    }
+        
     // MARK: - Functions
     func cellBackgroundColor(_ i: Int, _ j: Int) -> Color {
         let cell = game.cell(at: i, column: j)
@@ -84,16 +115,7 @@ struct GameFieldView: View {
 
     func cellValue(_ i: Int, _ j: Int) -> String? {
         let cell = game.cell(at: i, column: j)
-
-        if let value = cell.predefinedValue {
-            return value == .zero ? "🌞" : "🌚"
-        }
-
-        if let value = cell.value {
-            return value == .zero ? "🌞" : "🌚"
-        }
-
-        return nil
+        return cell.predefinedValue?.symbol ?? cell.value?.symbol
     }
     
     func isCellWithMistake(_ i: Int, _ j: Int) -> Bool {
@@ -103,12 +125,69 @@ struct GameFieldView: View {
     func tapCell(_ i: Int, _ j: Int) {
         game.toggleCell(i, j)
     }
+    
+    var cellHighlightMask: some View {
+        ZStack {
+            Rectangle()
+                .fill(Color.black.opacity(0.3))
+                .aspectRatio(1, contentMode: .fit)
+                .mask {
+                    ZStack {
+                        Rectangle()
+                        
+                        // Create a Group to cut out all non-dimmed cells
+                        Group {
+                            // Cut out the highlighted cell if present
+                            if let highlightedCell = highlightedCell,
+                               let cellEntry = cellEntries.last(where: { 
+                                   $0.row == highlightedCell.row && $0.column == highlightedCell.column
+                               }) {
+                                Rectangle()
+                                    .frame(width: cellEntry.rect.width, height: cellEntry.rect.height)
+                                    .position(x: cellEntry.rect.midX, y: cellEntry.rect.midY)
+                                    .blendMode(.destinationOut)
+                            }
+                            
+                            // Cut out all cells from notDimmedCells array
+                            ForEach(notDimmedCells, id: \.self) { position in
+                                if let cellEntry = cellEntries.last(where: {
+                                    $0.row == position.row && $0.column == position.column
+                                }) {
+                                    Rectangle()
+                                        .frame(width: cellEntry.rect.width, height: cellEntry.rect.height)
+                                        .position(x: cellEntry.rect.midX, y: cellEntry.rect.midY)
+                                        .blendMode(.destinationOut)
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+        .allowsHitTesting(false) // Allow taps to pass through
+    }
 }
 
 #Preview {
     GameFieldView(game: .init(level1),
                   showMistake: .constant(false),
-                  showSolved: .constant(false))
+                  showSolved: .constant(false),
+                  highlightedCell: nil,
+                  notDimmedCells: [],
+                  shakes: .constant(0),
+                  onTargetCellTapped: nil)
+        .aspectRatio(1, contentMode: .fit)
+        .padding()
+}
+
+#Preview {
+    GameFieldView(game: .init(level1),
+                  showMistake: .constant(false),
+                  showSolved: .constant(false),
+                  highlightedCell: .init(row: 1, column: 2),
+                  notDimmedCells: [.init(row: 1, column: 3),
+                                   .init(row: 1, column: 4)],
+                  shakes: .constant(0),
+                  onTargetCellTapped: nil)
         .aspectRatio(1, contentMode: .fit)
         .padding()
 }
