@@ -214,6 +214,29 @@ let level7 = Level.create(
         [.one, .zero, .one, .zero, .one, .zero],
     ])
 
+let level8 = Level.create(
+    title: "8",
+    boardDefinition: [
+        [nil, nil, .zero, .zero, nil, nil],
+        [.one, .zero, nil, nil, .zero, .zero],
+        [nil, nil, .one, .zero, nil, nil],
+        [.zero, nil, nil, nil, nil, .one],
+        [nil, .one, nil, nil, .zero, nil],
+        [nil, nil, .zero, .one, nil, nil],
+    ],
+    conditions: [
+        (.opposite, (3, 2), (4, 2)),
+        (.opposite, (3, 3), (4, 3))
+    ],
+    solvedCells: [
+        [.zero, .one, .zero, .zero, .one, .one],
+        [.one, .zero, .one, .one, .zero, .zero],
+        [.one, .zero, .one, .zero, .one, .zero],
+        [.zero, .one, .zero, .one, .zero, .one],
+        [.zero, .one, .one, .zero, .zero, .one],
+        [.one, .zero, .zero, .one, .one, .zero],
+    ])
+
 let testLevel1 = Level.create(
     title: "n/a",
     boardDefinition: [
