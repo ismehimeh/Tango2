@@ -193,10 +193,29 @@ struct GameView: View {
     }
     
     var hintsView: some View {
-        HStack {
-            Text(hint?.type.description ?? "")
-                .multilineTextAlignment(.leading)
-            Spacer()
+        VStack {
+            HStack {
+                Text("Hint:")
+                    .bold()
+                Spacer()
+                Button {
+                    hint = nil
+                } label: {
+                    Image(systemName: "xmark")
+                        .resizable()
+                        .aspectRatio(1, contentMode: .fit)
+                        .frame(width: 10)
+                        .foregroundStyle(.black)
+                        .padding(10)
+                }
+            }
+            .padding(.bottom, 5)
+            HStack {
+                Text(hint?.type.description ?? "")
+                    .multilineTextAlignment(.leading)
+                Spacer()
+            }
+            
         }
         .padding(16)
         .background(
