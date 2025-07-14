@@ -418,3 +418,78 @@ extension HintsTests {
         #expect(result4 == expectedValue4)
     }
 }
+
+// MARK: forcedThreeNoMoreThan2 
+extension HintsTests {
+    // NNN=N0x1
+    @Test func getForcedThreeNoMoreThan2HintForNNNEqualsN0x1() async throws {
+        let line: [CellValue?] = [nil, nil, nil, nil, .zero, .one]
+        let conditions: [GameCellCondition] = [.init(condition: .equal,
+                                                    cellA: .init(row: 0, column: 2),
+                                                    cellB: .init(row: 0, column: 3)),
+                                               .init(condition: .opposite,
+                                                     cellA: .init(row: 0, column: 4),
+                                                     cellB: .init(row: 0, column: 5))]
+        
+        let expectedResult = Hint(type: .forcedThreeNoMoreThan2(value: .one, sign: Sign.equal.symbol),
+                                  targetCell: .init(row: 0, column: 3),
+                                  relatedCells: [.init(row: 0, column: 2),
+                                                 .init(row: 0, column: 3),
+                                                 .init(row: 0, column: 4)])
+        
+        let result = Game.getForcedThreeNoMoreThan2Hint(in: line, with: conditions)
+        #expect(result == expectedResult)
+    }
+    
+    // N=N1x01N
+    @Test func getForcedThreeNoMoreThan2HintForNEqualsN1x01N() async throws {
+        let line: [CellValue?] = [nil, nil, .one, .zero, .one, nil]
+        let conditions: [GameCellCondition] = [.init(condition: .equal,
+                                                    cellA: .init(row: 0, column: 0),
+                                                    cellB: .init(row: 0, column: 1)),
+                                               .init(condition: .opposite,
+                                                     cellA: .init(row: 0, column: 2),
+                                                     cellB: .init(row: 0, column: 3))]
+        
+        let expectedResult = Hint(type: .forcedThreeNoMoreThan2(value: .zero, sign: Sign.equal.symbol),
+                                  targetCell: .init(row: 0, column: 1),
+                                  relatedCells: [.init(row: 0, column: 0),
+                                                .init(row: 0, column: 2)])
+        
+        let result = Game.getForcedThreeNoMoreThan2Hint(in: line, with: conditions)
+        #expect(result == expectedResult)
+    }
+    
+    // NN=N1NN
+    @Test func getForcedThreeNoMoreThan2HintForNNEqualsN1NN() async throws {
+        let line: [CellValue?] = [nil, nil, nil, .one, nil, nil]
+        let conditions: [GameCellCondition] = [.init(condition: .equal,
+                                                    cellA: .init(row: 0, column: 1),
+                                                    cellB: .init(row: 0, column: 2))]
+        
+        let expectedResult = Hint(type: .forcedThreeNoMoreThan2(value: .zero, sign: Sign.equal.symbol),
+                                  targetCell: .init(row: 0, column: 0),
+                                  relatedCells: [.init(row: 0, column: 2),
+                                                .init(row: 0, column: 1),
+                                                .init(row: 0, column: 3)])
+        
+        let result = Game.getForcedThreeNoMoreThan2Hint(in: line, with: conditions)
+        #expect(result == expectedResult)
+    }
+    
+    // NNN=N10
+    @Test func getForcedThreeNoMoreThan2HintForNNNEqualsN10() async throws {
+        let line: [CellValue?] = [nil, nil, nil, nil, .one, .zero]
+        let conditions: [GameCellCondition] = [.init(condition: .equal,
+                                                    cellA: .init(row: 0, column: 2),
+                                                    cellB: .init(row: 0, column: 3))]
+        
+        let expectedResult = Hint(type: .forcedThreeNoMoreThan2(value: .zero, sign: Sign.equal.symbol),
+                                  targetCell: .init(row: 0, column: 3),
+                                  relatedCells: [.init(row: 0, column: 2),
+                                                .init(row: 0, column: 4)])
+        
+        let result = Game.getForcedThreeNoMoreThan2Hint(in: line, with: conditions)
+        #expect(result == expectedResult)
+    }
+}

@@ -9,7 +9,7 @@ enum HintType: Equatable {
     case incorrectCell(value: CellValue)
     case oneOptionLeft(lineName: String, value: CellValue)
     case forcedThreeWithSameNumber(lineName: String, value: CellValue)
-    case forcedThreeNoMoreThan2(wrongValue: CellValue, value: CellValue, sign: String)
+    case forcedThreeNoMoreThan2(value: CellValue, sign: String)
     case sign(sign: String, value: CellValue)
     case noMoreThan2(value: CellValue)
     case tripleOpposite(lineName: String, value: CellValue)
@@ -22,20 +22,14 @@ enum HintType: Equatable {
             return "Each \(lineName) must contain the same number of \(zeroSymbol) and \(oneSymbol).\n\nThis leaves only one option for the highlighted cell in this \(lineName).\n\nTherefore the highlighted cell must be a \(value.symbol)."
         case let .forcedThreeWithSameNumber(lineName, value):
             return "Each \(lineName) must contain the same number of \(zeroSymbol) and \(oneSymbol).\n\nPlacing a \(value.opposite.symbol) in the highlighted cell would force three \(value.symbol) to be placed together.\n\nTherefore the highlighted cell must be a \(value.symbol)."
-        case let .forcedThreeNoMoreThan2(wrongValue, value, sign):
-            // possible cases
-            // NNN=N0x1
-            // NxNxN101
-            // N=N1x01N
-            // NN=N1NN
-            // N=NN010
-            // NNN=N10
-            return "No more than 2 \(zeroSymbol) or \(oneSymbol) may be next to each other, either vertically or horizontally.\n\nPlacing a \(wrongValue.symbol) in the highlighted cell would force three \(value.symbol) to be placed in this row due to the \(sign).\n\nTherefore the highlighted cell must be a \(value.symbol)."
+        case let .forcedThreeNoMoreThan2(value, sign):
+            return "No more than 2 \(zeroSymbol) or \(oneSymbol) may be next to each other, either vertically or horizontally.\n\nPlacing a \(value.opposite.symbol) in the highlighted cell would force three \(value.symbol) to be placed in this row due to the \(sign).\n\nTherefore the highlighted cell must be a \(value.symbol)."
         case let .sign(sign, value):
             return "Cells separated by an \(sign) sign must be of the same type.\n\nTherefore the highlighted cell must be a \(value.symbol)."
         case let .noMoreThan2(value):
             return "No more than 2 \(zeroSymbol) or \(oneSymbol) may be next to each other, either vertically or horizontally.\n\nTherefore the highlighted cell must be a \(value.symbol)."
         case let .tripleOpposite(lineName, value):
+            // N=NN010 - tripple opposite?
             // I consider it special case, because saw it only once
             //NxNxN101
             //NxNxN010

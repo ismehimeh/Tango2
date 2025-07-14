@@ -315,6 +315,13 @@ extension Game {
         
         return Hint(type: .tripleOpposite(lineName: "", value: value), targetCell: targetCell, relatedCells: relatedCells)
     }
+    
+    // MARK: ForcedThreeNoMoreThan2
+    static func getForcedThreeNoMoreThan2Hint(in line: [CellValue?],
+                                              with conditions: [GameCellCondition]) -> Hint?
+    {
+        return nil
+    }
 }
 
 private extension Game {
