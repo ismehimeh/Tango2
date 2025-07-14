@@ -53,10 +53,6 @@ struct GameFieldView: View {
                 cellEntries = value
             }
             .coordinateSpace(name: "grid")
-            
-            if highlightedCell != nil || !notDimmedCells.isEmpty {
-                cellHighlightMask
-            }
 
             ZStack {
                 ForEach(game.gameConditions) { condition in
@@ -69,6 +65,10 @@ struct GameFieldView: View {
                             .position(midPoint)
                     }
                 }
+            }
+            
+            if highlightedCell != nil || !notDimmedCells.isEmpty {
+                cellHighlightMask
             }
         }
         .overlay {
