@@ -52,7 +52,7 @@ struct HintView: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 4)
-                .stroke(.red.opacity(0.2))
+                .stroke(.gray.opacity(0.3))
         )
         .modifier(Shake(animatableData: CGFloat(shakes)))
     }

@@ -23,8 +23,11 @@ struct GameView: View {
     @State private var isControlsDisabled = false
     @State var hint: Hint?
     @State private var shakes: Int = 0
+    @State var showNotReadyHint = false
+    @State private var hintNotificationTask: Task<Void, Error>?
     
     private let winningDelay = 0.1
+    private let notificationDuration = 5.0
     
     var game: Game
     
@@ -47,6 +50,11 @@ struct GameView: View {
                 }
                 undoAndHintView
                 mistakesListView
+                
+                if showNotReadyHint {
+                    hintNotReadyView
+                }
+                
                 if hint != nil {
                     HintView(description: hint?.type.description ?? "",
                               shakes: $shakes)
@@ -116,8 +124,6 @@ struct GameView: View {
                 }
             }
             
-            
-            
             // run glimmer animations
             // scale a littble bit every cell?
             // show result screen after everything happend
@@ -147,7 +153,6 @@ struct GameView: View {
 
     var undoAndHintView: some View {
         HStack {
-            
             VStack {
                 Button {
                     undoManager?.undo()
@@ -176,7 +181,7 @@ struct GameView: View {
                         hint = nil
                     }
                     else {
-                        print("Hint not ready yet. Think harder!")
+                        showHintNotification()
                     }
                 }
                 else {
@@ -207,6 +212,21 @@ struct GameView: View {
         }
     }
     
+    var hintNotReadyView: some View {
+        HStack {
+            Text("Hint not ready yet. Think harder!")
+                .multilineTextAlignment(.leading)
+            Spacer()
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 4)
+                .stroke(.gray.opacity(0.3))
+        )
+        .transition(.opacity)
+        .id(showNotReadyHint) // Force view recreation when state changes
+    }
+    
     private func processMistake(_ newValue: Bool) {
         if newValue {
             let mistakeId = UUID()
@@ -225,6 +245,26 @@ struct GameView: View {
     private func validateMistake(_ id: UUID) {
         guard id == mistakeValidationID else { return }
         showMistake = game.isMistake && isMistakeVisible
+    }
+    
+    private func showHintNotification() {
+        // Cancel any existing task
+        hintNotificationTask?.cancel()
+        
+        // Show the notification
+        showNotReadyHint = true
+        
+        // Create a new task to hide the notification after the duration
+        hintNotificationTask = Task { @MainActor in
+            do {
+                try await Task.sleep(for: .seconds(notificationDuration))
+                if !Task.isCancelled {
+                    showNotReadyHint = false
+                }
+            } catch {
+                // Task was cancelled, which is expected when resetting the timer
+            }
+        }
     }
 }
 
