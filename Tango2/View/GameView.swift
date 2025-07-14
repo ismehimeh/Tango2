@@ -38,6 +38,12 @@ struct GameView: View {
                               highlightedCell: hint?.targetCell,
                               notDimmedCells: hint?.relatedCells ?? [],
                               shakes: $shakes)
+                { newValue in
+                    guard let hint else { return }
+                    if newValue == hint.type.value {
+                        self.hint = nil
+                    }
+                }
                 undoAndHintView
                 mistakesListView
                 if hint != nil {

@@ -38,6 +38,25 @@ enum HintType: Equatable {
             return "Each \(lineName) must contain the same number of \(zeroSymbol) and \(oneSymbol)./n/nThe final \(value.symbol) in this \(lineName) must be elsewhere due to the remaining \(GameCellCondition.Condition.opposite.symbol).\n\nTherefore the highlighted cell must be a \(value.symbol)."
         }
     }
+    
+    var value: CellValue {
+        switch self {
+        case .incorrectCell(let value):
+            return value
+        case .oneOptionLeft(_, let value):
+            return value
+        case .forcedThreeWithSameNumber(_, let value):
+            return value
+        case .forcedThreeNoMoreThan2(let value, _):
+            return value
+        case .sign(_, let value):
+            return value
+        case .noMoreThan2(let value):
+            return value
+        case .tripleOpposite(_, let value):
+            return value
+        }
+    }
 }
 
 

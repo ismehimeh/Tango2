@@ -18,6 +18,7 @@ struct GameFieldView: View {
     var highlightedCell: CellPosition?
     var notDimmedCells: [CellPosition]
     @Binding var shakes: Int
+    var onTargetCellTapped: ((CellValue?) -> Void)?
     
     enum Constants {
         static let cellPrefilledBackgroundColor = Color.init(red: 238 / 255.0, green: 234 / 255.0, blue: 232 / 255.0)
@@ -49,6 +50,8 @@ struct GameFieldView: View {
                                         j == highlightedCell.column
                                     {
                                         tapCell(i, j)
+                                        // Call the callback when target cell is tapped
+                                        onTargetCellTapped?(game.cell(at: i, column: j).value)
                                     }
                                     else {
                                         withAnimation(.linear) {
@@ -170,7 +173,8 @@ struct GameFieldView: View {
                   showSolved: .constant(false),
                   highlightedCell: nil,
                   notDimmedCells: [],
-                  shakes: .constant(0))
+                  shakes: .constant(0),
+                  onTargetCellTapped: nil)
         .aspectRatio(1, contentMode: .fit)
         .padding()
 }
@@ -182,7 +186,8 @@ struct GameFieldView: View {
                   highlightedCell: .init(row: 1, column: 2),
                   notDimmedCells: [.init(row: 1, column: 3),
                                    .init(row: 1, column: 4)],
-                  shakes: .constant(0))
+                  shakes: .constant(0),
+                  onTargetCellTapped: nil)
         .aspectRatio(1, contentMode: .fit)
         .padding()
 }
