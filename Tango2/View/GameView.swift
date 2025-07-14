@@ -47,7 +47,11 @@ struct GameView: View {
                 undoAndHintView
                 mistakesListView
                 if hint != nil {
-                    hintsView
+                    HintsView(description: hint?.type.description ?? "",
+                              shakes: $shakes)
+                    {
+                        hint = nil
+                    }
                 }
                 HowToPlayView()
                     .frame(width: 300)
@@ -190,39 +194,6 @@ struct GameView: View {
                     .stroke(.red.opacity(0.2))
             )
         }
-    }
-    
-    var hintsView: some View {
-        VStack {
-            HStack {
-                Text("Hint:")
-                    .bold()
-                Spacer()
-                Button {
-                    hint = nil
-                } label: {
-                    Image(systemName: "xmark")
-                        .resizable()
-                        .aspectRatio(1, contentMode: .fit)
-                        .frame(width: 10)
-                        .foregroundStyle(.black)
-                        .padding(10)
-                }
-            }
-            .padding(.bottom, 5)
-            HStack {
-                Text(hint?.type.description ?? "")
-                    .multilineTextAlignment(.leading)
-                Spacer()
-            }
-            
-        }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 4)
-                .stroke(.red.opacity(0.2))
-        )
-        .modifier(Shake(animatableData: CGFloat(shakes)))
     }
     
     private func processMistake(_ newValue: Bool) {
