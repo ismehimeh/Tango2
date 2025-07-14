@@ -17,6 +17,7 @@ struct GameFieldView: View {
     @Binding var showSolved: Bool
     var highlightedCell: CellPosition?
     var notDimmedCells: [CellPosition]
+    @Binding var shakes: Int
     
     enum Constants {
         static let cellPrefilledBackgroundColor = Color.init(red: 238 / 255.0, green: 234 / 255.0, blue: 232 / 255.0)
@@ -42,7 +43,22 @@ struct GameFieldView: View {
                                          isHighlighted: isCellHighlighted(i, j))
                             }
                             .onTapGesture {
-                                tapCell(i, j)
+                                if let highlightedCell {
+                                    if
+                                        i == highlightedCell.row &&
+                                        j == highlightedCell.column
+                                    {
+                                        tapCell(i, j)
+                                    }
+                                    else {
+                                        withAnimation(.linear) {
+                                            shakes += 1
+                                        }
+                                    }
+                                }
+                                else {
+                                    tapCell(i, j)
+                                }
                             }
                         }
                     }
@@ -153,7 +169,8 @@ struct GameFieldView: View {
                   showMistake: .constant(false),
                   showSolved: .constant(false),
                   highlightedCell: nil,
-                  notDimmedCells: [])
+                  notDimmedCells: [],
+                  shakes: .constant(0))
         .aspectRatio(1, contentMode: .fit)
         .padding()
 }
@@ -164,7 +181,8 @@ struct GameFieldView: View {
                   showSolved: .constant(false),
                   highlightedCell: .init(row: 1, column: 2),
                   notDimmedCells: [.init(row: 1, column: 3),
-                                   .init(row: 1, column: 4)])
+                                   .init(row: 1, column: 4)],
+                  shakes: .constant(0))
         .aspectRatio(1, contentMode: .fit)
         .padding()
 }

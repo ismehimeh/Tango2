@@ -21,6 +21,7 @@ struct GameView: View {
     @State var mistakeValidationID: UUID?
     @State private var isControlsDisabled = false
     @State var hint: Hint?
+    @State private var shakes: Int = 0
     
     private let winningDelay = 0.1
     
@@ -35,7 +36,8 @@ struct GameView: View {
                               showMistake: $showMistake,
                               showSolved: $showingResult,
                               highlightedCell: hint?.targetCell,
-                              notDimmedCells: hint?.relatedCells ?? [])
+                              notDimmedCells: hint?.relatedCells ?? [],
+                              shakes: $shakes)
                 undoAndHintView
                 mistakesListView
                 if hint != nil {
@@ -185,16 +187,17 @@ struct GameView: View {
     }
     
     var hintsView: some View {
-            HStack {
-                Text(hint?.type.description ?? "")
-                    .multilineTextAlignment(.leading)
-                Spacer()
-            }
-            .padding(16)
-            .background(
-                RoundedRectangle(cornerRadius: 4)
-                    .stroke(.red.opacity(0.2))
-            )
+        HStack {
+            Text(hint?.type.description ?? "")
+                .multilineTextAlignment(.leading)
+            Spacer()
+        }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 4)
+                .stroke(.red.opacity(0.2))
+        )
+        .modifier(Shake(animatableData: CGFloat(shakes)))
     }
     
     private func processMistake(_ newValue: Bool) {
