@@ -179,7 +179,7 @@ struct GameFieldView: View {
         .padding()
 }
 
-#Preview {
+#Preview("Dimmed") {
     GameFieldView(game: .init(level1),
                   showMistake: .constant(false),
                   showSolved: .constant(false),
@@ -190,4 +190,16 @@ struct GameFieldView: View {
                   onTargetCellTapped: nil)
         .aspectRatio(1, contentMode: .fit)
         .padding()
+}
+
+#Preview("4x4") {
+    GameFieldView(game: .init(tutorialLevel),
+                  showMistake: .constant(false),
+                  showSolved: .constant(false),
+                  highlightedCell: nil,
+                  notDimmedCells: [],
+                  shakes: .constant(0),
+                  onTargetCellTapped: nil)
+    .aspectRatio(1, contentMode: .fit)
+    .padding()
 }

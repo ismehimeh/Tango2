@@ -8,6 +8,7 @@
 //MARK: - Tutorial Level
 let tutorialLevel = Level.create(
     title: "Tutorial",
+    lineLength: 4,
     boardDefinition: [
         [nil, nil, nil, .zero],
         [nil, .one, nil, .one],

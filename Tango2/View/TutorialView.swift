@@ -16,33 +16,41 @@ struct TutorialView: View {
     }
     
     var descriptionView: some View {
-        VStack {
-            VStack(alignment: .leading) {
-                Text("The goal of the puzzle is to fill the grid with \(CellValue.zero.symbol) and \(CellValue.one.symbol).\n\nPlay quick tutorial to learn the rules.")
-                    .padding(.bottom, 20)
-                
-                Button {
+        VStack(spacing: 20) {
+            GameFieldView(game: Game(tutorialLevel),
+                          showMistake: .constant(false),
+                          showSolved: .constant(false),
+                          notDimmedCells: [],
+                          shakes: .constant(0))
+            .aspectRatio(1, contentMode: .fit)
+            VStack {
+                VStack(alignment: .leading) {
+                    Text("The goal of the puzzle is to fill the grid with \(CellValue.zero.symbol) and \(CellValue.one.symbol).\n\nPlay quick tutorial to learn the rules.")
+                        .padding(.bottom, 20)
                     
-                } label: {
-                    Text("Play tutorial")
-                        .bold()
-                        .padding(.vertical, 7)
-                        .frame(maxWidth: .infinity)
+                    Button {
+                        
+                    } label: {
+                        Text("Play tutorial")
+                            .bold()
+                            .padding(.vertical, 7)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .foregroundStyle(buttonColor)
+                    .background(
+                        Capsule()
+                            .stroke(buttonColor)
+                    )
                 }
-                .foregroundStyle(buttonColor)
-                .background(
-                    Capsule()
-                        .stroke(buttonColor)
-                )
+                .padding(.horizontal, 20)
+                .padding(.vertical, 15)
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 15)
+            .background(
+                RoundedRectangle(cornerRadius: 5)
+                    .stroke(.gray.opacity(0.3))
+                    .fill(.gray.opacity(0.1))
+            )
         }
-        .background(
-            RoundedRectangle(cornerRadius: 5)
-                .stroke(.gray.opacity(0.3))
-                .fill(.gray.opacity(0.1))
-        )
     }
 }
 
