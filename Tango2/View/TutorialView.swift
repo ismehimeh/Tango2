@@ -19,7 +19,8 @@ struct TutorialView: View {
             GameFieldView(game: Game(tutorialLevel),
                           showMistake: .constant(false),
                           showSolved: .constant(false),
-                          notDimmedCells: [],
+                          highlightedCell: stage.highligthedCell,
+                          notDimmedCells: stage.notDimmedCells ?? [],
                           shakes: .constant(0))
             .aspectRatio(1, contentMode: .fit)
             // TODO: text changes width
@@ -54,21 +55,21 @@ struct TutorialView: View {
             playGameButton
         default:
             EmptyView()
-//            Button {
-//                if let next = stage.next {
-//                    stage = next
-//                }
-//            } label: {
-//                Text("Play tutorial") // or "Play game"
-//                    .bold()
-//                    .padding(.vertical, 7)
-//                    .frame(maxWidth: .infinity)
-//            }
-//            .foregroundStyle(buttonColor)
-//            .background(
-//                Capsule()
-//                    .stroke(buttonColor)
-//            )
+            Button {
+                if let next = stage.next {
+                    stage = next
+                }
+            } label: {
+                Text("Play tutorial") // or "Play game"
+                    .bold()
+                    .padding(.vertical, 7)
+                    .frame(maxWidth: .infinity)
+            }
+            .foregroundStyle(buttonColor)
+            .background(
+                Capsule()
+                    .stroke(buttonColor)
+            )
         }
     }
     
@@ -132,6 +133,54 @@ enum TutorialStage: CaseIterable {
             return nil
         }
         return allCases[currentIndex + 1]
+    }
+    
+    var highligthedCell: CellPosition? {
+        switch self {
+        case .noMoreThan2:
+            return .init(row: 1, column: 2)
+        case .sameNumber:
+            return .init(row: 1, column: 0)
+        case .equalSign:
+            return .init(row: 0, column: 0)
+        case .oppositeSign:
+            return .init(row: 0, column: 1)
+        case .noMoreThan2_2:
+            return .init(row: 2, column: 1)
+        default:
+            return nil
+        }
+    }
+    
+    var notDimmedCells: [CellPosition]? {
+        switch self {
+        case .noMoreThan2:
+            return [
+                .init(row: 1, column: 1),
+                .init(row: 1, column: 3)
+            ]
+        case .sameNumber:
+            return [
+                .init(row: 1, column: 1),
+                .init(row: 1, column: 2),
+                .init(row: 1, column: 3)
+            ]
+        case .equalSign:
+            return [
+                .init(row: 1, column: 0)
+            ]
+        case .oppositeSign:
+            return [
+                .init(row: 0, column: 0)
+            ]
+        case .noMoreThan2_2:
+            return [
+                .init(row: 0, column: 1),
+                .init(row: 1, column: 1)
+            ]
+        default:
+            return nil
+        }
     }
     
     var text: String {
