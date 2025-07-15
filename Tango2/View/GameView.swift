@@ -13,6 +13,7 @@ struct GameView: View {
     @State private var showingSettings = false
     @State private var showingResult = false
     @State private var showingClearAlert = false
+    @State private var showingTutorial = false
     @AppStorage(GameSettings.clockVisibleKey) private var isClockVisible = GameSettings.defaultClockVisible
     @State private var viewModel = GameViewModel()
     @AppStorage(GameSettings.mistakeHighlightKey) private var isMistakeVisible = GameSettings.defaultMistakeHighlight
@@ -78,6 +79,13 @@ struct GameView: View {
                 Image(systemName: "gearshape.fill")
             }
         }
+        .toolbar {
+            Button {
+                showingTutorial = true
+            } label: {
+                Image(systemName: "questionmark.circle")
+            }
+        }
         .navigationBarBackButtonHidden(isControlsDisabled)
         .disabled(isControlsDisabled)
         .onAppear {
@@ -97,6 +105,13 @@ struct GameView: View {
         .sheet(isPresented: $showingResult) {
             ResultView(levelTitle: game.level.title,
                        timeSpent: viewModel.timeString)
+        }
+        .sheet(isPresented: $showingTutorial) {
+            NavigationStack {
+                TutorialView()
+                    .toolbarTitleDisplayMode(.inline)
+                    .navigationTitle("How to play Tango")
+            }
         }
         .alert("You sure?", isPresented: $showingClearAlert) {
             Button("Yes", role: .destructive) {
