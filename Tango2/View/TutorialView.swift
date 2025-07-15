@@ -12,6 +12,7 @@ struct TutorialView: View {
     private let buttonColor = Color(red: 55/255.0, green: 110/255.0, blue: 191/255.0)
     
     @State private var stage = TutorialStage.intro
+    private var game = Game(tutorialLevel)
     
     private let oppositeErrorText = "Use opposite shapes to separate cells with \(GameCellCondition.Condition.opposite.symbol)."
     
@@ -19,7 +20,7 @@ struct TutorialView: View {
         // TODO: this should be a scroll because of expandable "Reminder how to play"
         VStack(spacing: 20) {
             ZStack {
-                GameFieldView(game: Game(tutorialLevel),
+                GameFieldView(game: game,
                               showMistake: .constant(false),
                               showSolved: .constant(false),
                               highlightedCell: stage.highligthedCell,

@@ -50,7 +50,7 @@ struct GameView: View {
                     }
                 }
                 undoAndHintView
-                mistakesListView
+                MistakesListView(mistakes: game.mistakes)
                 
                 if showNotReadyHint {
                     hintNotReadyView
@@ -212,21 +212,6 @@ struct GameView: View {
         }
     }
     
-    var mistakesListView: some View {
-        ForEach(game.mistakes, id: \.self) { mistake in
-            HStack {
-                Text(mistake.type.description)
-                    .multilineTextAlignment(.leading)
-                Spacer()
-            }
-            .padding(16)
-            .background(
-                RoundedRectangle(cornerRadius: 4)
-                    .stroke(.red.opacity(0.2))
-            )
-        }
-    }
-    
     var hintNotReadyView: some View {
         HStack {
             Text("Hint not ready yet. Think harder!")
@@ -279,6 +264,25 @@ struct GameView: View {
             } catch {
                 // Task was cancelled, which is expected when resetting the timer
             }
+        }
+    }
+}
+
+struct MistakesListView: View {
+    var mistakes: [Mistake]
+    
+    var body: some View {
+        ForEach(mistakes, id: \.self) { mistake in
+            HStack {
+                Text(mistake.type.description)
+                    .multilineTextAlignment(.leading)
+                Spacer()
+            }
+            .padding(16)
+            .background(
+                RoundedRectangle(cornerRadius: 4)
+                    .stroke(.red.opacity(0.2))
+            )
         }
     }
 }
