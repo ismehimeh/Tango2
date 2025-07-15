@@ -8,7 +8,10 @@
 import SwiftUI
 
 struct TutorialView: View {
+
     private let buttonColor = Color(red: 55/255.0, green: 110/255.0, blue: 191/255.0)
+    
+    @State private var stage = TutorialStage.intro
     
     var body: some View {
         descriptionView
@@ -25,13 +28,15 @@ struct TutorialView: View {
             .aspectRatio(1, contentMode: .fit)
             VStack {
                 VStack(alignment: .leading) {
-                    Text("The goal of the puzzle is to fill the grid with \(CellValue.zero.symbol) and \(CellValue.one.symbol).\n\nPlay quick tutorial to learn the rules.")
+                    Text(stage.text)
                         .padding(.bottom, 20)
                     
                     Button {
-                        
+                        if let next = stage.next {
+                            stage = next
+                        }
                     } label: {
-                        Text("Play tutorial")
+                        Text("Play tutorial") // or "Play game"
                             .bold()
                             .padding(.vertical, 7)
                             .frame(maxWidth: .infinity)
@@ -44,6 +49,7 @@ struct TutorialView: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 15)
+                // TODO: "Reminder how to play" on the last slide
             }
             .background(
                 RoundedRectangle(cornerRadius: 5)
@@ -56,4 +62,49 @@ struct TutorialView: View {
 
 #Preview {
     TutorialView()
+}
+
+
+enum TutorialStage: CaseIterable {
+    case intro
+    case noMoreThan2
+    case sameNumber
+    case equalSign
+    case oppositeSign
+    case oppositeError
+    case noMoreThan2_2
+    case doItYourself
+    case congrats
+    
+    var next: TutorialStage? {
+        let allCases = TutorialStage.allCases
+        guard let currentIndex = allCases.firstIndex(of: self),
+              currentIndex < allCases.count - 1 else {
+            return nil
+        }
+        return allCases[currentIndex + 1]
+    }
+    
+    var text: String {
+        switch self {
+        case .intro:
+            return "The goal of the puzzle is to fill the grid with \(CellValue.zero.symbol) and \(CellValue.one.symbol).\n\nPlay quick tutorial to learn the rules."
+        case .noMoreThan2:
+            return "\(HintType.noMoreThan2(value: .zero).description)\n\nPlace a \(CellValue.zero.symbol) by tapping on the highlighted cell."
+        case .sameNumber:
+            return "Each row (and column) must contain the same number of \(CellValue.zero.symbol) and \(CellValue.one.symbol).\n\nTherefore, the highlighted cell must be a \(CellValue.zero.symbol)."
+        case .equalSign:
+            return HintType.sign(sign: GameCellCondition.Condition.equal.symbol, value: .zero).description
+        case .oppositeSign:
+            return "\(HintType.sign(sign: GameCellCondition.Condition.opposite.symbol, value: .one).description)\n\nPlace a \(CellValue.one.symbol) by tapping twice on the highlighted cell."
+        case .oppositeError:
+            return "Use opposite shapes to separate cells with \(GameCellCondition.Condition.opposite.symbol)."
+        case .noMoreThan2_2:
+            return HintType.noMoreThan2(value: .one).description
+        case .doItYourself:
+            return "Each puzzle has one right answer and can be solved via deduction (you should never have to make a guess).\n\nYou now know everything you need to complete the puzzle.\n\nGood luck!"
+        case .congrats:
+            return "Congrats on finishing the tutorial.\nYou're ready to play!"
+        }
+    }
 }

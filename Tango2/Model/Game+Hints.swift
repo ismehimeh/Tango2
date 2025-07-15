@@ -9,6 +9,8 @@
 
 typealias Sign = GameCellCondition.Condition
 
+// TODO: hints are designed specifically for 6x6 levels - should I update them for 4x4?
+
 /// Represents the type of line being processed (row or column)
 enum LineType {
     case row(index: Int)
