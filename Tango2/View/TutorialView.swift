@@ -14,11 +14,7 @@ struct TutorialView: View {
     @State private var stage = TutorialStage.intro
     
     var body: some View {
-        descriptionView
-            .padding(.horizontal, 60)
-    }
-    
-    var descriptionView: some View {
+        // TODO: this should be a scroll because of expandable "Reminder how to play"
         VStack(spacing: 20) {
             GameFieldView(game: Game(tutorialLevel),
                           showMistake: .constant(false),
@@ -26,26 +22,12 @@ struct TutorialView: View {
                           notDimmedCells: [],
                           shakes: .constant(0))
             .aspectRatio(1, contentMode: .fit)
+            // TODO: text changes width
             VStack {
                 VStack(alignment: .leading) {
                     Text(stage.text)
                         .padding(.bottom, 20)
-                    
-                    Button {
-                        if let next = stage.next {
-                            stage = next
-                        }
-                    } label: {
-                        Text("Play tutorial") // or "Play game"
-                            .bold()
-                            .padding(.vertical, 7)
-                            .frame(maxWidth: .infinity)
-                    }
-                    .foregroundStyle(buttonColor)
-                    .background(
-                        Capsule()
-                            .stroke(buttonColor)
-                    )
+                    supplementViewForStage
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 15)
@@ -57,6 +39,73 @@ struct TutorialView: View {
                     .fill(.gray.opacity(0.1))
             )
         }
+        .padding(.horizontal, 60)
+        Spacer()
+    }
+    
+    @ViewBuilder
+    var supplementViewForStage: some View {
+        switch stage {
+        case .intro:
+            playTutorialButton
+        case .doItYourself:
+            HowToPlayView()
+        case .congrats:
+            playGameButton
+        default:
+            EmptyView()
+//            Button {
+//                if let next = stage.next {
+//                    stage = next
+//                }
+//            } label: {
+//                Text("Play tutorial") // or "Play game"
+//                    .bold()
+//                    .padding(.vertical, 7)
+//                    .frame(maxWidth: .infinity)
+//            }
+//            .foregroundStyle(buttonColor)
+//            .background(
+//                Capsule()
+//                    .stroke(buttonColor)
+//            )
+        }
+    }
+    
+    var playTutorialButton: some View {
+        Button {
+            if let next = stage.next {
+                stage = next
+            }
+        } label: {
+            Text("Play tutorial")
+                .bold()
+                .padding(.vertical, 7)
+                .frame(maxWidth: .infinity)
+        }
+        .foregroundStyle(buttonColor)
+        .background(
+            Capsule()
+                .stroke(buttonColor)
+        )
+    }
+    
+    var playGameButton: some View {
+        Button {
+            if let next = stage.next {
+                stage = next
+            }
+        } label: {
+            Text("Play game")
+                .bold()
+                .padding(.vertical, 7)
+                .frame(maxWidth: .infinity)
+        }
+        .foregroundStyle(buttonColor)
+        .background(
+            Capsule()
+                .stroke(buttonColor)
+        )
     }
 }
 
