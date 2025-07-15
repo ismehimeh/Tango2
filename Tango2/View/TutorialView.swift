@@ -13,15 +13,31 @@ struct TutorialView: View {
     
     @State private var stage = TutorialStage.intro
     
+    private let oppositeErrorText = "Use opposite shapes to separate cells with \(GameCellCondition.Condition.opposite.symbol)."
+    
     var body: some View {
         // TODO: this should be a scroll because of expandable "Reminder how to play"
         VStack(spacing: 20) {
-            GameFieldView(game: Game(tutorialLevel),
-                          showMistake: .constant(false),
-                          showSolved: .constant(false),
-                          highlightedCell: stage.highligthedCell,
-                          notDimmedCells: stage.notDimmedCells ?? [],
-                          shakes: .constant(0))
+            ZStack {
+                GameFieldView(game: Game(tutorialLevel),
+                              showMistake: .constant(false),
+                              showSolved: .constant(false),
+                              highlightedCell: stage.highligthedCell,
+                              notDimmedCells: stage.notDimmedCells ?? [],
+                              shakes: .constant(0))
+                { value in
+                    if value == stage.expectedCellValue {
+                        nextStage()
+                    }
+                }
+                if stage == .intro {
+                    // covers field in `invisible` tappable area
+                    Color.white.opacity(0.0001)
+                        .onTapGesture {
+                            nextStage()
+                        }
+                }
+            }
             .aspectRatio(1, contentMode: .fit)
             // TODO: text changes width
             VStack {
@@ -75,9 +91,7 @@ struct TutorialView: View {
     
     var playTutorialButton: some View {
         Button {
-            if let next = stage.next {
-                stage = next
-            }
+            nextStage()
         } label: {
             Text("Play tutorial")
                 .bold()
@@ -93,9 +107,7 @@ struct TutorialView: View {
     
     var playGameButton: some View {
         Button {
-            if let next = stage.next {
-                stage = next
-            }
+            nextStage()
         } label: {
             Text("Play game")
                 .bold()
@@ -108,12 +120,17 @@ struct TutorialView: View {
                 .stroke(buttonColor)
         )
     }
+    
+    func nextStage() {
+        if let next = stage.next {
+            stage = next
+        }
+    }
 }
 
 #Preview {
     TutorialView()
 }
-
 
 enum TutorialStage: CaseIterable {
     case intro
@@ -121,7 +138,6 @@ enum TutorialStage: CaseIterable {
     case sameNumber
     case equalSign
     case oppositeSign
-    case oppositeError
     case noMoreThan2_2
     case doItYourself
     case congrats
@@ -183,6 +199,17 @@ enum TutorialStage: CaseIterable {
         }
     }
     
+    var expectedCellValue: CellValue? {
+        switch self {
+        case .noMoreThan2, .sameNumber, .equalSign, .noMoreThan2_2:
+            return .zero
+        case .oppositeSign:
+            return .one
+        default:
+            return nil
+        }
+    }
+    
     var text: String {
         switch self {
         case .intro:
@@ -195,8 +222,6 @@ enum TutorialStage: CaseIterable {
             return HintType.sign(sign: GameCellCondition.Condition.equal.symbol, value: .zero).description
         case .oppositeSign:
             return "\(HintType.sign(sign: GameCellCondition.Condition.opposite.symbol, value: .one).description)\n\nPlace a \(CellValue.one.symbol) by tapping twice on the highlighted cell."
-        case .oppositeError:
-            return "Use opposite shapes to separate cells with \(GameCellCondition.Condition.opposite.symbol)."
         case .noMoreThan2_2:
             return HintType.noMoreThan2(value: .one).description
         case .doItYourself:
