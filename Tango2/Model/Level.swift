@@ -10,14 +10,10 @@ import Foundation
 struct Level: Identifiable, Hashable {
     let id = UUID()
     let title: String // TODO: I am not planning to use it, just need it to distinguish cell for now
+    let lineLength: Int
     let gameCells: [[GameCell]]
     let gameConditions: [GameCellCondition]
     let solvedCells: [[CellValue]]
-    
-    // Standard game board size (6x6)
-    var lineLength: Int {
-        return gameCells.first?.count ?? 6
-    }
     
     /// Factory method to create a Level with a more concise syntax
     /// - Parameters:
@@ -26,6 +22,7 @@ struct Level: Identifiable, Hashable {
     ///   - conditions: Array of tuples defining conditions between cells
     /// - Returns: A new Level instance
     static func create(title: String,
+                       lineLength: Int = 6,
                        boardDefinition: [[CellValue?]],
                        conditions: [(condition: GameCellCondition.Condition,
                                      position1: (row: Int, col: Int),
@@ -53,8 +50,9 @@ struct Level: Identifiable, Hashable {
         }
         
         return Level(title: title,
-               gameCells: gameCells,
-               gameConditions: gameConditions,
-               solvedCells: solvedCells)
+                     lineLength: lineLength,
+                     gameCells: gameCells,
+                     gameConditions: gameConditions,
+                     solvedCells: solvedCells)
     }
 }
