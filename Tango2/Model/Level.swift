@@ -11,7 +11,7 @@ struct Level: Identifiable, Hashable {
     let id = UUID()
     let title: String // TODO: I am not planning to use it, just need it to distinguish cell for now
     let lineLength: Int
-    let gameCells: [[GameCell]]
+    let levelCells: [[LevelCell]]
     let gameConditions: [GameCellCondition]
     let solvedCells: [[CellValue]]
     
@@ -29,13 +29,13 @@ struct Level: Identifiable, Hashable {
                                      position2: (row: Int, col: Int))],
                        solvedCells: [[CellValue]] = []) -> Level
     {
-        // Convert simple board definition to GameCells
-        let gameCells = boardDefinition.map { row in
+        // Convert simple board definition to LevelCells
+        let levelCells = boardDefinition.map { row in
             row.map { value in
                 if let predefinedValue = value {
-                    return GameCell(predefinedValue: predefinedValue)
+                    return LevelCell(predefinedValue: predefinedValue)
                 } else {
-                    return GameCell()
+                    return LevelCell()
                 }
             }
         }
@@ -51,7 +51,7 @@ struct Level: Identifiable, Hashable {
         
         return Level(title: title,
                      lineLength: lineLength,
-                     gameCells: gameCells,
+                     levelCells: levelCells,
                      gameConditions: gameConditions,
                      solvedCells: solvedCells)
     }

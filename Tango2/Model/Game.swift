@@ -32,8 +32,14 @@ class Game {
 
     init(_ level: Level) {
         self.level = level
+        // Create mutable game cells from immutable level cells
+        let cells = level.levelCells.map { row in
+            row.map { levelCell in
+                GameCell(predefinedValue: levelCell.predefinedValue)
+            }
+        }
         // Convert 2D array to flat array
-        self.gameCells = level.gameCells.flatMap { $0 }
+        self.gameCells = cells.flatMap { $0 }
         isSolved = checkIsSolved()
         isMistake = !isFieldValid()
         mistakes = getMistakes()
