@@ -35,7 +35,7 @@ extension Game {
     
     func getHint() -> Hint? {
         // we assume that game field is N x N
-        for i in 0..<level.gameCells.count {
+        for i in 0..<level.levelCells.count {
             if let hint = getHint(forRowWithIndex: i) {
                 return hint
             }
