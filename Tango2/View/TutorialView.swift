@@ -14,8 +14,6 @@ struct TutorialView: View {
     @State private var stage = TutorialStage.intro
     @State private var game = Game(tutorialLevel)
     
-    private let oppositeErrorText = "Use opposite shapes to separate cells with \(GameCellCondition.Condition.opposite.symbol)."
-    
     var body: some View {
         // TODO: this should be a scroll because of expandable "Reminder how to play"
         VStack(spacing: 20) {
@@ -41,6 +39,9 @@ struct TutorialView: View {
             }
             .aspectRatio(1, contentMode: .fit)
             // TODO: text changes width
+            
+            MistakesListView(mistakes: game.mistakes.map({$0.type.tutorialDescription}))
+            
             VStack {
                 VStack(alignment: .leading) {
                     Text(stage.text)

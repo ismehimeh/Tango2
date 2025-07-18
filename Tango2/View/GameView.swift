@@ -50,7 +50,7 @@ struct GameView: View {
                     }
                 }
                 undoAndHintView
-                MistakesListView(mistakes: game.mistakes)
+                MistakesListView(mistakes: game.mistakes.map({$0.type.description}))
                 
                 if showNotReadyHint {
                     hintNotReadyView
@@ -269,12 +269,12 @@ struct GameView: View {
 }
 
 struct MistakesListView: View {
-    var mistakes: [Mistake]
+    var mistakes: [String]
     
     var body: some View {
         ForEach(mistakes, id: \.self) { mistake in
             HStack {
-                Text(mistake.type.description)
+                Text(mistake)
                     .multilineTextAlignment(.leading)
                 Spacer()
             }
