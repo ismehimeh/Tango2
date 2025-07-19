@@ -12,6 +12,9 @@ import Combine
 class GameViewModel {
     
     var timeString = "0:00"
+    private var lastActionTime = Date.now
+    
+    private(set) var idleTimeoutPassed = false
     
     var secondsPassed = 0 {
         didSet {
@@ -26,11 +29,18 @@ class GameViewModel {
         timerCancellable = Timer.publish(every: 1, on: .main, in: .common)
             .autoconnect()
             .sink { [weak self] _ in
-                self?.secondsPassed += 1
+                guard let self else { return }
+                secondsPassed += 1
+                idleTimeoutPassed = abs(lastActionTime.timeIntervalSinceNow) > 60
             }
     }
     
     func stopStimer() {
         timerCancellable = nil
+    }
+    
+    func cellTapped() {
+        lastActionTime = Date.now
+        idleTimeoutPassed = false
     }
 }

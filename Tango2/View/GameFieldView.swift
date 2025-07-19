@@ -19,6 +19,7 @@ struct GameFieldView: View {
     var notDimmedCells: [CellPosition]
     @Binding var shakes: Int
     var onTargetCellTapped: ((CellValue?) -> Void)?
+    var onCellTapped: (() -> Void)?
     
     enum Constants {
         static let cellPrefilledBackgroundColor = Color.init(red: 238 / 255.0, green: 234 / 255.0, blue: 232 / 255.0)
@@ -44,6 +45,7 @@ struct GameFieldView: View {
                                          isHighlighted: isCellHighlighted(i, j))
                             }
                             .onTapGesture {
+                                onCellTapped?()
                                 if let highlightedCell {
                                     if
                                         i == highlightedCell.row &&

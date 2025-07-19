@@ -38,6 +38,7 @@ struct GameView: View {
         ScrollView {
             VStack {
                 topView
+                
                 GameFieldView(game: game,
                               showMistake: $showMistake,
                               showSolved: $showingResult,
@@ -49,7 +50,10 @@ struct GameView: View {
                     if newValue == hint.type.value {
                         self.hint = nil
                     }
+                } onCellTapped: {
+                    viewModel.cellTapped()
                 }
+                
                 undoAndHintView
                 MistakesListView(mistakes: game.mistakes.map({$0.type.description}))
                 
@@ -68,7 +72,7 @@ struct GameView: View {
                         self.hint = nil
                     }
                 }
-                if showHintHint {
+                if viewModel.idleTimeoutPassed {
                     hintHintView
                 }
                 HowToPlayView()
