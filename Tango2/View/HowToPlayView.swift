@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct HowToPlayView: View {
+    
+    var title: String?
     var body: some View {
-        DisclosureGroup("How to play") {
+        DisclosureGroup(title ?? "How to play") {
             VStack(alignment: .leading, spacing: 10) {
                 HStack {
                     Text("•")

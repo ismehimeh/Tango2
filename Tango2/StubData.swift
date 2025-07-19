@@ -5,6 +5,27 @@
 //  Created by Sergei Vasilenko on 10.03.2025.
 //
 
+//MARK: - Tutorial Level
+let tutorialLevel = Level.create(
+    title: "Tutorial",
+    lineLength: 4,
+    boardDefinition: [
+        [nil, nil, nil, .zero],
+        [nil, .one, nil, .one],
+        [nil, nil, nil, nil],
+        [nil, nil, nil, nil],
+    ],
+    conditions: [
+        (.opposite, (0, 0), (0, 1)),
+        (.opposite, (2, 1), (2, 2)),
+        (.equal, (0, 0), (1, 0))
+    ], solvedCells: [
+        [.zero, .one, .one, .zero],
+        [.zero, .one, .zero, .one],
+        [.one, .zero, .one, .zero],
+        [.one, .zero, .zero, .one],
+    ])
+
 // MARK: - Level 1
 let level1 = Level.create(
     title: "1",
@@ -347,3 +368,18 @@ let testLevel4 = Level.create(
     ],
     conditions: [ ]
 )
+
+let testTutorial = Level.create(
+    title: "Test",
+    lineLength: 4,
+    boardDefinition: [
+        [.zero, .one, .zero, .zero],
+        [.zero, .one, .zero, .one],
+        [.one, .zero, .one, .zero],
+        [.one, .zero, .zero, .one],
+    ],
+    conditions: [
+        (.opposite, (0, 0), (0, 1)),
+        (.opposite, (2, 1), (2, 2)),
+        (.equal, (0, 0), (1, 0))
+    ])

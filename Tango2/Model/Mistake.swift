@@ -25,12 +25,28 @@ extension MistakeType {
         case .signViolation(let condition):
             switch condition {
             case .equal:
-                return "Cells separated by an = sign must be of the same type"
+                return "Cells separated by an \(GameCellCondition.Condition.equal.symbol) sign must be of the same type"
             case .opposite:
-                return "Cell separated by X sign must be of the opposite type"
+                return "Cell separated by \(GameCellCondition.Condition.opposite.symbol) sign must be of the opposite type"
             }
         case .sameNumberValues:
             return "Each row (and column) must contain the same number of \(zeroSymbol) and \(oneSymbol)"
+        }
+    }
+    
+    var tutorialDescription: String {
+        switch self {
+        case .signViolation(let condition):
+            switch condition {
+            case .equal:
+                return "Use identical shapes to join cells with a \(GameCellCondition.Condition.equal.symbol)."
+            case .opposite:
+                return "Use opposite shapes to separate cells with \(GameCellCondition.Condition.opposite.symbol)."
+            }
+        case .noMoreThan2:
+            return "Oops! Only 2 \(zeroSymbol) and \(oneSymbol) can touch, either vertically or horizontally."
+        case .sameNumberValues:
+            return "Each row and column must have the same number of \(zeroSymbol) and \(oneSymbol)."
         }
     }
 }

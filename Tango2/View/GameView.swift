@@ -13,6 +13,7 @@ struct GameView: View {
     @State private var showingSettings = false
     @State private var showingResult = false
     @State private var showingClearAlert = false
+    @State private var showingTutorial = false
     @AppStorage(GameSettings.clockVisibleKey) private var isClockVisible = GameSettings.defaultClockVisible
     @State private var viewModel = GameViewModel()
     @AppStorage(GameSettings.mistakeHighlightKey) private var isMistakeVisible = GameSettings.defaultMistakeHighlight
@@ -49,7 +50,7 @@ struct GameView: View {
                     }
                 }
                 undoAndHintView
-                mistakesListView
+                MistakesListView(mistakes: game.mistakes.map({$0.type.description}))
                 
                 if showNotReadyHint {
                     hintNotReadyView
@@ -78,6 +79,13 @@ struct GameView: View {
                 Image(systemName: "gearshape.fill")
             }
         }
+        .toolbar {
+            Button {
+                showingTutorial = true
+            } label: {
+                Image(systemName: "questionmark.circle")
+            }
+        }
         .navigationBarBackButtonHidden(isControlsDisabled)
         .disabled(isControlsDisabled)
         .onAppear {
@@ -97,6 +105,13 @@ struct GameView: View {
         .sheet(isPresented: $showingResult) {
             ResultView(levelTitle: game.level.title,
                        timeSpent: viewModel.timeString)
+        }
+        .sheet(isPresented: $showingTutorial) {
+            NavigationStack {
+                TutorialView()
+                    .toolbarTitleDisplayMode(.inline)
+                    .navigationTitle("How to play Tango")
+            }
         }
         .alert("You sure?", isPresented: $showingClearAlert) {
             Button("Yes", role: .destructive) {
@@ -197,21 +212,6 @@ struct GameView: View {
         }
     }
     
-    var mistakesListView: some View {
-        ForEach(game.mistakes, id: \.self) { mistake in
-            HStack {
-                Text(mistake.type.description)
-                    .multilineTextAlignment(.leading)
-                Spacer()
-            }
-            .padding(16)
-            .background(
-                RoundedRectangle(cornerRadius: 4)
-                    .stroke(.red.opacity(0.2))
-            )
-        }
-    }
-    
     var hintNotReadyView: some View {
         HStack {
             Text("Hint not ready yet. Think harder!")
@@ -264,6 +264,25 @@ struct GameView: View {
             } catch {
                 // Task was cancelled, which is expected when resetting the timer
             }
+        }
+    }
+}
+
+struct MistakesListView: View {
+    var mistakes: [String]
+    
+    var body: some View {
+        ForEach(Array(Set(mistakes)), id: \.self) { mistake in
+            HStack {
+                Text(mistake)
+                    .multilineTextAlignment(.leading)
+                Spacer()
+            }
+            .padding(16)
+            .background(
+                RoundedRectangle(cornerRadius: 4)
+                    .stroke(.red.opacity(0.2))
+            )
         }
     }
 }

@@ -11,7 +11,10 @@ import Foundation
 class Game {
 
     let level: Level
-    let lineLength = 6 // Standard game board size
+    
+    var lineLength: Int {
+        level.lineLength
+    }
     
     var gameCells: [GameCell]
     
@@ -29,8 +32,14 @@ class Game {
 
     init(_ level: Level) {
         self.level = level
+        // Create mutable game cells from immutable level cells
+        let cells = level.levelCells.map { row in
+            row.map { levelCell in
+                GameCell(predefinedValue: levelCell.predefinedValue)
+            }
+        }
         // Convert 2D array to flat array
-        self.gameCells = level.gameCells.flatMap { $0 }
+        self.gameCells = cells.flatMap { $0 }
         isSolved = checkIsSolved()
         isMistake = !isFieldValid()
         mistakes = getMistakes()
@@ -56,16 +65,16 @@ class Game {
     }
     
     func cellIndex(row: Int, column: Int) -> Int {
-        return row * lineLength + column
+        return row * level.lineLength + column
     }
     
     func row(_ rowIndex: Int) -> [GameCell] {
-        let startIndex = rowIndex * lineLength
-        return Array(gameCells[startIndex..<startIndex + lineLength])
+        let startIndex = rowIndex * level.lineLength
+        return Array(gameCells[startIndex..<startIndex + level.lineLength])
     }
     
     func column(_ columnIndex: Int) -> [GameCell] {
-        return (0..<lineLength).map { gameCells[cellIndex(row: $0, column: columnIndex)] }
+        return (0..<level.lineLength).map { gameCells[cellIndex(row: $0, column: columnIndex)] }
     }
     
     // Access the solved state rows and columns
@@ -95,8 +104,8 @@ class Game {
     }
 
     func isFieldValid() -> Bool {
-        let isRowsValid = (0..<lineLength).map { isRowValid($0) }.allSatisfy { $0 }
-        let isColumnsValid = (0..<lineLength).map { isColumnValid($0) }.allSatisfy { $0 }
+        let isRowsValid = (0..<level.lineLength).map { isRowValid($0) }.allSatisfy { $0 }
+        let isColumnsValid = (0..<level.lineLength).map { isColumnValid($0) }.allSatisfy { $0 }
         return isRowsValid && isColumnsValid
     }
 
@@ -111,8 +120,8 @@ class Game {
 
         // count of 0 and 1
         guard
-            zeroes <= 3,
-            ones <= 3
+            zeroes <= lineLength / 2,
+            ones <= lineLength / 2
         else {
             return false
         }

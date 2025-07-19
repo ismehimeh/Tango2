@@ -9,6 +9,8 @@
 
 typealias Sign = GameCellCondition.Condition
 
+// TODO: hints are designed specifically for 6x6 levels - should I update them for 4x4?
+
 /// Represents the type of line being processed (row or column)
 enum LineType {
     case row(index: Int)
@@ -33,7 +35,7 @@ extension Game {
     
     func getHint() -> Hint? {
         // we assume that game field is N x N
-        for i in 0..<level.gameCells.count {
+        for i in 0..<level.levelCells.count {
             if let hint = getHint(forRowWithIndex: i) {
                 return hint
             }
