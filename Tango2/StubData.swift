@@ -266,6 +266,31 @@ let level9 = Level.create(
         [.zero, .zero, .one, .one, .zero, .one]
     ])
 
+// Difficulty: Hard
+let level10 = Level.create(
+    title: "10",
+    boardDefinition: [
+        [.zero, nil, nil, nil, nil, .zero],
+        [nil, .one, nil, nil, .zero, nil],
+        [nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil],
+        [nil, .zero, nil, nil, .zero, nil],
+        [.zero, nil, nil, nil, nil, .one],
+    ],
+    conditions: [
+        (.opposite, (2, 2), (2, 3)),
+        (.opposite, (3, 2), (3, 3)),
+        (.equal, (2, 2), (3, 2)),
+        (.equal, (2, 3), (3, 3)),
+    ], solvedCells: [
+        [.zero, .one, .zero, .one, .one, .zero],
+        [.one, .one, .zero, .one, .zero, .zero],
+        [.one, .zero, .one, .zero, .zero, .one],
+        [.zero, .one, .one, .zero, .one, .zero],
+        [.one, .zero, .zero, .one, .zero, .one],
+        [.zero, .zero, .one, .zero, .one, .one],
+    ])
+
 let testLevel1 = Level.create(
     title: "n/a",
     boardDefinition: [
