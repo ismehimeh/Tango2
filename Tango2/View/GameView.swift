@@ -26,6 +26,7 @@ struct GameView: View {
     @State private var shakes: Int = 0
     @State var showNotReadyHint = false
     @State private var hintNotificationTask: Task<Void, Error>?
+    @State private var showHintHint = false
     
     private let winningDelay = 0.1
     private let notificationDuration = 5.0
@@ -67,8 +68,17 @@ struct GameView: View {
                         self.hint = nil
                     }
                 }
+                if showHintHint {
+                    hintHintView
+                }
                 HowToPlayView()
-                    .frame(width: 300)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 15)
+                    .background(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(.gray.opacity(0.3))
+                            .fill(.gray.opacity(0.1))
+                    )
             }
             .padding(.horizontal, 15)
         }
@@ -210,6 +220,17 @@ struct GameView: View {
                 
             }
         }
+    }
+    
+    var hintHintView: some View {
+        Text("Feeling stuck? Tap \"Hint\" to get a nudge in the right direction.")
+            .padding(.horizontal, 20)
+            .padding(.vertical, 15)
+            .background(
+                RoundedRectangle(cornerRadius: 5)
+                    .stroke(.gray.opacity(0.3))
+                    .fill(.gray.opacity(0.1))
+            )
     }
     
     var hintNotReadyView: some View {

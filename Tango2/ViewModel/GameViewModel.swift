@@ -19,7 +19,7 @@ class GameViewModel {
         }
     }
     
-    private let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    private let totalTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     private var timerCancellable: AnyCancellable?
     
     func startTimer() {
