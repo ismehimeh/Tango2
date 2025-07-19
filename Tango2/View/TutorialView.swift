@@ -29,6 +29,7 @@ struct TutorialView: View {
                         nextStage()
                     }
                 }
+                .allowsHitTesting(stage != .congrats)
                 if stage == .intro {
                     // covers field in `invisible` tappable area
                     Color.white.opacity(0.0001)
@@ -38,6 +39,11 @@ struct TutorialView: View {
                 }
             }
             .aspectRatio(1, contentMode: .fit)
+            .onChange(of: game.isSolved, initial: false) { _, newValue in
+                if newValue {
+                    nextStage()
+                }
+            }
             // TODO: text changes width
             
             MistakesListView(mistakes: game.mistakes.map({$0.type.tutorialDescription}))

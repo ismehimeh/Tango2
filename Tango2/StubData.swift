@@ -368,3 +368,18 @@ let testLevel4 = Level.create(
     ],
     conditions: [ ]
 )
+
+let testTutorial = Level.create(
+    title: "Test",
+    lineLength: 4,
+    boardDefinition: [
+        [.zero, .one, .zero, .zero],
+        [.zero, .one, .zero, .one],
+        [.one, .zero, .one, .zero],
+        [.one, .zero, .zero, .one],
+    ],
+    conditions: [
+        (.opposite, (0, 0), (0, 1)),
+        (.opposite, (2, 1), (2, 2)),
+        (.equal, (0, 0), (1, 0))
+    ])

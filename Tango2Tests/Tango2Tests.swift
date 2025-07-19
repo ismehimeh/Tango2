@@ -184,4 +184,10 @@ struct Tango2Tests {
         let expectedResult = [Mistake]()
         #expect(result == expectedResult)
     }
+    
+    // MARK: - Game.isRowValid
+    @Test func isRowValidForAlmostFinishedTutorial() async throws {
+        let game = Game(testTutorial)
+        #expect(game.isRowValid(0) == false)
+    }
 }

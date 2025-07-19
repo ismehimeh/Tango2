@@ -120,8 +120,8 @@ class Game {
 
         // count of 0 and 1
         guard
-            zeroes <= 3,
-            ones <= 3
+            zeroes <= lineLength / 2,
+            ones <= lineLength / 2
         else {
             return false
         }

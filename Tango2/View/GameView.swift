@@ -272,7 +272,7 @@ struct MistakesListView: View {
     var mistakes: [String]
     
     var body: some View {
-        ForEach(mistakes, id: \.self) { mistake in
+        ForEach(Array(Set(mistakes)), id: \.self) { mistake in
             HStack {
                 Text(mistake)
                     .multilineTextAlignment(.leading)
