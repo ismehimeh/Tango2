@@ -13,7 +13,7 @@ struct TutorialView: View {
     
     @State private var stage = TutorialStage.intro
     @State private var game = Game(tutorialLevel)
-    
+    @Environment(\.dismiss) var dismiss
     var body: some View {
         // TODO: this should be a scroll because of expandable "Reminder how to play"
         VStack(spacing: 20) {
@@ -79,21 +79,6 @@ struct TutorialView: View {
             playGameButton
         default:
             EmptyView()
-            Button {
-                if let next = stage.next {
-                    stage = next
-                }
-            } label: {
-                Text("Play tutorial") // or "Play game"
-                    .bold()
-                    .padding(.vertical, 7)
-                    .frame(maxWidth: .infinity)
-            }
-            .foregroundStyle(buttonColor)
-            .background(
-                Capsule()
-                    .stroke(buttonColor)
-            )
         }
     }
     
@@ -115,7 +100,7 @@ struct TutorialView: View {
     
     var playGameButton: some View {
         Button {
-            nextStage()
+            dismiss()
         } label: {
             Text("Play game")
                 .bold()
