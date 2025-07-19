@@ -237,6 +237,7 @@ let level8 = Level.create(
         [.one, .zero, .zero, .one, .one, .zero],
     ])
 
+// Difficulty: Hard
 let level9 = Level.create(
     title: "9",
     boardDefinition: [
@@ -249,7 +250,7 @@ let level9 = Level.create(
     ],
     conditions: [
         (.opposite, (0, 4), (0, 5)),
-        (.opposite, (1, 2), (0, 3)),
+        (.opposite, (1, 2), (1, 3)),
         (.opposite, (2, 3), (2, 4)),
         (.equal, (3, 1), (3, 2)),
         (.equal, (4, 2), (4, 3)),
