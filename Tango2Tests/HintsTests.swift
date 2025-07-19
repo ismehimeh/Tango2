@@ -437,6 +437,22 @@ extension HintsTests {
             #expect(result == expectedValue)
         }
     }
+    
+    @Test func getTrippleOppositeForN0NxN0N() {
+        let line: [CellValue?] = [nil, .zero, nil, nil, .zero, nil]
+        let conditions: [GameCellCondition] = [.init(condition: .opposite,
+                                                     cellA: .init(row: 0, column: 1),
+                                                     cellB: .init(row: 0, column: 2))]
+        // I am not sure they're correct
+        let expectedValue: Hint? = .init(type: .tripleOpposite(lineName: "", value: .one),
+                                         targetCell: .init(row: 0, column: 0),
+                                         relatedCells: [.init(row: 0, column: 1),
+                                                        .init(row: 0, column: 4)])
+        let result = Game.getTripleOppositeHint(in: line, with: conditions)
+        withKnownIssue("Would be updated") {
+            #expect(result == expectedValue)
+        }
+    }
 }
 
 // MARK: forcedThreeNoMoreThan2 
