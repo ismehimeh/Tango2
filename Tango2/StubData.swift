@@ -313,6 +313,42 @@ let level10 = Level.create(
         [.zero, .zero, .one, .zero, .one, .one],
     ])
 
+let level11 = Level.create(
+    title: "11",
+    boardDefinition: [
+        [.zero, .one, nil, nil, nil, nil],
+        [nil, .zero, nil, nil, nil, nil],
+        [.zero, .one, .zero, nil, nil, nil],
+        [nil, nil, nil, .zero, nil, .one],
+        [nil, nil, nil, .one, .zero, nil],
+        [nil, nil, nil, .zero, nil, .one],
+    ],
+    conditions: [
+        (.opposite, (0, 3), (0, 4)),
+        (.opposite, (0, 4), (0, 5)),
+        (.equal, (2, 3), (2, 4)),
+        (.opposite, (2, 4), (2, 5)),
+        (.opposite, (3, 0), (3, 1)),
+        (.opposite, (3, 1), (3, 2)),
+        (.equal, (5, 0), (5, 1)),
+        (.opposite, (5, 1), (5, 2)),
+        (.opposite, (0, 3), (1, 3)),
+        (.equal, (1, 3), (2, 3)),
+        (.opposite, (0, 5), (1, 5)),
+        (.opposite, (1, 5), (2, 5)),
+        (.equal, (3, 0), (4, 0)),
+        (.opposite, (4, 0), (5, 0)),
+        (.opposite, (3, 2), (4, 2)),
+        (.opposite, (4, 2), (5, 2))
+    ], solvedCells: [
+        [.zero, .one, .one, .zero, .one, .zero],
+        [.one, .zero, .zero, .one, .zero, .one],
+        [.zero, .one, .zero, .one, .one, .zero],
+        [.one, .zero, .one, .zero, .zero, .one],
+        [.one, .one, .zero, .one, .zero, .zero],
+        [.zero, .zero, .one, .zero, .one, .one],
+    ])
+
 let testLevel1 = Level.create(
     title: "n/a",
     boardDefinition: [
