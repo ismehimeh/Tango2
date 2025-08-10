@@ -21,12 +21,13 @@ class Game {
     var gameConditions: [GameCellCondition] {
         level.gameConditions
     }
+    
     var isSolved = true
     var isMistake = false
     var mistakes = [Mistake]()
     var secondsSpent = 0
     
-    private var undoManager: UndoManager?
+    private var undoManager: UndoManagerProtocol?
 
     init(_ level: Level) {
         self.level = level
@@ -53,7 +54,7 @@ class Game {
         }
     }
     
-    func setUndoManager(_ undoManager: UndoManager?) {
+    func setUndoManager(_ undoManager: UndoManagerProtocol?) {
         self.undoManager = undoManager
     }
     
