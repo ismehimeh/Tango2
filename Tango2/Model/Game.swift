@@ -5,6 +5,7 @@
 //  Created by Sergei Vasilenko on 11.03.2025.
 //
 
+import Combine
 import Foundation
 
 @Observable
@@ -16,8 +17,6 @@ class Game {
         level.lineLength
     }
     
-    var gameCells: [GameCell]
-    
     var gameConditions: [GameCellCondition] {
         level.gameConditions
     }
@@ -27,7 +26,8 @@ class Game {
     var mistakes = [Mistake]()
     var secondsSpent = 0
     
-    private var undoManager: UndoManagerProtocol?
+    let cellsStore: CellsStore
+    private var cancellables = Set<AnyCancellable>()
 
     init(_ level: Level) {
         self.level = level
@@ -38,10 +38,34 @@ class Game {
             }
         }
         // Convert 2D array to flat array
-        self.gameCells = cells.flatMap { $0 }
+        self.cellsStore = CellsStore(cells.flatMap { $0 },
+                                     lineLength: level.lineLength)
+        
+        validateField()
+        bind()
+    }
+    
+    private func bind() {
+        cellsStore
+            .fieldNeedsRevalidation
+            .sink(receiveValue: validateField)
+            .store(in: &cancellables)
+    }
+    
+    private func validateField() {
         isSolved = checkIsSolved()
         isMistake = !isFieldValid()
         mistakes = getMistakes()
+        
+        // TODO: this code related to delayed mistake indication and was used only on toggle cell, not on every field change
+//        let mistakeId = UUID()
+//        mistakeValidationID = mistakeId
+//        isMistake = false
+        
+//        Task {
+//            try await Task.sleep(for: .seconds(1))
+//            await validateMistake(mistakeId)
+//        }
     }
     
     // TODO: test
@@ -55,25 +79,7 @@ class Game {
     }
     
     func setUndoManager(_ undoManager: UndoManagerProtocol?) {
-        self.undoManager = undoManager
-    }
-    
-    // Helper methods for 2D access
-    func cell(at row: Int, column: Int) -> GameCell {
-        return gameCells[cellIndex(row: row, column: column)]
-    }
-    
-    func cellIndex(row: Int, column: Int) -> Int {
-        return row * level.lineLength + column
-    }
-    
-    func row(_ rowIndex: Int) -> [GameCell] {
-        let startIndex = rowIndex * level.lineLength
-        return Array(gameCells[startIndex..<startIndex + level.lineLength])
-    }
-    
-    func column(_ columnIndex: Int) -> [GameCell] {
-        return (0..<level.lineLength).map { gameCells[cellIndex(row: $0, column: columnIndex)] }
+        cellsStore.setUndoManager(undoManager)
     }
     
     // Access the solved state rows and columns
@@ -88,14 +94,14 @@ class Game {
         return (0..<level.solvedCells.count).map { level.solvedCells[$0][columnIndex] }
     }
 
-    func isRowValid(_ row: Int) -> Bool {
-        let rowArray = self.row(row)
-        let conditions = gameConditions.filter { $0.cellA.row == row && $0.cellB.row == row}
+    func isRowValid(_ index: Int) -> Bool {
+        let rowArray = cellsStore.row(index)
+        let conditions = gameConditions.filter { $0.cellA.row == index && $0.cellB.row == index}
         return isCellsArrayValid(rowArray, conditions)
     }
 
     func isColumnValid(_ column: Int) -> Bool {
-        let columnArray = self.column(column)
+        let columnArray = cellsStore.column(column)
         let conditions = gameConditions
             .filter { $0.cellA.column == column && $0.cellB.column == column}
             .map { GameCellCondition(condition: $0.condition, cellA: CellPosition(row: $0.cellA.column, column: $0.cellA.row), cellB: CellPosition(row: $0.cellB.column, column: $0.cellB.row)) }
@@ -109,7 +115,7 @@ class Game {
     }
 
     func checkIsSolved() -> Bool {
-        let isAllCellsFilled = gameCells.allSatisfy { $0.value != nil || $0.predefinedValue != nil}
+        let isAllCellsFilled = cellsStore.cells.allSatisfy { $0.value != nil || $0.predefinedValue != nil}
         return isAllCellsFilled && isFieldValid()
     }
 
@@ -162,77 +168,23 @@ class Game {
 
         return true
     }
+}
+
+extension Game {
+    
+    func setCellValue(at row: Int, column: Int, value: CellValue?) {
+        cellsStore.setCellValue(at: row, column: column, value: value)
+    }
     
     func toggleCell(_ i: Int, _ j: Int) {
-        let index = cellIndex(row: i, column: j)
-        let cell = gameCells[index]
-        guard cell.predefinedValue == nil else { return }
-        
-        let oldValue = cell.value
-        
-        undoManager?.registerUndo(withTarget: self) { [weak self] target in
-            guard let self else { return }
-            
-            target.setCellValue(at: i, column: j, value: oldValue)
-            
-            undoManager?.registerUndo(withTarget: target) { redoTarget in
-                target.toggleCell(i, j)
-            }
-        }
-
-        if cell.value == nil {
-            gameCells[index].value = .zero
-        }
-        else if cell.value == .zero {
-            gameCells[index].value = .one
-        }
-        else {
-            gameCells[index].value = nil
-        }
-        
-        isSolved = checkIsSolved()
-        isMistake = !isFieldValid()
-        mistakes = getMistakes()
-        
-//        let mistakeId = UUID()
-//        mistakeValidationID = mistakeId
-//        isMistake = false
-        
-//        Task {
-//            try await Task.sleep(for: .seconds(1))
-//            await validateMistake(mistakeId)
-//        }
+        cellsStore.toggleCell(i, j)
+    }
+    
+    func cell(at row: Int, column: Int) -> GameCell {
+        cellsStore.cell(at: row, column: column)
     }
     
     func clearField() {
-        let oldCells = gameCells
-        
-        undoManager?.registerUndo(withTarget: self) { [weak self] target in
-            guard let self else { return }
-            
-            resetField(with: oldCells)
-            
-            undoManager?.registerUndo(withTarget: self) { redoTarget in
-                redoTarget.clearField()
-            }
-        }
-        
-        resetField(with: gameCells.cleared())
-    }
-    
-    func resetField(with cells: [GameCell]) {
-        gameCells = cells
-        isSolved = checkIsSolved()
-        isMistake = !isFieldValid()
-        mistakes = getMistakes()
-    }
-    
-    func setCellValue(at row: Int, column: Int, value: CellValue?) {
-        let index = cellIndex(row: row, column: column)
-        gameCells[index].value = value
-        
-        isSolved = checkIsSolved()
-        isMistake = !isFieldValid()
-        mistakes = getMistakes()
+        cellsStore.clearField()
     }
 }

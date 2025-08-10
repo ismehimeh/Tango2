@@ -26,17 +26,17 @@ extension Game {
     
     func getMistakes(forRowWithIndex rowIndex: Int) -> [Mistake] {
         var mistakes = [Mistake]()
-        mistakes.append(contentsOf: checkSignViolation(cells: row(rowIndex), isRow: true, index: rowIndex))
-        mistakes.append(contentsOf: checkSameNumberValues(cells: row(rowIndex), isRow: true, index: rowIndex))
-        mistakes.append(contentsOf: checkNoMoreThan2(cells: row(rowIndex), isRow: true, index: rowIndex))
+        mistakes.append(contentsOf: checkSignViolation(cells: cellsStore.row(rowIndex), isRow: true, index: rowIndex))
+        mistakes.append(contentsOf: checkSameNumberValues(cells: cellsStore.row(rowIndex), isRow: true, index: rowIndex))
+        mistakes.append(contentsOf: checkNoMoreThan2(cells: cellsStore.row(rowIndex), isRow: true, index: rowIndex))
         return mistakes
     }
     
     func getMistakes(forColumnWithIndex columnIndex: Int) -> [Mistake] {
         var mistakes = [Mistake]()
-        mistakes.append(contentsOf: checkSignViolation(cells: column(columnIndex), isRow: false, index: columnIndex))
-        mistakes.append(contentsOf: checkSameNumberValues(cells: column(columnIndex), isRow: false, index: columnIndex))
-        mistakes.append(contentsOf: checkNoMoreThan2(cells: column(columnIndex), isRow: false, index: columnIndex))
+        mistakes.append(contentsOf: checkSignViolation(cells: cellsStore.column(columnIndex), isRow: false, index: columnIndex))
+        mistakes.append(contentsOf: checkSameNumberValues(cells: cellsStore.column(columnIndex), isRow: false, index: columnIndex))
+        mistakes.append(contentsOf: checkNoMoreThan2(cells: cellsStore.column(columnIndex), isRow: false, index: columnIndex))
         return mistakes
     }
 }
