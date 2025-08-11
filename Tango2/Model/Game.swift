@@ -10,6 +10,13 @@ import Foundation
 
 @Observable
 class Game {
+    // Responsibilities of Game
+    // 1. Generates hints
+    // 2. Generate mistakes
+    // 3. Holds one game state (isSolved, isMistake, secondsSpent)
+    // 4. Orchestrates field changes and reponse for them
+    // 5. Holds and provides solved level data
+    // 6. Checks field's validity
 
     let level: Level
     
