@@ -36,15 +36,19 @@ class Game {
     private var cancellables = Set<AnyCancellable>()
     private let fieldValidator: FieldValidatorProtocol
 
-    init(_ level: Level, fieldValidator: FieldValidatorProtocol = DefaultFieldValidator()) {
+    init(_ level: Level,
+         fieldValidator: FieldValidatorProtocol = DefaultFieldValidator())
+    {
         self.level = level
         self.fieldValidator = fieldValidator
+        
         // Create mutable game cells from immutable level cells
         let cells = level.levelCells.map { row in
             row.map { levelCell in
                 GameCell(predefinedValue: levelCell.predefinedValue)
             }
         }
+        
         // Convert 2D array to flat array
         self.cellsStore = CellsStore(cells.flatMap { $0 },
                                      lineLength: level.lineLength)
@@ -76,8 +80,6 @@ class Game {
 //        }
     }
     
-    // TODO: test
-    // looking for mistake with this row and column
     func isMistakeCell(i: Int, j: Int) -> Bool {
         return mistakes.contains { mistake in
             mistake.cells.contains { cell in
@@ -85,8 +87,11 @@ class Game {
             }
         }
     }
+}
+
+// MARK: Access the solved state rows and columns
+extension Game {
     
-    // Access the solved state rows and columns
     func solvedRow(_ rowIndex: Int) -> [CellValue] {
         guard rowIndex < level.solvedCells.count else { return [] }
         return level.solvedCells[rowIndex]
@@ -104,7 +109,7 @@ class Game {
     }
 }
 
-// MARK: validity check
+// MARK: Validity check
 extension Game {
     
     func isRowValid(_ index: Int) -> Bool {
