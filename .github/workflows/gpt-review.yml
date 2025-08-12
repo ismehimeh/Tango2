@@ -1,0 +1,16 @@
+name: GPT Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run GPT Review
+        uses: microsoft/gpt-review@v0.9.5
+        with:
+          azure_endpoint: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
+          azure_api_key: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          azure_deployment: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
