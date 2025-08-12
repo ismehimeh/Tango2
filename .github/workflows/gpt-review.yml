@@ -1,16 +1,41 @@
-name: GPT Review
+name: GPT Review (CLI)
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+permissions:
+  contents: read
+  pull-requests: write
+
 jobs:
   review:
     runs-on: ubuntu-latest
     steps:
-      - name: Run GPT Review
-        uses: microsoft/gpt-review@v0.9.5
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
         with:
-          azure_endpoint: ${{ secrets.AZURE_OPENAI_ENDPOINT }}
-          azure_api_key: ${{ secrets.AZURE_OPENAI_API_KEY }}
-          azure_deployment: ${{ secrets.AZURE_OPENAI_DEPLOYMENT }}
+          python-version: '3.x'
+
+      - name: Install gpt-review CLI
+        run: pip install gpt-review
+
+      - name: Run GPT PR review
+        env:
+          # Use ONE of these credential paths:
+          # --- Direct OpenAI:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # --- OR Azure OpenAI (preferred in corporate/Azure setups):
+          AZURE_OPENAI_API: ${{ secrets.AZURE_OPENAI_API }}              # e.g., https://<resource>.openai.azure.com/
+          AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
+          # Optional: if you store secrets in Azure Key Vault
+          AZURE_KEY_VAULT_URL: ${{ secrets.AZURE_KEY_VAULT_URL }}
+
+          # GitHub token to let the CLI post comments on the PR
+          GITHUB_ACCESS_TOKEN: ${{ github.token }}
+        run: |
+          gpt github review \
+            --access-token "$GITHUB_ACCESS_TOKEN" \
+            --pull-request "${{ github.event.pull_request.number }}" \
+            --repository "${{ github.repository }}"
