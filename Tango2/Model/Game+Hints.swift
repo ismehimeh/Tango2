@@ -63,10 +63,10 @@ extension Game {
         // Get the appropriate line values and solved values
         switch lineType {
         case .row(let index):
-            lineValues = cellsStore.row(index).map { $0.value }
+            lineValues = row(index).map { $0.value }
             solvedValues = solvedRow(index)
         case .column(let index):
-            lineValues = cellsStore.column(index).map { $0.value }
+            lineValues = column(index).map { $0.value }
             solvedValues = solvedColumn(index)
         }
         

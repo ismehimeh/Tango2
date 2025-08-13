@@ -32,7 +32,7 @@ class Game {
     var mistakes = [Mistake]()
     var secondsSpent = 0
     
-    let cellsStore: CellsStore
+    private let cellsStore: CellsStore
     private var cancellables = Set<AnyCancellable>()
     private let fieldValidator: FieldValidatorProtocol
 
@@ -154,5 +154,13 @@ extension Game {
     
     func clearField() {
         cellsStore.clearField()
+    }
+    
+    func row(_ rowIndex: Int) -> [GameCell] {
+        cellsStore.row(rowIndex)
+    }
+    
+    func column(_ columnIndex: Int) -> [GameCell] {
+        cellsStore.column(columnIndex)
     }
 }

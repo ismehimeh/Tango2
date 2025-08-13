@@ -159,7 +159,7 @@ struct Tango2Tests {
     // checkNoMoreThan2 for cells
     @Test func checkNoMoreThan2ForCellsRow() async throws {
         let game = Game(testLevel3)
-        let row = game.cellsStore.row(0)
+        let row = game.row(0)
         let result = game.checkNoMoreThan2(cells: row, isRow: true, index: 0)
         let expectedResult = [Mistake(cells: [.init(row: 0, column: 0),
                                               .init(row: 0, column: 1),
@@ -169,7 +169,7 @@ struct Tango2Tests {
     
     @Test func checkNoMoreThan2ForCellsColumn() async throws {
         let game = Game(testLevel3)
-        let column = game.cellsStore.column(0)
+        let column = game.column(0)
         let result = game.checkNoMoreThan2(cells: column, isRow: false, index: 0)
         let expectedResult = [Mistake(cells: [.init(row: 0, column: 0),
                                               .init(row: 1, column: 0),
@@ -179,7 +179,7 @@ struct Tango2Tests {
     
     @Test func checkNoMoreThan2ForCellsColumnSpecialCase() async throws {
         let game = Game(testLevel4)
-        let column = game.cellsStore.column(1)
+        let column = game.column(1)
         let result = game.checkNoMoreThan2(cells: column, isRow: false, index: 1)
         let expectedResult = [Mistake]()
         #expect(result == expectedResult)
