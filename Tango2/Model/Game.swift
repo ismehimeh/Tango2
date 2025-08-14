@@ -12,10 +12,9 @@ import Foundation
 class Game {
     // Responsibilities of Game
     // 1. Generates hints
-    // 2. Generate mistakes
-    // 3. Holds one game state (isSolved, isMistake, secondsSpent)
-    // 4. Orchestrates field changes and reponse for them
-    // 5. Holds and provides solved level data
+    // 2. Holds one game state (isSolved, isMistake, secondsSpent)
+    // 3. Orchestrates field changes and reponse for them
+    // 4. Holds and provides solved level data
 
     let currentLevel: Level
     
@@ -166,6 +165,14 @@ extension Game {
     
     func getMistakes() -> [Mistake] {
         mistakeService.getMistakes()
+    }
+    
+    func getMistakes(forRowWithIndex rowIndex: Int) -> [Mistake] {
+        mistakeService.getMistakes(forRowWithIndex: rowIndex)
+    }
+    
+    func getMistakes(forColumnWithIndex columnIndex: Int) -> [Mistake] {
+        mistakeService.getMistakes(forColumnWithIndex: columnIndex)
     }
 }
 
