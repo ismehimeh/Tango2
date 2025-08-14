@@ -5,7 +5,10 @@
 //  Created by Sergei Vasilenko on 13.08.2025.
 //
 
-protocol MistakeServiceProtocol {
+protocol MistakeServiceProtocol: AnyObject {
+    
+    var dataSource: MistakeServiceDataSource? { get set }
+    
     func getMistakes() -> [Mistake]
     func getMistakes(forRowWithIndex rowIndex: Int) -> [Mistake]
     func getMistakes(forColumnWithIndex columnIndex: Int) -> [Mistake]

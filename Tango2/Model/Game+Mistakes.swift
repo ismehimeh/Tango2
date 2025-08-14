@@ -12,12 +12,12 @@ extension Game {
         var allMistakes = [Mistake]()
         
         // Check all rows
-        for rowIndex in 0..<level.levelCells.count {
+        for rowIndex in 0..<currentLevel.levelCells.count {
             allMistakes.append(contentsOf: getMistakes(forRowWithIndex: rowIndex))
         }
         
         // Check all columns
-        for columnIndex in 0..<level.levelCells[0].count {
+        for columnIndex in 0..<currentLevel.levelCells[0].count {
             allMistakes.append(contentsOf: getMistakes(forColumnWithIndex: columnIndex))
         }
         

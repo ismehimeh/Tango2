@@ -17,14 +17,14 @@ class Game {
     // 4. Orchestrates field changes and reponse for them
     // 5. Holds and provides solved level data
 
-    let level: Level
+    let currentLevel: Level
     
     var lineLength: Int {
         cellsStore.lineLength
     }
     
     var gameConditions: [GameCellCondition] {
-        level.gameConditions
+        currentLevel.gameConditions
     }
     
     var isSolved = true
@@ -35,12 +35,15 @@ class Game {
     private let cellsStore: CellsStore
     private var cancellables = Set<AnyCancellable>()
     private let fieldValidator: FieldValidatorProtocol
+    private let mistakeService: MistakeServiceProtocol
 
     init(_ level: Level,
-         fieldValidator: FieldValidatorProtocol = DefaultFieldValidator())
+         fieldValidator: FieldValidatorProtocol = DefaultFieldValidator(),
+         mistakeService: MistakeServiceProtocol = MistakeService())
     {
-        self.level = level
+        self.currentLevel = level
         self.fieldValidator = fieldValidator
+        self.mistakeService = mistakeService
         
         // Create mutable game cells from immutable level cells
         let cells = level.levelCells.map { row in
@@ -52,6 +55,7 @@ class Game {
         // Convert 2D array to flat array
         self.cellsStore = CellsStore(cells.flatMap { $0 },
                                      lineLength: level.lineLength)
+        mistakeService.dataSource = self
         
         refreshGame()
         bind()
@@ -93,14 +97,14 @@ class Game {
 extension Game {
     
     func solvedRow(_ rowIndex: Int) -> [CellValue] {
-        guard rowIndex < level.solvedCells.count else { return [] }
-        return level.solvedCells[rowIndex]
+        guard rowIndex < currentLevel.solvedCells.count else { return [] }
+        return currentLevel.solvedCells[rowIndex]
     }
     
     func solvedColumn(_ columnIndex: Int) -> [CellValue] {
-        guard !level.solvedCells.isEmpty else { return [] }
-        guard columnIndex < level.solvedCells[0].count else { return [] }
-        return (0..<level.solvedCells.count).map { level.solvedCells[$0][columnIndex] }
+        guard !currentLevel.solvedCells.isEmpty else { return [] }
+        guard columnIndex < currentLevel.solvedCells[0].count else { return [] }
+        return (0..<currentLevel.solvedCells.count).map { currentLevel.solvedCells[$0][columnIndex] }
     }
 
     func checkIsSolved() -> Bool {
@@ -155,12 +159,22 @@ extension Game {
     func clearField() {
         cellsStore.clearField()
     }
+}
+
+extension Game: MistakeServiceDataSource {
+    func level() -> Level {
+        return currentLevel
+    }
+    
+    func conditions() -> [GameCellCondition] {
+        return gameConditions
+    }
     
     func row(_ rowIndex: Int) -> [GameCell] {
-        cellsStore.row(rowIndex)
+        return cellsStore.row(rowIndex)
     }
     
     func column(_ columnIndex: Int) -> [GameCell] {
-        cellsStore.column(columnIndex)
+        return cellsStore.column(columnIndex)
     }
 }
