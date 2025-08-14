@@ -161,6 +161,15 @@ extension Game {
     }
 }
 
+// MARK: MistakeService
+extension Game {
+    
+    func getMistakes() -> [Mistake] {
+        mistakeService.getMistakes()
+    }
+}
+
+// MARK: MistakeServiceDataSource
 extension Game: MistakeServiceDataSource {
     func level() -> Level {
         return currentLevel

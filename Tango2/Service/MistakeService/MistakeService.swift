@@ -124,14 +124,14 @@ extension MistakeService {
      */
     func checkNoMoreThan2(cells: [GameCell], isRow: Bool, index: Int) -> [Mistake] {
         var mistakes = [Mistake]()
-        if let zerosMistakePosition = Game.checkNoMoreThan2(of: .zero, in: cells.map { $0.value }) {
+        if let zerosMistakePosition = MistakeService.checkNoMoreThan2(of: .zero, in: cells.map { $0.value }) {
             let positions = (zerosMistakePosition.0...zerosMistakePosition.1).map {
                 CellPosition(row: isRow ? index : $0, column: isRow ? $0 : index)
             }
             mistakes.append(.init(cells: positions, type: .noMoreThan2))
         }
         
-        if let onesMistakePosition = Game.checkNoMoreThan2(of: .one, in: cells.map { $0.value }) {
+        if let onesMistakePosition = MistakeService.checkNoMoreThan2(of: .one, in: cells.map { $0.value }) {
             let positions = (onesMistakePosition.0...onesMistakePosition.1).map {
                 CellPosition(row: isRow ? index : $0, column: isRow ? $0 : index)
             }
