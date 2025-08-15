@@ -32,17 +32,17 @@ class Game {
     
     private let cellsStore: FieldStore
     private var cancellables = Set<AnyCancellable>()
-    private let fieldValidator: FieldValidatorProtocol
+    private let validatorService: ValidatorServiceProtocol
     private let mistakeService: MistakeServiceProtocol
     private let hintService: HintServiceProtocol
 
     init(_ level: Level,
-         fieldValidator: FieldValidatorProtocol = DefaultFieldValidator(),
+         validatorService: ValidatorServiceProtocol = ValidatorService(),
          mistakeService: MistakeServiceProtocol = MistakeService(),
          hintService: HintServiceProtocol = HintService())
     {
         self.currentLevel = level
-        self.fieldValidator = fieldValidator
+        self.validatorService = validatorService
         self.mistakeService = mistakeService
         self.hintService = hintService
         
@@ -56,6 +56,8 @@ class Game {
         // Convert 2D array to flat array
         self.cellsStore = FieldStore(cells.flatMap { $0 },
                                      lineLength: level.lineLength)
+        
+        validatorService.dataSource = self
         mistakeService.dataSource = self
         hintService.dataSource = self
         
@@ -72,7 +74,7 @@ class Game {
     
     private func refreshGame() {
         isSolved = checkIsSolved()
-        isMistake = !isFieldValid()
+        isMistake = !validatorService.isFieldValid()
         mistakes = getMistakes()
         
         // TODO: this code related to delayed mistake indication and was used only on toggle cell, not on every field change
@@ -99,31 +101,7 @@ extension Game {
 
     func checkIsSolved() -> Bool {
         let isAllCellsFilled = cellsStore.cells.allSatisfy { $0.value != nil || $0.predefinedValue != nil}
-        return isAllCellsFilled && isFieldValid()
-    }
-}
-
-// MARK: Validity check
-extension Game {
-    
-    func isRowValid(_ index: Int) -> Bool {
-        let rowArray = cellsStore.row(index)
-        let conditions = gameConditions.filter { $0.cellA.row == index && $0.cellB.row == index}
-        return fieldValidator.isCellsArrayValid(rowArray, conditions, lineLength: lineLength)
-    }
-
-    func isColumnValid(_ column: Int) -> Bool {
-        let columnArray = cellsStore.column(column)
-        let conditions = gameConditions
-            .filter { $0.cellA.column == column && $0.cellB.column == column}
-            .map { Condition(condition: $0.condition, cellA: CellPosition(row: $0.cellA.column, column: $0.cellA.row), cellB: CellPosition(row: $0.cellB.column, column: $0.cellB.row)) }
-        return fieldValidator.isCellsArrayValid(columnArray, conditions, lineLength: lineLength)
-    }
-
-    func isFieldValid() -> Bool {
-        let isRowsValid = (0..<lineLength).map { isRowValid($0) }.allSatisfy { $0 }
-        let isColumnsValid = (0..<lineLength).map { isColumnValid($0) }.allSatisfy { $0 }
-        return isRowsValid && isColumnsValid
+        return isAllCellsFilled && validatorService.isFieldValid()
     }
 }
 
@@ -168,7 +146,7 @@ extension Game {
 }
 
 // MARK: MistakeServiceDataSource & HintServiceDataSource
-extension Game: MistakeServiceDataSource, HintServiceDataSource {
+extension Game: MistakeServiceDataSource, HintServiceDataSource, ValidatorServiceDataSource {
     func level() -> Level {
         return currentLevel
     }
