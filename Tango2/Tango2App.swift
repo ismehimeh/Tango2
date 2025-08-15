@@ -5,6 +5,7 @@
 //  Created by Sergei Vasilenko on 9.06.2025.
 //
 
+import SwiftData
 import SwiftUI
 
 @main
@@ -19,6 +20,7 @@ struct Tango2App: App {
         WindowGroup {
             LevelsView(levels: appState.levels)
                 .environment(appState)
+                .modelContainer(for: [LevelCell.self])
         }
     }
 }

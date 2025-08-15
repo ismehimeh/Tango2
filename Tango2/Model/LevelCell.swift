@@ -6,12 +6,23 @@
 //
 
 import Foundation
+import SwiftData
 
-/// Immutable representation of a cell in a level definition
-struct LevelCell: Hashable, Equatable {
-    let predefinedValue: CellValue?
+@Model
+class LevelCell: Hashable, Equatable {
+    var predefinedValueRaw: Int?
+    
+    var predefinedValue: CellValue? {
+        get {
+            guard let raw = predefinedValueRaw else { return nil }
+            return CellValue(rawValue: raw)
+        }
+        set {
+            predefinedValueRaw = newValue?.rawValue
+        }
+    }
     
     init(predefinedValue: CellValue? = nil) {
-        self.predefinedValue = predefinedValue
+        self.predefinedValueRaw = predefinedValue?.rawValue
     }
 }
