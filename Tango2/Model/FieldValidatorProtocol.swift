@@ -6,5 +6,5 @@
 //
 
 protocol FieldValidatorProtocol {
-    func isCellsArrayValid(_ cells: [GameCell], _ conditions: [GameCellCondition], lineLength: Int) -> Bool
+    func isCellsArrayValid(_ cells: [GameCell], _ conditions: [Condition], lineLength: Int) -> Bool
 }

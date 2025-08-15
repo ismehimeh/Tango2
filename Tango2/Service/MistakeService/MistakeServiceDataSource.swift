@@ -7,7 +7,7 @@
 
 protocol MistakeServiceDataSource: AnyObject {
     func level() -> Level
-    func conditions() -> [GameCellCondition]
+    func conditions() -> [Condition]
     func row(_ rowIndex: Int) -> [GameCell]
     func column(_ columnIndex: Int) -> [GameCell]
 }

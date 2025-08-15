@@ -5,10 +5,7 @@
 //  Created by Sergei Vasilenko on 15.08.2025.
 //
 
-typealias Sign = GameCellCondition.Condition
-
 // TODO: hints are designed specifically for 6x6 levels - should I update them for 4x4?
-
 class HintService: HintServiceProtocol {
     
     weak var dataSource: HintServiceDataSource?
@@ -115,7 +112,7 @@ class HintService: HintServiceProtocol {
 private extension HintService {
     
     /// Gets the filtered conditions relevant for the given line type
-    private func getFilteredConditions(for lineType: LineType) -> [GameCellCondition] {
+    private func getFilteredConditions(for lineType: LineType) -> [Condition] {
         guard let conditions = dataSource?.conditions() else { return [] }
         
         switch lineType {
@@ -123,7 +120,7 @@ private extension HintService {
             return conditions.filter {
                 $0.cellA.column != $0.cellB.column && $0.cellA.row == index
             }.map {
-                GameCellCondition(
+                Condition(
                     condition: $0.condition,
                     cellA: .init(row: 0, column: $0.cellA.column),
                     cellB: .init(row: 0, column: $0.cellB.column))
@@ -133,7 +130,7 @@ private extension HintService {
             return conditions.filter {
                 $0.cellA.row != $0.cellB.row && $0.cellA.column == index
             }.map {
-                GameCellCondition(
+                Condition(
                     condition: $0.condition,
                     cellA: .init(row: 0, column: $0.cellA.row),
                     cellB: .init(row: 0, column: $0.cellB.row))
@@ -215,7 +212,7 @@ extension HintService {
                     relatedCells: relatedCells)
     }
     
-    static func getSignHint(for line: [CellValue?], with conditions: [GameCellCondition]) -> Hint? {
+    static func getSignHint(for line: [CellValue?], with conditions: [Condition]) -> Hint? {
         for condition in conditions {
             let first = line[condition.cellA.column]
             let second = line[condition.cellB.column]
@@ -312,7 +309,7 @@ extension HintService {
     }
     
     static func getTripleOppositeHint(in line: [CellValue?],
-                                      with conditions: [GameCellCondition]) -> Hint?
+                                      with conditions: [Condition]) -> Hint?
     {
         let nilSequence: [CellValue?] = [nil, nil, nil]
         guard let nilSequenceRange = line.firstRange(of: nilSequence) else { return nil }
@@ -325,7 +322,7 @@ extension HintService {
         let containsFirstSequence = line.contains(notNilSequences[0])
         guard containsFirstSequence ||  line.contains(notNilSequences[1]) else { return nil }
         
-        let conditions1: [GameCellCondition] = [.init(condition: .opposite,
+        let conditions1: [Condition] = [.init(condition: .opposite,
                                                      cellA: .init(row: 0, column: 0),
                                                      cellB: .init(row: 0, column: 1)),
                                                .init(condition: .opposite,
@@ -333,7 +330,7 @@ extension HintService {
                                                      cellB: .init(row: 0, column: 2)),
         ]
         
-        let conditions2: [GameCellCondition] = [.init(condition: .opposite,
+        let conditions2: [Condition] = [.init(condition: .opposite,
                                                      cellA: .init(row: 0, column: 3),
                                                      cellB: .init(row: 0, column: 4)),
                                                .init(condition: .opposite,
@@ -361,7 +358,7 @@ extension HintService {
     
     // MARK: ForcedThreeNoMoreThan2
     static func getForcedThreeNoMoreThan2Hint(in line: [CellValue?],
-                                              with conditions: [GameCellCondition]) -> Hint?
+                                              with conditions: [Condition]) -> Hint?
     {
         // looks like this hint is all about equal sign and 2 empty cell around
         
@@ -375,7 +372,8 @@ extension HintService {
             equal.cellA.column > 0,
             let value = line[equal.cellA.column - 1]
         {
-            return Hint(type: .forcedThreeNoMoreThan2(value: value.opposite, sign: Sign.equal.symbol),
+            return Hint(type: .forcedThreeNoMoreThan2(value: value.opposite,
+                                                      sign: Condition.Sign.equal.symbol),
                         targetCell: equal.cellA,
                         relatedCells: [equal.cellB,
                                        .init(row: 0, column: equal.cellA.column - 1)])
@@ -385,7 +383,8 @@ extension HintService {
             equal.cellB.column < line.count - 1,
             let value = line[equal.cellB.column + 1]
         {
-            return Hint(type: .forcedThreeNoMoreThan2(value: value.opposite, sign: Sign.equal.symbol),
+            return Hint(type: .forcedThreeNoMoreThan2(value: value.opposite,
+                                                      sign: Condition.Sign.equal.symbol),
                         targetCell: equal.cellB,
                         relatedCells: [equal.cellA,
                                        .init(row: 0, column: equal.cellB.column + 1)])

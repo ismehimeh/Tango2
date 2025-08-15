@@ -93,9 +93,9 @@ enum TutorialStage: CaseIterable {
         case .sameNumber:
             return "Each row (and column) must contain the same number of \(CellValue.zero.symbol) and \(CellValue.one.symbol).\n\nTherefore, the highlighted cell must be a \(CellValue.zero.symbol)."
         case .equalSign:
-            return HintType.sign(sign: GameCellCondition.Condition.equal.symbol, value: .zero).description
+            return HintType.sign(sign: Condition.Sign.equal.symbol, value: .zero).description
         case .oppositeSign:
-            return "\(HintType.sign(sign: GameCellCondition.Condition.opposite.symbol, value: .one).description)\n\nPlace a \(CellValue.one.symbol) by tapping twice on the highlighted cell."
+            return "\(HintType.sign(sign: Condition.Sign.opposite.symbol, value: .one).description)\n\nPlace a \(CellValue.one.symbol) by tapping twice on the highlighted cell."
         case .noMoreThan2_2:
             return HintType.noMoreThan2(value: .one).description
         case .doItYourself:

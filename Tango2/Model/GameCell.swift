@@ -35,7 +35,7 @@ enum CellValue: Int, Hashable {
         self == .zero ? .one : .zero
     }
     
-    func signed(_ sign: GameCellCondition.Condition) -> CellValue {
+    func signed(_ sign: Condition.Sign) -> CellValue {
         if sign == .equal {
             return self
         }

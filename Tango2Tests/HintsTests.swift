@@ -8,7 +8,7 @@
 import Testing
 @testable import Tango2
 
-typealias Sign = GameCellCondition.Condition
+typealias Sign = Condition.Sign
 
 struct HintsTests { }
 
@@ -228,7 +228,7 @@ extension HintsTests {
     
     @Test func noHintForLineWithNoSign() {
         let line: [CellValue?] = [nil, nil, nil, nil, nil, nil]
-        let conditions: [GameCellCondition] = [.init(condition: .equal,
+        let conditions: [Condition] = [.init(condition: .equal,
                                                      cellA: .init(row: 0, column: 0),
                                                      cellB: .init(row: 0, column: 1))]
         let expectedValue: Hint? = nil
@@ -238,7 +238,7 @@ extension HintsTests {
     
     @Test func noHintForEmptyLineWithSign() {
         let line: [CellValue?] = [nil, nil, nil, nil, nil, nil]
-        let conditions: [GameCellCondition] = []
+        let conditions: [Condition] = []
         let expectedValue: Hint? = nil
         let result = HintService.getSignHint(for: line, with: conditions)
         #expect(result == expectedValue)
@@ -246,7 +246,7 @@ extension HintsTests {
     
     @Test func gotSignHintFor0AndOEqual() {
         let line: [CellValue?] = [.zero, nil, nil, nil, nil, nil]
-        let conditions: [GameCellCondition] = [.init(condition: .equal,
+        let conditions: [Condition] = [.init(condition: .equal,
                                                      cellA: .init(row: 0, column: 0),
                                                      cellB: .init(row: 0, column: 1))]
         let expectedValue: Hint? = .init(type: .sign(sign: Sign.equal.symbol, value: .zero),
@@ -258,7 +258,7 @@ extension HintsTests {
     
     @Test func gotSignHintFor0AndEqualReversed() {
         let line: [CellValue?] = [nil, .zero, nil, nil, nil, nil]
-        let conditions: [GameCellCondition] = [.init(condition: .equal,
+        let conditions: [Condition] = [.init(condition: .equal,
                                                      cellA: .init(row: 0, column: 0),
                                                      cellB: .init(row: 0, column: 1))]
         let expectedValue: Hint? = .init(type: .sign(sign: Sign.equal.symbol, value: .zero),
@@ -270,7 +270,7 @@ extension HintsTests {
     
     @Test func gotSignHintFor1AndOEqual() {
         let line: [CellValue?] = [.one, nil, nil, nil, nil, nil]
-        let conditions: [GameCellCondition] = [.init(condition: .equal,
+        let conditions: [Condition] = [.init(condition: .equal,
                                                      cellA: .init(row: 0, column: 0),
                                                      cellB: .init(row: 0, column: 1))]
         let expectedValue: Hint? = .init(type: .sign(sign: Sign.equal.symbol, value: .one),
@@ -282,7 +282,7 @@ extension HintsTests {
     
     @Test func gotSignHintFor1AndEqualReversed() {
         let line: [CellValue?] = [nil, .one, nil, nil, nil, nil]
-        let conditions: [GameCellCondition] = [.init(condition: .equal,
+        let conditions: [Condition] = [.init(condition: .equal,
                                                      cellA: .init(row: 0, column: 0),
                                                      cellB: .init(row: 0, column: 1))]
         let expectedValue: Hint? = .init(type: .sign(sign: Sign.equal.symbol, value: .one),
@@ -294,7 +294,7 @@ extension HintsTests {
     
     @Test func gotSignHintFor0And2Conditions() {
         let line: [CellValue?] = [nil, nil, nil, nil, .zero, nil]
-        let conditions: [GameCellCondition] = [.init(condition: .equal,
+        let conditions: [Condition] = [.init(condition: .equal,
                                                      cellA: .init(row: 0, column: 2),
                                                      cellB: .init(row: 0, column: 3)),
                                                .init(condition: .opposite,
@@ -363,7 +363,7 @@ extension HintsTests {
         let line1: [CellValue?] = [nil, nil, nil, .zero, .one, .zero]
         let line2: [CellValue?] = [nil, nil, nil, .one, .zero, .one]
         
-        let conditions1: [GameCellCondition] = [.init(condition: .opposite,
+        let conditions1: [Condition] = [.init(condition: .opposite,
                                                      cellA: .init(row: 0, column: 0),
                                                      cellB: .init(row: 0, column: 1)),
                                                .init(condition: .opposite,
@@ -391,7 +391,7 @@ extension HintsTests {
         let line3: [CellValue?] = [.zero, .one, .zero, nil, nil, nil]
         let line4: [CellValue?] = [.one, .zero, .one, nil, nil, nil]
         
-        let conditions2: [GameCellCondition] = [.init(condition: .opposite,
+        let conditions2: [Condition] = [.init(condition: .opposite,
                                                      cellA: .init(row: 0, column: 3),
                                                      cellB: .init(row: 0, column: 4)),
                                                .init(condition: .opposite,
@@ -422,7 +422,7 @@ extension HintsTests {
         // N=NN010
         let line: [CellValue?] = [nil, nil, nil, .zero, .one, .zero]
         
-        let conditions: [GameCellCondition] = [.init(condition: .equal,
+        let conditions: [Condition] = [.init(condition: .equal,
                                                      cellA: .init(row: 0, column: 0),
                                                      cellB: .init(row: 0, column: 1))]
         
@@ -440,7 +440,7 @@ extension HintsTests {
     
     @Test func getTrippleOppositeForN0NxN0N() {
         let line: [CellValue?] = [nil, .zero, nil, nil, .zero, nil]
-        let conditions: [GameCellCondition] = [.init(condition: .opposite,
+        let conditions: [Condition] = [.init(condition: .opposite,
                                                      cellA: .init(row: 0, column: 1),
                                                      cellB: .init(row: 0, column: 2))]
         // I am not sure they're correct
@@ -460,7 +460,7 @@ extension HintsTests {
     // NNN=N0x1
     @Test func getForcedThreeNoMoreThan2HintForNNNEqualsN0x1() async throws {
         let line: [CellValue?] = [nil, nil, nil, nil, .zero, .one]
-        let conditions: [GameCellCondition] = [.init(condition: .equal,
+        let conditions: [Condition] = [.init(condition: .equal,
                                                     cellA: .init(row: 0, column: 2),
                                                     cellB: .init(row: 0, column: 3)),
                                                .init(condition: .opposite,
@@ -479,7 +479,7 @@ extension HintsTests {
     // N=N1x01N
     @Test func getForcedThreeNoMoreThan2HintForNEqualsN1x01N() async throws {
         let line: [CellValue?] = [nil, nil, .one, .zero, .one, nil]
-        let conditions: [GameCellCondition] = [.init(condition: .equal,
+        let conditions: [Condition] = [.init(condition: .equal,
                                                     cellA: .init(row: 0, column: 0),
                                                     cellB: .init(row: 0, column: 1)),
                                                .init(condition: .opposite,
@@ -498,7 +498,7 @@ extension HintsTests {
     // NN=N1NN
     @Test func getForcedThreeNoMoreThan2HintForNNEqualsN1NN() async throws {
         let line: [CellValue?] = [nil, nil, nil, .one, nil, nil]
-        let conditions: [GameCellCondition] = [.init(condition: .equal,
+        let conditions: [Condition] = [.init(condition: .equal,
                                                     cellA: .init(row: 0, column: 1),
                                                     cellB: .init(row: 0, column: 2))]
         
@@ -514,7 +514,7 @@ extension HintsTests {
     // NNN=N10
     @Test func getForcedThreeNoMoreThan2HintForNNNEqualsN10() async throws {
         let line: [CellValue?] = [nil, nil, nil, nil, .one, .zero]
-        let conditions: [GameCellCondition] = [.init(condition: .equal,
+        let conditions: [Condition] = [.init(condition: .equal,
                                                     cellA: .init(row: 0, column: 2),
                                                     cellB: .init(row: 0, column: 3))]
         

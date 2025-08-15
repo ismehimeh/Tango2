@@ -8,7 +8,7 @@
 protocol HintServiceDataSource: AnyObject {
     
     func level() -> Level
-    func conditions() -> [GameCellCondition]
+    func conditions() -> [Condition]
     func row(_ rowIndex: Int) -> [GameCell]
     func column(_ columnIndex: Int) -> [GameCell]
     func solvedRow(_ rowIndex: Int) -> [CellValue]

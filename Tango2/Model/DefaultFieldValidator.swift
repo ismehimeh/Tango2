@@ -7,7 +7,7 @@
 
 struct DefaultFieldValidator: FieldValidatorProtocol {
     
-    func isCellsArrayValid(_ cells: [GameCell], _ conditions: [GameCellCondition], lineLength: Int) -> Bool {
+    func isCellsArrayValid(_ cells: [GameCell], _ conditions: [Condition], lineLength: Int) -> Bool {
         let zeroes = cells.count { $0.value == .zero }
         let ones = cells.count { $0.value == .one }
 

@@ -22,7 +22,7 @@ class Game {
         cellsStore.lineLength
     }
     
-    var gameConditions: [GameCellCondition] {
+    var gameConditions: [Condition] {
         currentLevel.gameConditions
     }
     
@@ -117,7 +117,7 @@ extension Game {
         let columnArray = cellsStore.column(column)
         let conditions = gameConditions
             .filter { $0.cellA.column == column && $0.cellB.column == column}
-            .map { GameCellCondition(condition: $0.condition, cellA: CellPosition(row: $0.cellA.column, column: $0.cellA.row), cellB: CellPosition(row: $0.cellB.column, column: $0.cellB.row)) }
+            .map { Condition(condition: $0.condition, cellA: CellPosition(row: $0.cellA.column, column: $0.cellA.row), cellB: CellPosition(row: $0.cellB.column, column: $0.cellB.row)) }
         return fieldValidator.isCellsArrayValid(columnArray, conditions, lineLength: lineLength)
     }
 
@@ -174,7 +174,7 @@ extension Game: MistakeServiceDataSource, HintServiceDataSource {
         return currentLevel
     }
     
-    func conditions() -> [GameCellCondition] {
+    func conditions() -> [Condition] {
         return gameConditions
     }
     
