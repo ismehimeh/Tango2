@@ -1,14 +1,24 @@
 //
-//  Game+Mistakes.swift
+//  MistakeService.swift
 //  Tango2
 //
-//  Created by Sergei Vasilenko on 10.07.2025.
+//  Created by Sergei Vasilenko on 13.08.2025.
 //
 
-// - MARK: Mistakes
-extension Game {
+final class MistakeService {
+    weak var dataSource: MistakeServiceDataSource?
+    
+    init() { }
+}
+
+// MARK: - MistakeServiceProtocol
+extension MistakeService: MistakeServiceProtocol {
     
     func getMistakes() -> [Mistake] {
+        guard let level = dataSource?.level() else {
+            assertionFailure("Level is not provided for MistakeService!")
+            return []
+        }
         var allMistakes = [Mistake]()
         
         // Check all rows
@@ -25,24 +35,35 @@ extension Game {
     }
     
     func getMistakes(forRowWithIndex rowIndex: Int) -> [Mistake] {
+        guard let dataSource else {
+            assertionFailure("DataSource is not provided for MistakeService!")
+            return []
+        }
+        
         var mistakes = [Mistake]()
-        mistakes.append(contentsOf: checkSignViolation(cells: cellsStore.row(rowIndex), isRow: true, index: rowIndex))
-        mistakes.append(contentsOf: checkSameNumberValues(cells: cellsStore.row(rowIndex), isRow: true, index: rowIndex))
-        mistakes.append(contentsOf: checkNoMoreThan2(cells: cellsStore.row(rowIndex), isRow: true, index: rowIndex))
+        mistakes.append(contentsOf: checkSignViolation(cells: dataSource.row(rowIndex), isRow: true, index: rowIndex))
+        mistakes.append(contentsOf: checkSameNumberValues(cells: dataSource.row(rowIndex), isRow: true, index: rowIndex))
+        mistakes.append(contentsOf: checkNoMoreThan2(cells: dataSource.row(rowIndex), isRow: true, index: rowIndex))
         return mistakes
     }
     
     func getMistakes(forColumnWithIndex columnIndex: Int) -> [Mistake] {
+        guard let dataSource else {
+            assertionFailure("DataSource is not provided for MistakeService!")
+            return []
+        }
+        
         var mistakes = [Mistake]()
-        mistakes.append(contentsOf: checkSignViolation(cells: cellsStore.column(columnIndex), isRow: false, index: columnIndex))
-        mistakes.append(contentsOf: checkSameNumberValues(cells: cellsStore.column(columnIndex), isRow: false, index: columnIndex))
-        mistakes.append(contentsOf: checkNoMoreThan2(cells: cellsStore.column(columnIndex), isRow: false, index: columnIndex))
+        mistakes.append(contentsOf: checkSignViolation(cells: dataSource.column(columnIndex), isRow: false, index: columnIndex))
+        mistakes.append(contentsOf: checkSameNumberValues(cells: dataSource.column(columnIndex), isRow: false, index: columnIndex))
+        mistakes.append(contentsOf: checkNoMoreThan2(cells: dataSource.column(columnIndex), isRow: false, index: columnIndex))
         return mistakes
     }
 }
 
-// MARK: - Private Helper Methods for Mistake Detection
-extension Game {
+// MARK: - Private
+
+extension MistakeService {
     /**
      Checks for sign violations between cells based on game conditions.
      
@@ -53,10 +74,15 @@ extension Game {
      - Returns: Array of mistake types found
      */
     private func checkSignViolation(cells: [GameCell], isRow: Bool, index: Int) -> [Mistake] {
+        guard let conditions = dataSource?.conditions() else {
+            assertionFailure("Conditions are not provided for MistakeService!")
+            return []
+        }
+        
         var mistakes = [Mistake]()
         
         // Filter conditions that apply to this row/column
-        let relatedConditions = gameConditions.filter {
+        let relatedConditions = conditions.filter {
             if isRow {
                 return $0.cellA.row == index && $0.cellB.row == index
             } else {
@@ -98,14 +124,14 @@ extension Game {
      */
     func checkNoMoreThan2(cells: [GameCell], isRow: Bool, index: Int) -> [Mistake] {
         var mistakes = [Mistake]()
-        if let zerosMistakePosition = Game.checkNoMoreThan2(of: .zero, in: cells.map { $0.value }) {
+        if let zerosMistakePosition = MistakeService.checkNoMoreThan2(of: .zero, in: cells.map { $0.value }) {
             let positions = (zerosMistakePosition.0...zerosMistakePosition.1).map {
                 CellPosition(row: isRow ? index : $0, column: isRow ? $0 : index)
             }
             mistakes.append(.init(cells: positions, type: .noMoreThan2))
         }
         
-        if let onesMistakePosition = Game.checkNoMoreThan2(of: .one, in: cells.map { $0.value }) {
+        if let onesMistakePosition = MistakeService.checkNoMoreThan2(of: .one, in: cells.map { $0.value }) {
             let positions = (onesMistakePosition.0...onesMistakePosition.1).map {
                 CellPosition(row: isRow ? index : $0, column: isRow ? $0 : index)
             }

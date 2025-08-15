@@ -9,7 +9,7 @@ import Combine
 import SwiftUI
 
 /// Stores field cells and provides fucntions to iteract with them
-class CellsStore {
+class FieldStore {
     var cells: [GameCell]
     var lineLength: Int
     private var undoManager: UndoManagerProtocol?

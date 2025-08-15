@@ -10,15 +10,19 @@ import Foundation
 
 @Observable
 class Game {
+    // Responsibilities of Game
+    // 1. Holds one game state (isSolved, isMistake, secondsSpent)
+    // 2. Orchestrates field changes and reponse for them
+    // 3. Holds and provides solved level data
 
-    let level: Level
+    let currentLevel: Level
     
     var lineLength: Int {
-        level.lineLength
+        cellsStore.lineLength
     }
     
-    var gameConditions: [GameCellCondition] {
-        level.gameConditions
+    var gameConditions: [Condition] {
+        currentLevel.gameConditions
     }
     
     var isSolved = true
@@ -26,35 +30,51 @@ class Game {
     var mistakes = [Mistake]()
     var secondsSpent = 0
     
-    let cellsStore: CellsStore
+    private let cellsStore: FieldStore
     private var cancellables = Set<AnyCancellable>()
+    private let validatorService: ValidatorServiceProtocol
+    private let mistakeService: MistakeServiceProtocol
+    private let hintService: HintServiceProtocol
 
-    init(_ level: Level) {
-        self.level = level
+    init(_ level: Level,
+         validatorService: ValidatorServiceProtocol = ValidatorService(),
+         mistakeService: MistakeServiceProtocol = MistakeService(),
+         hintService: HintServiceProtocol = HintService())
+    {
+        self.currentLevel = level
+        self.validatorService = validatorService
+        self.mistakeService = mistakeService
+        self.hintService = hintService
+        
         // Create mutable game cells from immutable level cells
         let cells = level.levelCells.map { row in
             row.map { levelCell in
                 GameCell(predefinedValue: levelCell.predefinedValue)
             }
         }
+        
         // Convert 2D array to flat array
-        self.cellsStore = CellsStore(cells.flatMap { $0 },
+        self.cellsStore = FieldStore(cells.flatMap { $0 },
                                      lineLength: level.lineLength)
         
-        validateField()
+        validatorService.dataSource = self
+        mistakeService.dataSource = self
+        hintService.dataSource = self
+        
+        refreshGame()
         bind()
     }
     
     private func bind() {
         cellsStore
             .fieldNeedsRevalidation
-            .sink(receiveValue: validateField)
+            .sink(receiveValue: refreshGame)
             .store(in: &cancellables)
     }
     
-    private func validateField() {
+    private func refreshGame() {
         isSolved = checkIsSolved()
-        isMistake = !isFieldValid()
+        isMistake = !validatorService.isFieldValid()
         mistakes = getMistakes()
         
         // TODO: this code related to delayed mistake indication and was used only on toggle cell, not on every field change
@@ -68,8 +88,6 @@ class Game {
 //        }
     }
     
-    // TODO: test
-    // looking for mistake with this row and column
     func isMistakeCell(i: Int, j: Int) -> Bool {
         return mistakes.contains { mistake in
             mistake.cells.contains { cell in
@@ -77,100 +95,22 @@ class Game {
             }
         }
     }
+}
+
+extension Game {
+
+    func checkIsSolved() -> Bool {
+        let isAllCellsFilled = cellsStore.cells.allSatisfy { $0.value != nil || $0.predefinedValue != nil}
+        return isAllCellsFilled && validatorService.isFieldValid()
+    }
+}
+
+// MARK: Passing actions to cellsStore
+extension Game {
     
     func setUndoManager(_ undoManager: UndoManagerProtocol?) {
         cellsStore.setUndoManager(undoManager)
     }
-    
-    // Access the solved state rows and columns
-    func solvedRow(_ rowIndex: Int) -> [CellValue] {
-        guard rowIndex < level.solvedCells.count else { return [] }
-        return level.solvedCells[rowIndex]
-    }
-    
-    func solvedColumn(_ columnIndex: Int) -> [CellValue] {
-        guard !level.solvedCells.isEmpty else { return [] }
-        guard columnIndex < level.solvedCells[0].count else { return [] }
-        return (0..<level.solvedCells.count).map { level.solvedCells[$0][columnIndex] }
-    }
-
-    func isRowValid(_ index: Int) -> Bool {
-        let rowArray = cellsStore.row(index)
-        let conditions = gameConditions.filter { $0.cellA.row == index && $0.cellB.row == index}
-        return isCellsArrayValid(rowArray, conditions)
-    }
-
-    func isColumnValid(_ column: Int) -> Bool {
-        let columnArray = cellsStore.column(column)
-        let conditions = gameConditions
-            .filter { $0.cellA.column == column && $0.cellB.column == column}
-            .map { GameCellCondition(condition: $0.condition, cellA: CellPosition(row: $0.cellA.column, column: $0.cellA.row), cellB: CellPosition(row: $0.cellB.column, column: $0.cellB.row)) }
-        return isCellsArrayValid(columnArray, conditions)
-    }
-
-    func isFieldValid() -> Bool {
-        let isRowsValid = (0..<level.lineLength).map { isRowValid($0) }.allSatisfy { $0 }
-        let isColumnsValid = (0..<level.lineLength).map { isColumnValid($0) }.allSatisfy { $0 }
-        return isRowsValid && isColumnsValid
-    }
-
-    func checkIsSolved() -> Bool {
-        let isAllCellsFilled = cellsStore.cells.allSatisfy { $0.value != nil || $0.predefinedValue != nil}
-        return isAllCellsFilled && isFieldValid()
-    }
-
-    private func isCellsArrayValid(_ cells: [GameCell], _ conditions: [GameCellCondition]) -> Bool {
-        let zeroes = cells.count { $0.value == .zero }
-        let ones = cells.count { $0.value == .one }
-
-        // count of 0 and 1
-        guard
-            zeroes <= lineLength / 2,
-            ones <= lineLength / 2
-        else {
-            return false
-        }
-
-        // no more than 2 after each other
-        var zeroesCount = 0
-        var onesCount = 0
-        for cell in cells {
-            if cell.value == .zero {
-                zeroesCount += 1
-                onesCount = 0
-            }
-            if cell.value == .one {
-                zeroesCount = 0
-                onesCount += 1
-            }
-            if cell.value == nil {
-                zeroesCount = 0
-                onesCount = 0
-            }
-            guard zeroesCount <= 2 && onesCount <= 2 else { return false }
-        }
-
-        // check conditions
-        for condition in conditions {
-            // For row conditions, we use column as the index
-            let cellA = cells[condition.cellA.column]
-            let cellB = cells[condition.cellB.column]
-            guard cellA.value != nil && cellB.value != nil else { continue }
-
-            if condition.condition == .equal && cellA.value != cellB.value {
-                return false
-            }
-
-            if condition.condition == .opposite && cellA.value == cellB.value {
-                return false
-            }
-        }
-
-        return true
-    }
-}
-
-extension Game {
     
     func setCellValue(at row: Int, column: Int, value: CellValue?) {
         cellsStore.setCellValue(at: row, column: column, value: value)
@@ -186,5 +126,70 @@ extension Game {
     
     func clearField() {
         cellsStore.clearField()
+    }
+}
+
+// MARK: MistakeService
+extension Game {
+    
+    func getMistakes() -> [Mistake] {
+        mistakeService.getMistakes()
+    }
+    
+    func getMistakes(forRowWithIndex rowIndex: Int) -> [Mistake] {
+        mistakeService.getMistakes(forRowWithIndex: rowIndex)
+    }
+    
+    func getMistakes(forColumnWithIndex columnIndex: Int) -> [Mistake] {
+        mistakeService.getMistakes(forColumnWithIndex: columnIndex)
+    }
+}
+
+// MARK: MistakeServiceDataSource & HintServiceDataSource
+extension Game: MistakeServiceDataSource, HintServiceDataSource, ValidatorServiceDataSource {
+    
+    func level() -> Level {
+        currentLevel
+    }
+    
+    func conditions() -> [Condition] {
+        gameConditions
+    }
+    
+    func row(_ rowIndex: Int) -> [GameCell] {
+        cellsStore.row(rowIndex)
+    }
+    
+    func column(_ columnIndex: Int) -> [GameCell] {
+        cellsStore.column(columnIndex)
+    }
+    
+    func solvedRow(_ rowIndex: Int) -> [CellValue] {
+        guard
+            rowIndex < currentLevel.solvedCells.count
+        else {
+            return []
+        }
+        
+        return currentLevel.solvedCells[rowIndex]
+    }
+    
+    func solvedColumn(_ columnIndex: Int) -> [CellValue] {
+        guard
+            !currentLevel.solvedCells.isEmpty,
+            columnIndex < currentLevel.solvedCells[0].count
+        else {
+            return []
+        }
+        
+        return (0..<currentLevel.solvedCells.count).map { currentLevel.solvedCells[$0][columnIndex] }
+    }
+}
+
+// MARK: Hints
+extension Game {
+    
+    func getHint() -> Hint? {
+        hintService.getHint()
     }
 }

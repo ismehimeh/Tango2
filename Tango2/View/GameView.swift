@@ -117,7 +117,7 @@ struct GameView: View {
                 .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $showingResult) {
-            ResultView(levelTitle: game.level.title,
+            ResultView(levelTitle: game.currentLevel.title,
                        timeSpent: viewModel.timeString)
         }
         .sheet(isPresented: $showingTutorial) {

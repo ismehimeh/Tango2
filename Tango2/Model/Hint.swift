@@ -35,7 +35,7 @@ enum HintType: Equatable {
             //NxNxN101
             //NxNxN010
             // All other variations should be already covered with other hints
-            return "Each \(lineName) must contain the same number of \(zeroSymbol) and \(oneSymbol)./n/nThe final \(value.symbol) in this \(lineName) must be elsewhere due to the remaining \(GameCellCondition.Condition.opposite.symbol).\n\nTherefore the highlighted cell must be a \(value.symbol)."
+            return "Each \(lineName) must contain the same number of \(zeroSymbol) and \(oneSymbol)./n/nThe final \(value.symbol) in this \(lineName) must be elsewhere due to the remaining \(Condition.Sign.opposite.symbol).\n\nTherefore the highlighted cell must be a \(value.symbol)."
         }
     }
     

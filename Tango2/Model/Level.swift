@@ -12,7 +12,7 @@ struct Level: Identifiable, Hashable {
     let title: String // TODO: I am not planning to use it, just need it to distinguish cell for now
     let lineLength: Int
     let levelCells: [[LevelCell]]
-    let gameConditions: [GameCellCondition]
+    let gameConditions: [Condition]
     let solvedCells: [[CellValue]]
     
     /// Factory method to create a Level with a more concise syntax
@@ -24,7 +24,7 @@ struct Level: Identifiable, Hashable {
     static func create(title: String,
                        lineLength: Int = 6,
                        boardDefinition: [[CellValue?]],
-                       conditions: [(condition: GameCellCondition.Condition,
+                       conditions: [(condition: Condition.Sign,
                                      position1: (row: Int, col: Int),
                                      position2: (row: Int, col: Int))],
                        solvedCells: [[CellValue]] = []) -> Level
@@ -42,7 +42,7 @@ struct Level: Identifiable, Hashable {
         
         // Convert simple conditions to GameCellConditions
         let gameConditions = conditions.map { cond in
-            GameCellCondition(condition: cond.condition,
+            Condition(condition: cond.condition,
                               cellA: CellPosition(row: cond.position1.row,
                                                   column: cond.position1.col),
                               cellB: CellPosition(row: cond.position2.row,

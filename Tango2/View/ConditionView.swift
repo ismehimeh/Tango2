@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ConditionView: View {
-    let condition: GameCellCondition.Condition
+    let condition: Condition.Sign
 
     var body: some View {
         Circle()
