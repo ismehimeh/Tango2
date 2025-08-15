@@ -27,11 +27,11 @@ class HintService: HintServiceProtocol {
     }
     
     private func getHint(forRowWithIndex rowIndex: Int) -> Hint? {
-        return getHint(for: .row(index: rowIndex))
+        getHint(for: .row(index: rowIndex))
     }
     
     private func getHint(forColumnWithIndex columnIndex: Int) -> Hint? {
-        return getHint(for: .column(index: columnIndex))
+        getHint(for: .column(index: columnIndex))
     }
     
     /// Common method to get hints for either rows or columns

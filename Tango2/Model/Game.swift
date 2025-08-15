@@ -147,30 +147,41 @@ extension Game {
 
 // MARK: MistakeServiceDataSource & HintServiceDataSource
 extension Game: MistakeServiceDataSource, HintServiceDataSource, ValidatorServiceDataSource {
+    
     func level() -> Level {
-        return currentLevel
+        currentLevel
     }
     
     func conditions() -> [Condition] {
-        return gameConditions
+        gameConditions
     }
     
     func row(_ rowIndex: Int) -> [GameCell] {
-        return cellsStore.row(rowIndex)
+        cellsStore.row(rowIndex)
     }
     
     func column(_ columnIndex: Int) -> [GameCell] {
-        return cellsStore.column(columnIndex)
+        cellsStore.column(columnIndex)
     }
     
     func solvedRow(_ rowIndex: Int) -> [CellValue] {
-        guard rowIndex < currentLevel.solvedCells.count else { return [] }
+        guard
+            rowIndex < currentLevel.solvedCells.count
+        else {
+            return []
+        }
+        
         return currentLevel.solvedCells[rowIndex]
     }
     
     func solvedColumn(_ columnIndex: Int) -> [CellValue] {
-        guard !currentLevel.solvedCells.isEmpty else { return [] }
-        guard columnIndex < currentLevel.solvedCells[0].count else { return [] }
+        guard
+            !currentLevel.solvedCells.isEmpty,
+            columnIndex < currentLevel.solvedCells[0].count
+        else {
+            return []
+        }
+        
         return (0..<currentLevel.solvedCells.count).map { currentLevel.solvedCells[$0][columnIndex] }
     }
 }

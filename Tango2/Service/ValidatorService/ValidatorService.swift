@@ -22,8 +22,6 @@ extension ValidatorService: ValidatorServiceProtocol {
         return dataSource.level().lineLength
     }
     
-    
-    
     func isFieldValid() -> Bool {
         let isRowsValid = (0..<lineLength).map { isRowValid($0) }.allSatisfy { $0 }
         let isColumnsValid = (0..<lineLength).map { isColumnValid($0) }.allSatisfy { $0 }
@@ -47,7 +45,7 @@ extension ValidatorService: ValidatorServiceProtocol {
             return false
         }
         
-        let columnArray = dataSource.column(column)
+        let columnArray = dataSource.column(column)  
         let conditions = dataSource.conditions()
             .filter { $0.cellA.column == column && $0.cellB.column == column}
             .map { Condition(condition: $0.condition, cellA: CellPosition(row: $0.cellA.column, column: $0.cellA.row), cellB: CellPosition(row: $0.cellB.column, column: $0.cellB.row)) }
