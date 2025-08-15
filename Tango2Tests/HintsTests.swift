@@ -17,14 +17,14 @@ extension HintsTests {
     @Test func getNoMoreThan2HintReturnNilForNilLine() async throws {
         let array: [CellValue?] = [nil, nil, nil, nil, nil, nil]
         let expectedResult: Hint? = nil
-        let result = Game.getNoMoreThan2Hint(for: array)
+        let result = HintService.getNoMoreThan2Hint(for: array)
         #expect(result == expectedResult)
     }
     
     @Test func getNoMoreThan2HintReturnNilForASingleZero() async throws {
         let array: [CellValue?] = [.zero, nil, nil, nil, nil, nil]
         let expectedResult: Hint? = nil
-        let result = Game.getNoMoreThan2Hint(for: array)
+        let result = HintService.getNoMoreThan2Hint(for: array)
         #expect(result == expectedResult)
     }
 
@@ -34,7 +34,7 @@ extension HintsTests {
                                   targetCell: .init(row: 0, column: 2),
                                   relatedCells: [.init(row: 0, column: 0),
                                                 .init(row: 0, column: 1)])
-        let result = Game.getNoMoreThan2Hint(for: array)
+        let result = HintService.getNoMoreThan2Hint(for: array)
         #expect(result == expectedResult)
     }
     
@@ -44,7 +44,7 @@ extension HintsTests {
                                   targetCell: .init(row: 0, column: 0),
                                   relatedCells: [.init(row: 0, column: 1),
                                                 .init(row: 0, column: 2)])
-        let result = Game.getNoMoreThan2Hint(for: array)
+        let result = HintService.getNoMoreThan2Hint(for: array)
         #expect(result == expectedResult)
     }
     
@@ -54,14 +54,14 @@ extension HintsTests {
                                   targetCell: .init(row: 0, column: 3),
                                   relatedCells: [.init(row: 0, column: 1),
                                                 .init(row: 0, column: 2)])
-        let result = Game.getNoMoreThan2Hint(for: array)
+        let result = HintService.getNoMoreThan2Hint(for: array)
         #expect(result == expectedResult)
     }
     
     @Test func getNoMoreThan2HintReturnsHintFor1001NN() async throws {
         let array: [CellValue?] = [.one, .zero, .zero, .one, nil, nil]
         let expectedResult: Hint? = nil
-        let result = Game.getNoMoreThan2Hint(for: array)
+        let result = HintService.getNoMoreThan2Hint(for: array)
         #expect(result == expectedResult)
     }
     
@@ -71,7 +71,7 @@ extension HintsTests {
                                   targetCell: .init(row: 0, column: 3),
                                   relatedCells: [.init(row: 0, column: 4),
                                                 .init(row: 0, column: 5)])
-        let result = Game.getNoMoreThan2Hint(for: array)
+        let result = HintService.getNoMoreThan2Hint(for: array)
         #expect(result == expectedResult)
     }
     
@@ -81,7 +81,7 @@ extension HintsTests {
                                   targetCell: .init(row: 0, column: 2),
                                   relatedCells: [.init(row: 0, column: 3),
                                                 .init(row: 0, column: 4)])
-        let result = Game.getNoMoreThan2Hint(for: array)
+        let result = HintService.getNoMoreThan2Hint(for: array)
         #expect(result == expectedResult)
     }
     
@@ -91,14 +91,14 @@ extension HintsTests {
                                   targetCell: .init(row: 0, column: 5),
                                   relatedCells: [.init(row: 0, column: 3),
                                                 .init(row: 0, column: 4)])
-        let result = Game.getNoMoreThan2Hint(for: array)
+        let result = HintService.getNoMoreThan2Hint(for: array)
         #expect(result == expectedResult)
     }
     
     @Test func getNoMoreThan2HintReturnsHintForNN0110() async throws {
         let array: [CellValue?] = [nil, nil, .zero, .one, .one, .zero]
         let expectedResult: Hint? = nil
-        let result = Game.getNoMoreThan2Hint(for: array)
+        let result = HintService.getNoMoreThan2Hint(for: array)
         #expect(result == expectedResult)
     }
     
@@ -108,7 +108,7 @@ extension HintsTests {
                                          targetCell: .init(row: 0, column: 1),
                                          relatedCells: [.init(row: 0, column: 0),
                                             .init(row: 0, column: 2)])
-        let result = Game.getNoMoreThan2Hint(for: array)
+        let result = HintService.getNoMoreThan2Hint(for: array)
         #expect(result == expectedResult)
     }
 }
@@ -118,21 +118,21 @@ extension HintsTests {
     @Test func noHintForEmptyLine() async throws {
         let line: [CellValue?] = [nil, nil, nil, nil, nil, nil]
         let correctLine: [CellValue] = [.zero, .one, .zero, .one, .zero, .one]
-        let result = Game.getIncorrectCellHint(for: line, with: correctLine)
+        let result = HintService.getIncorrectCellHint(for: line, with: correctLine)
         #expect(result == nil)
     }
     
     @Test func noHintForCorrectFirstValue() async throws {
         let line: [CellValue?] = [.zero, nil, nil, nil, nil, nil]
         let correctLine: [CellValue] = [.zero, .one, .zero, .one, .zero, .one]
-        let result = Game.getIncorrectCellHint(for: line, with: correctLine)
+        let result = HintService.getIncorrectCellHint(for: line, with: correctLine)
         #expect(result == nil)
     }
     
     @Test func receivedHintForIncorrectFirstValue() async throws {
         let line: [CellValue?] = [.one, nil, nil, nil, nil, nil]
         let correctLine: [CellValue] = [.zero, .one, .zero, .one, .zero, .one]
-        let result = Game.getIncorrectCellHint(for: line, with: correctLine)
+        let result = HintService.getIncorrectCellHint(for: line, with: correctLine)
         let expectedValue = Hint(type: .incorrectCell(value: .zero),
                                  targetCell: .init(row: 0, column: 0))
         #expect(result == expectedValue)
@@ -141,7 +141,7 @@ extension HintsTests {
     @Test func receivedHintForIncorrectSecondValue() async throws {
         let line: [CellValue?] = [nil, .zero, nil, nil, nil, nil]
         let correctLine: [CellValue] = [.zero, .one, .zero, .one, .zero, .one]
-        let result = Game.getIncorrectCellHint(for: line, with: correctLine)
+        let result = HintService.getIncorrectCellHint(for: line, with: correctLine)
         let expectedValue = Hint(type: .incorrectCell(value: .one),
                                  targetCell: .init(row: 0, column: 1))
         #expect(result == expectedValue)
@@ -150,7 +150,7 @@ extension HintsTests {
     @Test func receivedCorrectHintFor2IncorrectValues() async throws {
         let line: [CellValue?] = [.one, .zero, nil, nil, nil, nil]
         let correctLine: [CellValue] = [.zero, .one, .zero, .one, .zero, .one]
-        let result = Game.getIncorrectCellHint(for: line, with: correctLine)
+        let result = HintService.getIncorrectCellHint(for: line, with: correctLine)
         let expectedValue = Hint(type: .incorrectCell(value: .zero),
                                  targetCell: .init(row: 0, column: 0))
         #expect(result == expectedValue)
@@ -162,21 +162,21 @@ extension HintsTests {
     @Test func noOneOptionLeftHintForEmptyLine() async throws {
         let line: [CellValue?] = [nil, nil, nil, nil, nil, nil]
         let expectedValue: Hint? = nil
-        let result = Game.getOneOptionLeftHint(for: line)
+        let result = HintService.getOneOptionLeftHint(for: line)
         #expect(result == expectedValue)
     }
     
     @Test func noOneOptionLeftHintFor0011NN() async throws {
         let line: [CellValue?] = [.zero, .zero, .one, .one, nil, nil]
         let expectedValue: Hint? = nil
-        let result = Game.getOneOptionLeftHint(for: line)
+        let result = HintService.getOneOptionLeftHint(for: line)
         #expect(result == expectedValue)
     }
     
     @Test func noOneOptionLeftHintFor0110NN() async throws {
         let line: [CellValue?] = [.zero, .one, .one, .zero, nil, nil]
         let expectedValue: Hint? = nil
-        let result = Game.getOneOptionLeftHint(for: line)
+        let result = HintService.getOneOptionLeftHint(for: line)
         #expect(result == expectedValue)
     }
     
@@ -191,7 +191,7 @@ extension HintsTests {
                                             .init(row: 0, column: 3),
                                             .init(row: 0, column: 4)
                                         ])
-        let result = Game.getOneOptionLeftHint(for: line)
+        let result = HintService.getOneOptionLeftHint(for: line)
         #expect(result == expectedValue)
     }
     
@@ -206,7 +206,7 @@ extension HintsTests {
                                             .init(row: 0, column: 3),
                                             .init(row: 0, column: 4)
                                         ])
-        let result = Game.getOneOptionLeftHint(for: line)
+        let result = HintService.getOneOptionLeftHint(for: line)
         #expect(result == expectedValue)
     }
     
@@ -218,7 +218,7 @@ extension HintsTests {
                                                        .init(row: 0, column: 1),
                                                        .init(row: 0, column: 2),
                                                        .init(row: 0, column: 5)])
-        let result = Game.getOneOptionLeftHint(for: line)
+        let result = HintService.getOneOptionLeftHint(for: line)
         #expect(result == expectedValue)
     }
 }
@@ -232,7 +232,7 @@ extension HintsTests {
                                                      cellA: .init(row: 0, column: 0),
                                                      cellB: .init(row: 0, column: 1))]
         let expectedValue: Hint? = nil
-        let result = Game.getSignHint(for: line, with: conditions)
+        let result = HintService.getSignHint(for: line, with: conditions)
         #expect(result == expectedValue)
     }
     
@@ -240,7 +240,7 @@ extension HintsTests {
         let line: [CellValue?] = [nil, nil, nil, nil, nil, nil]
         let conditions: [GameCellCondition] = []
         let expectedValue: Hint? = nil
-        let result = Game.getSignHint(for: line, with: conditions)
+        let result = HintService.getSignHint(for: line, with: conditions)
         #expect(result == expectedValue)
     }
     
@@ -252,7 +252,7 @@ extension HintsTests {
         let expectedValue: Hint? = .init(type: .sign(sign: Sign.equal.symbol, value: .zero),
                                          targetCell: .init(row: 0, column: 1),
                                          relatedCells: [.init(row: 0, column: 0)])
-        let result = Game.getSignHint(for: line, with: conditions)
+        let result = HintService.getSignHint(for: line, with: conditions)
         #expect(result == expectedValue)
     }
     
@@ -264,7 +264,7 @@ extension HintsTests {
         let expectedValue: Hint? = .init(type: .sign(sign: Sign.equal.symbol, value: .zero),
                                          targetCell: .init(row: 0, column: 0),
                                          relatedCells: [.init(row: 0, column: 1)])
-        let result = Game.getSignHint(for: line, with: conditions)
+        let result = HintService.getSignHint(for: line, with: conditions)
         #expect(result == expectedValue)
     }
     
@@ -276,7 +276,7 @@ extension HintsTests {
         let expectedValue: Hint? = .init(type: .sign(sign: Sign.equal.symbol, value: .one),
                                          targetCell: .init(row: 0, column: 1),
                                          relatedCells: [.init(row: 0, column: 0)])
-        let result = Game.getSignHint(for: line, with: conditions)
+        let result = HintService.getSignHint(for: line, with: conditions)
         #expect(result == expectedValue)
     }
     
@@ -288,7 +288,7 @@ extension HintsTests {
         let expectedValue: Hint? = .init(type: .sign(sign: Sign.equal.symbol, value: .one),
                                          targetCell: .init(row: 0, column: 0),
                                          relatedCells: [.init(row: 0, column: 1)])
-        let result = Game.getSignHint(for: line, with: conditions)
+        let result = HintService.getSignHint(for: line, with: conditions)
         #expect(result == expectedValue)
     }
     
@@ -303,7 +303,7 @@ extension HintsTests {
         let expectedValue: Hint? = .init(type: .sign(sign: Sign.opposite.symbol, value: .one),
                                          targetCell: .init(row: 0, column: 5),
                                          relatedCells: [.init(row: 0, column: 4)])
-        let result = Game.getSignHint(for: line, with: conditions)
+        let result = HintService.getSignHint(for: line, with: conditions)
         #expect(result == expectedValue)
     }
     
@@ -316,7 +316,7 @@ extension HintsTests {
                                          relatedCells: [.init(row: 0, column: 3),
                                                         .init(row: 0, column: 4),
                                                         .init(row: 0, column: 5)])
-        let result = Game.getForcedThreeWithSameNumberHint(for: line)
+        let result = HintService.getForcedThreeWithSameNumberHint(for: line)
         #expect(result == expectedValue)
     }
     
@@ -328,7 +328,7 @@ extension HintsTests {
                                          relatedCells: [.init(row: 0, column: 0),
                                                         .init(row: 0, column: 1),
                                                         .init(row: 0, column: 5)])
-        let result = Game.getForcedThreeWithSameNumberHint(for: line)
+        let result = HintService.getForcedThreeWithSameNumberHint(for: line)
         #expect(result == expectedValue)
     }
     
@@ -339,7 +339,7 @@ extension HintsTests {
                                          targetCell: .init(row: 0, column: 1),
                                          relatedCells: [.init(row: 0, column: 0),
                                                         .init(row: 0, column: 5)])
-        let result = Game.getForcedThreeWithSameNumberHint(for: line)
+        let result = HintService.getForcedThreeWithSameNumberHint(for: line)
         #expect(result == expectedValue)
     }
     
@@ -351,7 +351,7 @@ extension HintsTests {
                                          relatedCells: [.init(row: 0, column: 0),
                                                         .init(row: 0, column: 1),
                                                         .init(row: 0, column: 2)])
-        let result = Game.getForcedThreeWithSameNumberHint(for: line)
+        let result = HintService.getForcedThreeWithSameNumberHint(for: line)
         #expect(result == expectedValue)
     }
 }
@@ -376,7 +376,7 @@ extension HintsTests {
                                          relatedCells: [.init(row: 0, column: 3),
                                                         .init(row: 0, column: 4),
                                                         .init(row: 0, column: 5)])
-        let result1 = Game.getTripleOppositeHint(in: line1, with: conditions1)
+        let result1 = HintService.getTripleOppositeHint(in: line1, with: conditions1)
         #expect(result1 == expectedValue1)
         
         let expectedValue2: Hint? = .init(type: .tripleOpposite(lineName: "",
@@ -385,7 +385,7 @@ extension HintsTests {
                                          relatedCells: [.init(row: 0, column: 3),
                                                         .init(row: 0, column: 4),
                                                         .init(row: 0, column: 5)])
-        let result2 = Game.getTripleOppositeHint(in: line2, with: conditions1)
+        let result2 = HintService.getTripleOppositeHint(in: line2, with: conditions1)
         #expect(result2 == expectedValue2)
         
         let line3: [CellValue?] = [.zero, .one, .zero, nil, nil, nil]
@@ -405,7 +405,7 @@ extension HintsTests {
                                          relatedCells: [.init(row: 0, column: 0),
                                                         .init(row: 0, column: 1),
                                                         .init(row: 0, column: 2)])
-        let result3 = Game.getTripleOppositeHint(in: line3, with: conditions2)
+        let result3 = HintService.getTripleOppositeHint(in: line3, with: conditions2)
         #expect(result3 == expectedValue3)
         
         let expectedValue4: Hint? = .init(type: .tripleOpposite(lineName: "",
@@ -414,7 +414,7 @@ extension HintsTests {
                                          relatedCells: [.init(row: 0, column: 0),
                                                         .init(row: 0, column: 1),
                                                         .init(row: 0, column: 2)])
-        let result4 = Game.getTripleOppositeHint(in: line4, with: conditions2)
+        let result4 = HintService.getTripleOppositeHint(in: line4, with: conditions2)
         #expect(result4 == expectedValue4)
     }
     
@@ -432,7 +432,7 @@ extension HintsTests {
                                          relatedCells: [.init(row: 0, column: 1),
                                                         .init(row: 0, column: 3),
                                                         .init(row: 0, column: 5)])
-        let result = Game.getTripleOppositeHint(in: line, with: conditions)
+        let result = HintService.getTripleOppositeHint(in: line, with: conditions)
         withKnownIssue("Would be updated") {
             #expect(result == expectedValue)
         }
@@ -448,7 +448,7 @@ extension HintsTests {
                                          targetCell: .init(row: 0, column: 0),
                                          relatedCells: [.init(row: 0, column: 1),
                                                         .init(row: 0, column: 4)])
-        let result = Game.getTripleOppositeHint(in: line, with: conditions)
+        let result = HintService.getTripleOppositeHint(in: line, with: conditions)
         withKnownIssue("Would be updated") {
             #expect(result == expectedValue)
         }
@@ -472,7 +472,7 @@ extension HintsTests {
                                   relatedCells: [.init(row: 0, column: 2),
                                                  .init(row: 0, column: 4)])
         
-        let result = Game.getForcedThreeNoMoreThan2Hint(in: line, with: conditions)
+        let result = HintService.getForcedThreeNoMoreThan2Hint(in: line, with: conditions)
         #expect(result == expectedResult)
     }
     
@@ -491,7 +491,7 @@ extension HintsTests {
                                   relatedCells: [.init(row: 0, column: 0),
                                                 .init(row: 0, column: 2)])
         
-        let result = Game.getForcedThreeNoMoreThan2Hint(in: line, with: conditions)
+        let result = HintService.getForcedThreeNoMoreThan2Hint(in: line, with: conditions)
         #expect(result == expectedResult)
     }
     
@@ -507,7 +507,7 @@ extension HintsTests {
                                   relatedCells: [.init(row: 0, column: 1),
                                                  .init(row: 0, column: 3)])
         
-        let result = Game.getForcedThreeNoMoreThan2Hint(in: line, with: conditions)
+        let result = HintService.getForcedThreeNoMoreThan2Hint(in: line, with: conditions)
         #expect(result == expectedResult)
     }
     
@@ -523,7 +523,7 @@ extension HintsTests {
                                   relatedCells: [.init(row: 0, column: 2),
                                                 .init(row: 0, column: 4)])
         
-        let result = Game.getForcedThreeNoMoreThan2Hint(in: line, with: conditions)
+        let result = HintService.getForcedThreeNoMoreThan2Hint(in: line, with: conditions)
         #expect(result == expectedResult)
     }
 }

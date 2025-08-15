@@ -5,6 +5,10 @@
 //  Created by Sergei Vasilenko on 15.08.2025.
 //
 
+typealias Sign = GameCellCondition.Condition
+
+// TODO: hints are designed specifically for 6x6 levels - should I update them for 4x4?
+
 class HintService: HintServiceProtocol {
     
     weak var dataSource: HintServiceDataSource?
