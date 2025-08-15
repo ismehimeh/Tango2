@@ -35,14 +35,17 @@ class Game {
     private var cancellables = Set<AnyCancellable>()
     private let fieldValidator: FieldValidatorProtocol
     private let mistakeService: MistakeServiceProtocol
+    private let hintService: HintServiceProtocol
 
     init(_ level: Level,
          fieldValidator: FieldValidatorProtocol = DefaultFieldValidator(),
-         mistakeService: MistakeServiceProtocol = MistakeService())
+         mistakeService: MistakeServiceProtocol = MistakeService(),
+         hintService: HintServiceProtocol = HintService())
     {
         self.currentLevel = level
         self.fieldValidator = fieldValidator
         self.mistakeService = mistakeService
+        self.hintService = hintService
         
         // Create mutable game cells from immutable level cells
         let cells = level.levelCells.map { row in
@@ -55,6 +58,7 @@ class Game {
         self.cellsStore = CellsStore(cells.flatMap { $0 },
                                      lineLength: level.lineLength)
         mistakeService.dataSource = self
+        hintService.dataSource = self
         
         refreshGame()
         bind()
@@ -92,19 +96,7 @@ class Game {
     }
 }
 
-// MARK: Access the solved state rows and columns
 extension Game {
-    
-    func solvedRow(_ rowIndex: Int) -> [CellValue] {
-        guard rowIndex < currentLevel.solvedCells.count else { return [] }
-        return currentLevel.solvedCells[rowIndex]
-    }
-    
-    func solvedColumn(_ columnIndex: Int) -> [CellValue] {
-        guard !currentLevel.solvedCells.isEmpty else { return [] }
-        guard columnIndex < currentLevel.solvedCells[0].count else { return [] }
-        return (0..<currentLevel.solvedCells.count).map { currentLevel.solvedCells[$0][columnIndex] }
-    }
 
     func checkIsSolved() -> Bool {
         let isAllCellsFilled = cellsStore.cells.allSatisfy { $0.value != nil || $0.predefinedValue != nil}
@@ -176,8 +168,8 @@ extension Game {
     }
 }
 
-// MARK: MistakeServiceDataSource
-extension Game: MistakeServiceDataSource {
+// MARK: MistakeServiceDataSource & HintServiceDataSource
+extension Game: MistakeServiceDataSource, HintServiceDataSource {
     func level() -> Level {
         return currentLevel
     }
@@ -192,5 +184,24 @@ extension Game: MistakeServiceDataSource {
     
     func column(_ columnIndex: Int) -> [GameCell] {
         return cellsStore.column(columnIndex)
+    }
+    
+    func solvedRow(_ rowIndex: Int) -> [CellValue] {
+        guard rowIndex < currentLevel.solvedCells.count else { return [] }
+        return currentLevel.solvedCells[rowIndex]
+    }
+    
+    func solvedColumn(_ columnIndex: Int) -> [CellValue] {
+        guard !currentLevel.solvedCells.isEmpty else { return [] }
+        guard columnIndex < currentLevel.solvedCells[0].count else { return [] }
+        return (0..<currentLevel.solvedCells.count).map { currentLevel.solvedCells[$0][columnIndex] }
+    }
+}
+
+// MARK: Hints
+extension Game {
+    
+    func getHint() -> Hint? {
+        hintService.getHint()
     }
 }

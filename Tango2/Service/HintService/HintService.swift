@@ -13,7 +13,7 @@ class HintService: HintServiceProtocol {
         guard let dataSource else { return nil }
         
         // we assume that game field is N x N
-        for i in 0..<dataSource.level.levelCells.count {
+        for i in 0..<dataSource.level().levelCells.count {
             if let hint = getHint(forRowWithIndex: i) {
                 return hint
             }
