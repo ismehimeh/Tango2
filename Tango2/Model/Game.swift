@@ -11,10 +11,9 @@ import Foundation
 @Observable
 class Game {
     // Responsibilities of Game
-    // 1. Generates hints
-    // 2. Holds one game state (isSolved, isMistake, secondsSpent)
-    // 3. Orchestrates field changes and reponse for them
-    // 4. Holds and provides solved level data
+    // 1. Holds one game state (isSolved, isMistake, secondsSpent)
+    // 2. Orchestrates field changes and reponse for them
+    // 3. Holds and provides solved level data
 
     let currentLevel: Level
     
@@ -31,7 +30,7 @@ class Game {
     var mistakes = [Mistake]()
     var secondsSpent = 0
     
-    private let cellsStore: CellsStore
+    private let cellsStore: FieldStore
     private var cancellables = Set<AnyCancellable>()
     private let fieldValidator: FieldValidatorProtocol
     private let mistakeService: MistakeServiceProtocol
@@ -55,7 +54,7 @@ class Game {
         }
         
         // Convert 2D array to flat array
-        self.cellsStore = CellsStore(cells.flatMap { $0 },
+        self.cellsStore = FieldStore(cells.flatMap { $0 },
                                      lineLength: level.lineLength)
         mistakeService.dataSource = self
         hintService.dataSource = self
