@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Condition: Identifiable, Hashable, Equatable {
+class Condition: Identifiable {
     
     enum Sign: Hashable {
         case equal
@@ -28,10 +28,29 @@ struct Condition: Identifiable, Hashable, Equatable {
     let cellA: CellPosition
     let cellB: CellPosition
     
+    init(condition: Sign,
+         cellA: CellPosition,
+         cellB: CellPosition)
+    {
+        self.condition = condition
+        self.cellA = cellA
+        self.cellB = cellB
+    }
+}
+
+extension Condition: Equatable {
+    
     static func == (lhs: Condition, rhs: Condition) -> Bool {
         lhs.condition == rhs.condition &&
         lhs.cellA == rhs.cellA &&
         lhs.cellB == rhs.cellB
+    }
+}
+
+extension Condition: Hashable {
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 
