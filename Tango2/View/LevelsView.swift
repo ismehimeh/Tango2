@@ -33,24 +33,12 @@ struct LevelsView: View {
                     ForEach(levels) { level in
                         if let result = results.first(where: { $0.solvedLevel == level }) {
                             NavigationLink(value: result) {
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(Color.gray)
-                                        .frame(width: 80, height: 80)
-                                    Text(level.title)
-                                        .foregroundColor(.white)
-                                }
+                                LevelGridCellView(title: level.title, isSolved: true, spentTime: "\(result.secondsSpent)", hints: result.hintsUsed, undos: result.undosUsed)
                             }
                         }
                         else {
                             NavigationLink(value: level) {
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .fill(Color.blue)
-                                        .frame(width: 80, height: 80)
-                                    Text(level.title)
-                                        .foregroundColor(.white)
-                                }
+                                LevelGridCellView(title: level.title, isSolved: false, spentTime: nil, hints: nil, undos: nil)
                             }
                         }
                     }
