@@ -43,14 +43,6 @@ struct LevelsView: View {
                         }
                     }
                 }
-                
-                if !results.isEmpty {
-                    VStack {
-                        Text("WIP Results")
-                            .font(.title)
-                        Text("Number of results \(results.count)")
-                    }
-                }
             }
             .navigationDestination(for: Level.self) { level in
                 GameView(game: {
