@@ -16,21 +16,18 @@ class Level: Identifiable {
     var levelCells: [[LevelCell]]
     var gameConditions: [Condition]
     var solvedCells: [[CellValue]]
-    var isSolved: Bool
     
     init(title: String,
          lineLength: Int,
          levelCells: [[LevelCell]],
          gameConditions: [Condition],
-         solvedCells: [[CellValue]],
-         isSolved: Bool = false)
+         solvedCells: [[CellValue]])
     {
         self.title = title
         self.lineLength = lineLength
         self.levelCells = levelCells
         self.gameConditions = gameConditions
         self.solvedCells = solvedCells
-        self.isSolved = isSolved
     }
     
     /// Factory method to create a Level with a more concise syntax

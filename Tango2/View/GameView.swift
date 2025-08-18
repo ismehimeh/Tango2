@@ -118,8 +118,9 @@ struct GameView: View {
                 .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $showingResult) {
-            ResultView(levelTitle: game.currentLevel.title,
-                       timeSpent: viewModel.timeString)
+            if let result = viewModel.gameResult {
+                ResultView(gameResult: result)
+            }
         }
         .sheet(isPresented: $showingTutorial) {
             NavigationStack {

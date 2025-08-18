@@ -13,8 +13,8 @@ struct ResultView: View {
     @Environment(Router.self) var router
     @Environment(AppState.self) var state
     
-    var levelTitle: String
-    var timeSpent: String
+    var gameResult: GameResult
+    var showButtons: Bool = true
     
     var body: some View {
         VStack {
@@ -26,10 +26,10 @@ struct ResultView: View {
                 .padding(.top, 50)
             
             VStack {
-                Text(levelTitle)
+                Text(gameResult.solvedLevel.title)
                     .font(.largeTitle)
                     .bold()
-                Text(timeSpent)
+                Text("\(gameResult.secondsSpent)")
                     .font(.title3)
                     .fontWeight(.medium)
             }
@@ -37,36 +37,37 @@ struct ResultView: View {
             .background(.white)
             .clipShape(RoundedRectangle(cornerRadius: 10))
             
-            if state.isNextLevelAvailable {
-                Button {
-                    tapNextLevel()
-                } label: {
-                    HStack {
-                        Text("Next Level")
-                        Image(systemName: "chevron.forward.2")
+            if showButtons {
+                if state.isNextLevelAvailable {
+                    Button {
+                        tapNextLevel()
+                    } label: {
+                        HStack {
+                            Text("Next Level")
+                            Image(systemName: "chevron.forward.2")
+                        }
                     }
+                    .buttonStyle(.borderedProminent)
+                    .padding(.top, 40)
                 }
-                .buttonStyle(.borderedProminent)
-                .padding(.top, 40)
-            }
-            else {
-                Text("You solved all levels!")
-                    .font(.title2)
-                    .foregroundStyle(.white)
-            }
+                else {
+                    Text("You solved all levels!")
+                        .font(.title2)
+                        .foregroundStyle(.white)
+                }
 
-            Button {
-                tapGoToLevels()
-            } label: {
-                Text("Go to levels")
-                    .foregroundStyle(.white)
+                Button {
+                    tapGoToLevels()
+                } label: {
+                    Text("Go to levels")
+                        .foregroundStyle(.white)
+                }
             }
 
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.secondary)
-        .navigationBarBackButtonHidden()
     }
     
     private func tapNextLevel() {
@@ -88,16 +89,18 @@ struct ResultView: View {
 
 #Preview {
     @Previewable @State var appState = AppState()
+    let result = GameResult(solvedLevel: level1, secondsSpent: 120, hintsUsed: 3, undosUsed: 4)
     appState.setCurrentLevel(0)
-    return ResultView(levelTitle: "23", timeSpent: "1:20")
+    return ResultView(gameResult: result)
         .environment(Router(path: .init()))
         .environment(appState)
 }
 
 #Preview("No next levels") {
     @Previewable @State var appState = AppState()
+    let result = GameResult(solvedLevel: level1, secondsSpent: 120, hintsUsed: 3, undosUsed: 4)
     appState.setCurrentLevel(2)
-    return ResultView(levelTitle: "23", timeSpent: "1:20")
+    return ResultView(gameResult: result)
         .environment(Router(path: .init()))
         .environment(appState)
 }

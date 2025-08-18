@@ -78,6 +78,9 @@ struct LevelsView: View {
                     state.updateIndex(accordingTo: level)
                 }
             }
+            .navigationDestination(for: GameResult.self) { result in
+                ResultView(gameResult: result, showButtons: false)
+            }
         }
         .environment(router)
         .sheet(isPresented: $showingDebugMenu) {
@@ -91,7 +94,6 @@ struct LevelsView: View {
     let container = try! ModelContainer(for: GameResult.self, configurations: config)
     var appState = AppState(container.mainContext)
     let level4 = level4
-    level4.isSolved = true
     
     let result = GameResult(solvedLevel: level4, secondsSpent: 10, hintsUsed: 3, undosUsed: 4)
     
