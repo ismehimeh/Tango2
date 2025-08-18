@@ -48,6 +48,7 @@ class GameViewModel {
     func saveResult(_ modelContext: ModelContext, level: Level) {
         let result = GameResult(solvedLevel: level, secondsSpent: secondsPassed, hintsUsed: 5, undosUsed: 6)
         modelContext.insert(result)
+        level.isSolved = true
         try! modelContext.save()
     }
 }

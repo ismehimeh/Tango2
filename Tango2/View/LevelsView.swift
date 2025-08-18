@@ -31,13 +31,26 @@ struct LevelsView: View {
                 #endif
                 LazyVGrid(columns: columns, spacing: 20) {
                     ForEach(levels) { level in
-                        NavigationLink(value: level) {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color.blue)
-                                    .frame(width: 80, height: 80)
-                                Text(level.title)
-                                    .foregroundColor(.white)
+                        if let result = results.first(where: { $0.solvedLevel == level }) {
+                            NavigationLink(value: result) {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Color.gray)
+                                        .frame(width: 80, height: 80)
+                                    Text(level.title)
+                                        .foregroundColor(.white)
+                                }
+                            }
+                        }
+                        else {
+                            NavigationLink(value: level) {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Color.blue)
+                                        .frame(width: 80, height: 80)
+                                    Text(level.title)
+                                        .foregroundColor(.white)
+                                }
                             }
                         }
                     }
@@ -74,10 +87,20 @@ struct LevelsView: View {
 }
 
 #Preview {
-    @Previewable @State var appState = AppState()
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: GameResult.self, configurations: config)
+    var appState = AppState(container.mainContext)
+    let level4 = level4
+    level4.isSolved = true
+    
+    let result = GameResult(solvedLevel: level4, secondsSpent: 10, hintsUsed: 3, undosUsed: 4)
+    
+    container.mainContext.insert(result)
+    
     var levels = [level1, level2, level3, level4, level5]
     return LevelsView(levels: levels)
         .environment(appState)
+        .modelContainer(container)
 }
 
 
