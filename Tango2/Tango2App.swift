@@ -15,8 +15,8 @@ struct Tango2App: App {
     private let modelContainer: ModelContainer
     
     init() {
-        let configuration = ModelConfiguration(for: Level.self)
-        modelContainer = try! ModelContainer(for: Level.self, configurations: configuration)
+        let configuration = ModelConfiguration(for: Level.self, GameResult.self)
+        modelContainer = try! ModelContainer(for: Level.self, GameResult.self, configurations: configuration)
         
         GameSettings.registerDefaults()
         if !UserDefaults.standard.bool(forKey: isLevelsPersistedKey) {

@@ -27,6 +27,7 @@ struct GameView: View {
     @State var showNotReadyHint = false
     @State private var hintNotificationTask: Task<Void, Error>?
     @State private var showHintHint = false
+    @Environment(\.modelContext) var modelContext
     
     private let winningDelay = 0.1
     private let notificationDuration = 5.0
@@ -144,6 +145,7 @@ struct GameView: View {
             else if !oldValue && newValue {
                 viewModel.stopStimer()
                 isControlsDisabled = true
+                viewModel.saveResult(modelContext, level: game.currentLevel)
                 
                 Task {
                     try? await Task.sleep(for: .seconds(winningDelay))

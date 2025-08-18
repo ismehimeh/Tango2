@@ -5,8 +5,9 @@
 //  Created by Sergei Vasilenko on 9.06.2025.
 //
 
-import SwiftUI
 import Combine
+import SwiftData
+import SwiftUI
 
 @Observable
 class GameViewModel {
@@ -42,5 +43,11 @@ class GameViewModel {
     func cellTapped() {
         lastActionTime = Date.now
         idleTimeoutPassed = false
+    }
+    
+    func saveResult(_ modelContext: ModelContext, level: Level) {
+        let result = GameResult(solvedLevel: level, secondsSpent: secondsPassed, hintsUsed: 5, undosUsed: 6)
+        modelContext.insert(result)
+        try! modelContext.save()
     }
 }

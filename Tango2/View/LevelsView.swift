@@ -5,6 +5,7 @@
 //  Created by Sergei Vasilenko on 9.06.2025.
 //
 
+import SwiftData
 import SwiftUI
 
 struct LevelsView: View {
@@ -13,6 +14,8 @@ struct LevelsView: View {
     @Environment(AppState.self) private var state
     @State private var router = Router(path: NavigationPath())
     @State private var showingDebugMenu = false
+    // TODO: temp
+    @Query private var results: [GameResult]
 
     let columns = [
         GridItem(.adaptive(minimum: 80))
@@ -39,6 +42,14 @@ struct LevelsView: View {
                         }
                     }
                 }
+                
+                if !results.isEmpty {
+                    VStack {
+                        Text("WIP Results")
+                            .font(.title)
+                        Text("Number of results \(results.count)")
+                    }
+                }
             }
             .navigationDestination(for: Level.self) { level in
                 GameView(game: {
@@ -63,8 +74,10 @@ struct LevelsView: View {
 }
 
 #Preview {
-    var levels = (1...100).map { _ in level1 }
-    LevelsView(levels: levels)
+    @Previewable @State var appState = AppState()
+    var levels = [level1, level2, level3, level4, level5]
+    return LevelsView(levels: levels)
+        .environment(appState)
 }
 
 
