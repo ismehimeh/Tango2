@@ -6,14 +6,16 @@
 //
 
 import Foundation
+import SwiftData
 
+@Model
 class Level: Identifiable {
-    let id = UUID()
-    let title: String // TODO: I am not planning to use it, just need it to distinguish cell for now
-    let lineLength: Int
-    let levelCells: [[LevelCell]]
-    let gameConditions: [Condition]
-    let solvedCells: [[CellValue]]
+    var id = UUID()
+    var title: String // TODO: I am not planning to use it, just need it to distinguish cell for now
+    var lineLength: Int
+    var levelCells: [[LevelCell]]
+    var gameConditions: [Condition]
+    var solvedCells: [[CellValue]]
     
     init(title: String,
          lineLength: Int,

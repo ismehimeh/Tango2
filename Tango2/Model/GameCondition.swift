@@ -6,10 +6,12 @@
 //
 
 import Foundation
+import SwiftData
 
+@Model
 class Condition: Identifiable {
     
-    enum Sign: Hashable {
+    enum Sign: Hashable, Codable {
         case equal
         case opposite
         
@@ -23,10 +25,10 @@ class Condition: Identifiable {
         }
     }
 
-    let id = UUID()
-    let condition: Sign
-    let cellA: CellPosition
-    let cellB: CellPosition
+    var id = UUID()
+    var condition: Sign
+    var cellA: CellPosition
+    var cellB: CellPosition
     
     init(condition: Sign,
          cellA: CellPosition,
@@ -54,7 +56,7 @@ extension Condition: Hashable {
     }
 }
 
-struct CellPosition: Equatable, Hashable {
+struct CellPosition: Equatable, Hashable, Codable {
     let row: Int
     let column: Int
 }
