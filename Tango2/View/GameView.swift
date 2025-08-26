@@ -117,7 +117,7 @@ struct GameView: View {
                 .presentationDetents([.medium])
                 .presentationDragIndicator(.visible)
         }
-        .sheet(isPresented: $showingResult) {
+        .fullScreenCover(isPresented: $showingResult) {
             if let result = viewModel.gameResult {
                 ResultView(gameResult: result)
             }

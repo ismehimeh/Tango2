@@ -67,7 +67,7 @@ struct ResultView: View {
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(.secondary)
+        .background(.gray)
     }
     
     private func tapNextLevel() {
