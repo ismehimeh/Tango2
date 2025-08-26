@@ -5,6 +5,7 @@
 //  Created by Sergei Vasilenko on 9.06.2025.
 //
 
+import SwiftData
 import SwiftUI
 
 struct LevelsView: View {
@@ -13,6 +14,8 @@ struct LevelsView: View {
     @Environment(AppState.self) private var state
     @State private var router = Router(path: NavigationPath())
     @State private var showingDebugMenu = false
+    // TODO: temp
+    @Query private var results: [GameResult]
 
     let columns = [
         GridItem(.adaptive(minimum: 80))
@@ -28,13 +31,14 @@ struct LevelsView: View {
                 #endif
                 LazyVGrid(columns: columns, spacing: 20) {
                     ForEach(levels) { level in
-                        NavigationLink(value: level) {
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 10)
-                                    .fill(Color.blue)
-                                    .frame(width: 80, height: 80)
-                                Text(level.title)
-                                    .foregroundColor(.white)
+                        if let result = results.first(where: { $0.solvedLevel == level }) {
+                            NavigationLink(value: result) {
+                                LevelGridCellView(title: level.title, isSolved: true, spentTime: "\(result.secondsSpent)", hints: result.hintsUsed, undos: result.undosUsed)
+                            }
+                        }
+                        else {
+                            NavigationLink(value: level) {
+                                LevelGridCellView(title: level.title, isSolved: false, spentTime: nil, hints: nil, undos: nil)
                             }
                         }
                     }
@@ -54,6 +58,9 @@ struct LevelsView: View {
                     state.updateIndex(accordingTo: level)
                 }
             }
+            .navigationDestination(for: GameResult.self) { result in
+                ResultView(gameResult: result, showButtons: false)
+            }
         }
         .environment(router)
         .sheet(isPresented: $showingDebugMenu) {
@@ -63,8 +70,19 @@ struct LevelsView: View {
 }
 
 #Preview {
-    var levels = (1...100).map { _ in level1 }
-    LevelsView(levels: levels)
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: GameResult.self, configurations: config)
+    var appState = AppState(container.mainContext)
+    let level4 = level4
+    
+    let result = GameResult(solvedLevel: level4, secondsSpent: 10, hintsUsed: 3, undosUsed: 4)
+    
+    container.mainContext.insert(result)
+    
+    var levels = [level1, level2, level3, level4, level5]
+    return LevelsView(levels: levels)
+        .environment(appState)
+        .modelContainer(container)
 }
 
 

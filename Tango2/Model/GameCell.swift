@@ -10,7 +10,7 @@ import SwiftUI
 let zeroSymbol = CellValue.zero.symbol
 let oneSymbol = CellValue.one.symbol
 
-enum CellValue: Int, Hashable {
+enum CellValue: Int, Hashable, Codable {
     case zero = 0
     case one = 1
     

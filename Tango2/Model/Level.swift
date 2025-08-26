@@ -6,14 +6,29 @@
 //
 
 import Foundation
+import SwiftData
 
-struct Level: Identifiable, Hashable {
-    let id = UUID()
-    let title: String // TODO: I am not planning to use it, just need it to distinguish cell for now
-    let lineLength: Int
-    let levelCells: [[LevelCell]]
-    let gameConditions: [Condition]
-    let solvedCells: [[CellValue]]
+@Model
+class Level: Identifiable {
+    var id = UUID()
+    var title: String // TODO: I am not planning to use it, just need it to distinguish cell for now
+    var lineLength: Int
+    var levelCells: [[LevelCell]]
+    var gameConditions: [Condition]
+    var solvedCells: [[CellValue]]
+    
+    init(title: String,
+         lineLength: Int,
+         levelCells: [[LevelCell]],
+         gameConditions: [Condition],
+         solvedCells: [[CellValue]])
+    {
+        self.title = title
+        self.lineLength = lineLength
+        self.levelCells = levelCells
+        self.gameConditions = gameConditions
+        self.solvedCells = solvedCells
+    }
     
     /// Factory method to create a Level with a more concise syntax
     /// - Parameters:
@@ -54,5 +69,18 @@ struct Level: Identifiable, Hashable {
                      levelCells: levelCells,
                      gameConditions: gameConditions,
                      solvedCells: solvedCells)
+    }
+}
+
+extension Level: Equatable {
+    static func == (lhs: Level, rhs: Level) -> Bool {
+        lhs.id == rhs.id
+    }   
+}
+
+extension Level: Hashable {
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }

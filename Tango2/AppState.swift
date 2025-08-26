@@ -5,13 +5,22 @@
 //  Created by Sergei Vasilenko on 22.06.2025.
 //
 
+import SwiftData
 import SwiftUI
 
 @Observable
 final class AppState {
-    let levels: [Level] = [level1, level2, level3, level4, level5, level6, level7, level8, level9, level10, level11]
+    let levels: [Level]
     var games: [Level.ID: Game] = [:]
     private var levelIndex: Int = 0
+    private let modelContext: ModelContext?
+    
+    init(_ context: ModelContext? = nil) {
+        self.modelContext = context
+        
+        let fetchDescriptor = FetchDescriptor<Level>(sortBy: [.init(\.title)])
+        levels = try! modelContext?.fetch(fetchDescriptor) ?? []
+    }
     
     func resetAllGames() {
         games = [:]
