@@ -83,7 +83,8 @@ struct ResultView: View {
     }
     
     private func tapGoToLevels() {
-        // TODO: implement
+        dismiss()
+        router.path.removeLast()
     }
 }
 
