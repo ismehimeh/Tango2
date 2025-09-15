@@ -147,9 +147,9 @@ extension MistakeService {
     static func checkNoMoreThan2(of target: CellValue, in array: [CellValue?]) -> (Int, Int)? {
         var startIndex = -1
         var sequenceLength = 0
-        for i in 0..<array.count {
+        for index in 0..<array.count {
             // not nil
-            if let value = array[i] {
+            if let value = array[index] {
                 if startIndex >= 0 {
                     if value == target {
                         sequenceLength += 1
@@ -167,7 +167,7 @@ extension MistakeService {
                 else {
                     if value == target {
                         sequenceLength += 1
-                        startIndex = i
+                        startIndex = index
                     }
                     else {
                         if sequenceLength > 2 {

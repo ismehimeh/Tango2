@@ -32,8 +32,8 @@ struct DebugMenuView: View {
             }
             
             Button("Clear results") {
-                try! context.delete(model: GameResult.self)
-                try! context.save()
+                try? context.delete(model: GameResult.self)
+                try? context.save()
             }
             Spacer()
         }

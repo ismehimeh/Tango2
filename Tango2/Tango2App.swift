@@ -12,33 +12,46 @@ import SwiftUI
 struct Tango2App: App {
     @State private var appState: AppState
     private let isLevelsPersistedKey = "isLevelsPersisted"
-    private let modelContainer: ModelContainer
+    private let modelContainer: ModelContainer?
     
     init() {
         let configuration = ModelConfiguration(for: Level.self, GameResult.self)
-        modelContainer = try! ModelContainer(for: Level.self, GameResult.self, configurations: configuration)
-        
+        do {
+            modelContainer = try ModelContainer(for: Level.self, GameResult.self, configurations: configuration)
+        } catch {
+            modelContainer = nil
+            fatalError("Failed to initialize ModelContainer: \(error)")
+        }
+
         GameSettings.registerDefaults()
-        if !UserDefaults.standard.bool(forKey: isLevelsPersistedKey) {
+        
+        if
+            !UserDefaults.standard.bool(forKey: isLevelsPersistedKey),
+            let modelContainer = modelContainer
+        {
             let context = modelContainer.mainContext
             let levels = [level1, level2, level3, level4, level5, level6, level7, level8, level9, level10, level11]
-            try! context.transaction {
+            try? context.transaction {
                 for level in levels {
                     context.insert(level)
                 }
             }
-            try! context.save()
+            try? context.save()
             UserDefaults.standard.set(true, forKey: isLevelsPersistedKey)
         }
-        
-        appState = AppState(modelContainer.mainContext)
+
+        appState = AppState(modelContainer?.mainContext)
     }
     
     var body: some Scene {
         WindowGroup {
-            LevelsView(levels: appState.levels)
-                .environment(appState)
-                .modelContainer(modelContainer)
+            if let modelContainer = modelContainer {
+                LevelsView(levels: appState.levels)
+                    .environment(appState)
+                    .modelContainer(modelContainer)
+            } else {
+                Text("Failed to initialize ModelContainer.")
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ final class AppState {
         self.modelContext = context
         
         let fetchDescriptor = FetchDescriptor<Level>(sortBy: [.init(\.title)])
-        levels = try! modelContext?.fetch(fetchDescriptor) ?? []
+        levels = (try? modelContext?.fetch(fetchDescriptor)) ?? []
     }
     
     func resetAllGames() {

@@ -14,11 +14,11 @@ class HintService: HintServiceProtocol {
         guard let dataSource else { return nil }
         
         // we assume that game field is N x N
-        for i in 0..<dataSource.level().levelCells.count {
-            if let hint = getHint(forRowWithIndex: i) {
+        for index in 0..<dataSource.level().levelCells.count {
+            if let hint = getHint(forRowWithIndex: index) {
                 return hint
             }
-            if let hint = getHint(forColumnWithIndex: i) {
+            if let hint = getHint(forColumnWithIndex: index) {
                 return hint
             }
         }
@@ -180,10 +180,10 @@ extension HintService {
             return nil
         }
         
-        for i in 0..<line.count {
-            guard let value = line[i] else { continue }
-            if value != correctLine[i] {
-                return Hint(type: .incorrectCell(value: correctLine[i]), targetCell: .init(row: 0, column: i))
+        for index in 0..<line.count {
+            guard let value = line[index] else { continue }
+            if value != correctLine[index] {
+                return Hint(type: .incorrectCell(value: correctLine[index]), targetCell: .init(row: 0, column: index))
             }
         }
         return nil
@@ -273,10 +273,10 @@ extension HintService {
         // okay, not let's just iterate over every index
         // and replace nil with value
         // and check will it lead to placing 3 opposite values in the cells left
-        for i in line.indices {
-            guard line[i] == nil else { continue }
+        for index in line.indices {
+            guard line[index] == nil else { continue }
             var lineCopy = line
-            lineCopy[i] = value
+            lineCopy[index] = value
             
             // it looks like this situation happens when we have one or zero appearences of opposite value
             // and there are 4 combinations of problematic sequences which are not include value
@@ -301,7 +301,7 @@ extension HintService {
             
             let valuesIndices: [Int] = line.enumerated().compactMap { $0.element != nil ? $0.offset : nil }
             return Hint(type: .forcedThreeWithSameNumber(lineName: "", value: value.opposite),
-                        targetCell: .init(row: 0, column: i),
+                        targetCell: .init(row: 0, column: index),
                         relatedCells: valuesIndices.map { .init(row: 0, column: $0) })
         }
         

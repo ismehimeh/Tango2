@@ -88,10 +88,10 @@ class Game {
 //        }
     }
     
-    func isMistakeCell(i: Int, j: Int) -> Bool {
+    func isMistakeCell(row: Int, column: Int) -> Bool {
         return mistakes.contains { mistake in
             mistake.cells.contains { cell in
-                cell.row == i && cell.column == j
+                cell.row == row && cell.column == column
             }
         }
     }
@@ -116,8 +116,8 @@ extension Game {
         cellsStore.setCellValue(at: row, column: column, value: value)
     }
     
-    func toggleCell(_ i: Int, _ j: Int) {
-        cellsStore.toggleCell(i, j)
+    func toggleCell(_ row: Int, _ column: Int) {
+        cellsStore.toggleCell(row, column)
     }
     
     func cell(at row: Int, column: Int) -> GameCell {

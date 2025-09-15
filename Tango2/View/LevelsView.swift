@@ -71,6 +71,7 @@ struct LevelsView: View {
 
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    // swiftlint:disable:next force_try
     let container = try! ModelContainer(for: GameResult.self, configurations: config)
     var appState = AppState(container.mainContext)
     let level4 = level4

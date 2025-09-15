@@ -5,6 +5,8 @@
 //  Created by Sergei Vasilenko on 7.07.2025.
 //
 
+// swiftlint:disable line_length
+
 enum HintType: Equatable {
     case incorrectCell(value: CellValue)
     case oneOptionLeft(lineName: String, value: CellValue)

@@ -50,6 +50,6 @@ class GameViewModel {
         let result = GameResult(solvedLevel: level, secondsSpent: secondsPassed, hintsUsed: 5, undosUsed: 6)
         modelContext.insert(result)
         gameResult = result
-        try! modelContext.save()
+        try? modelContext.save()
     }
 }

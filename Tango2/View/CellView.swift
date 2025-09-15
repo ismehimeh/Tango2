@@ -61,9 +61,9 @@ struct Stripes: Shape {
         let width = rect.size.width
         let height = rect.size.height
         
-        for x in stride(from: 0, through: width, by: width / 4) {
-            path.move(to: CGPoint(x: x, y: 0))
-            path.addLine(to: CGPoint(x: x, y: height))
+        for xPosition in stride(from: 0, through: width, by: width / 4) {
+            path.move(to: CGPoint(x: xPosition, y: 0))
+            path.addLine(to: CGPoint(x: xPosition, y: height))
         }
         
         return path

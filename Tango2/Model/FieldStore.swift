@@ -37,8 +37,8 @@ class FieldStore {
         return row * lineLength + column
     }
     
-    func toggleCell(_ i: Int, _ j: Int) {
-        let index = cellIndex(row: i, column: j)
+    func toggleCell(_ row: Int, _ column: Int) {
+        let index = cellIndex(row: row, column: column)
         let cell = cells[index]
         guard cell.predefinedValue == nil else { return }
         
@@ -47,10 +47,10 @@ class FieldStore {
         undoManager?.registerUndo(withTarget: self) { [weak self] target in
             guard let self else { return }
             
-            target.setCellValue(at: i, column: j, value: oldValue)
+            target.setCellValue(at: row, column: column, value: oldValue)
             
             undoManager?.registerUndo(withTarget: target) { redoTarget in
-                target.toggleCell(i, j)
+                target.toggleCell(row, column)
             }
         }
 

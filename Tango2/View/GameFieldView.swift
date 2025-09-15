@@ -33,27 +33,27 @@ struct GameFieldView: View {
                 .foregroundStyle(Constants.fieldBackgroundColor)
                 .aspectRatio(1, contentMode: .fit)
             Grid(horizontalSpacing: 2, verticalSpacing: 2) {
-                ForEach(0..<game.lineLength, id: \.self) { i in
+                ForEach(0..<game.lineLength, id: \.self) { row in
                     GridRow {
-                        ForEach(0..<game.lineLength, id: \.self) { j in
+                        ForEach(0..<game.lineLength, id: \.self) { column in
                             ZStack {
-                                CellView(row: i,
-                                         column: j,
-                                         backgroundColor: cellBackgroundColor(i, j),
-                                         cellContent: cellValue(i, j),
-                                         isMarkedAsMistake: isCellWithMistake(i, j), 
-                                         isHighlighted: isCellHighlighted(i, j))
+                                CellView(row: row,
+                                         column: column,
+                                         backgroundColor: cellBackgroundColor(row, column),
+                                         cellContent: cellValue(row, column),
+                                         isMarkedAsMistake: isCellWithMistake(row, column),
+                                         isHighlighted: isCellHighlighted(row, column))
                             }
                             .onTapGesture {
                                 onCellTapped?()
                                 if let highlightedCell {
                                     if
-                                        i == highlightedCell.row &&
-                                        j == highlightedCell.column
+                                        row == highlightedCell.row &&
+                                        column == highlightedCell.column
                                     {
-                                        tapCell(i, j)
+                                        tapCell(row, column)
                                         // Call the callback when target cell is tapped
-                                        onTargetCellTapped?(game.cell(at: i, column: j).value)
+                                        onTargetCellTapped?(game.cell(at: row, column: column).value)
                                     }
                                     else {
                                         withAnimation(.linear) {
@@ -62,7 +62,7 @@ struct GameFieldView: View {
                                     }
                                 }
                                 else {
-                                    tapCell(i, j)
+                                    tapCell(row, column)
                                 }
                             }
                         }
@@ -100,14 +100,14 @@ struct GameFieldView: View {
         }
     }
     
-    func isCellHighlighted(_ i: Int, _ j: Int) -> Bool {
+    func isCellHighlighted(_ row: Int, _ column: Int) -> Bool {
         guard let position = highlightedCell else { return false }
-        return position.row == i && position.column == j
+        return position.row == row && position.column == column
     }
         
     // MARK: - Functions
-    func cellBackgroundColor(_ i: Int, _ j: Int) -> Color {
-        let cell = game.cell(at: i, column: j)
+    func cellBackgroundColor(_ row: Int, _ column: Int) -> Color {
+        let cell = game.cell(at: row, column: column)
         if let _ = cell.predefinedValue {
             return Constants.cellPrefilledBackgroundColor
         } else {
@@ -115,17 +115,17 @@ struct GameFieldView: View {
         }
     }
 
-    func cellValue(_ i: Int, _ j: Int) -> String? {
-        let cell = game.cell(at: i, column: j)
+    func cellValue(_ row: Int, _ column: Int) -> String? {
+        let cell = game.cell(at: row, column: column)
         return cell.predefinedValue?.symbol ?? cell.value?.symbol
     }
     
-    func isCellWithMistake(_ i: Int, _ j: Int) -> Bool {
-        return game.isMistakeCell(i: i, j: j)
+    func isCellWithMistake(_ row: Int, _ column: Int) -> Bool {
+        return game.isMistakeCell(row: row, column: column)
     }
     
-    func tapCell(_ i: Int, _ j: Int) {
-        game.toggleCell(i, j)
+    func tapCell(_ row: Int, _ column: Int) {
+        game.toggleCell(row, column)
     }
     
     var cellHighlightMask: some View {
