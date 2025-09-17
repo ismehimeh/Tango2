@@ -8,4 +8,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v5.0.0
     - name: Build
-      run: xcodebuild
+      run: |
+        xcodebuild \
+        CODE_SIGNING_ALLOWED=NO
