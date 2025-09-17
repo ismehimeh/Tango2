@@ -23,6 +23,6 @@ jobs:
     - name: Run SwiftLint -> SARIF
       run: swiftlint --config .swiftlint.yml --reporter sarif --output swiftlint.sarif
     - name: Upload SARIF to GitHub Code Scanning
-    uses: github/codeql-action/upload-sarif@v3
+      uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: swiftlint.sarif
