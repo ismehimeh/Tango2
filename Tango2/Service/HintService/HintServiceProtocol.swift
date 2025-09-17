@@ -6,7 +6,7 @@
 //
 
 protocol HintServiceProtocol: AnyObject {
-    
+
     var dataSource: HintServiceDataSource? { get set }
 
     func getHint() -> Hint?

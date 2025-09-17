@@ -14,7 +14,7 @@ struct CellView: View {
     let cellContent: String?
     let isMarkedAsMistake: Bool
     let isHighlighted: Bool
-    
+
     private let hihglightColor = Color(red: 50 / 255.0, green: 108 / 255.0, blue: 215 / 255.0)
 
     var body: some View {
@@ -55,17 +55,17 @@ struct CellView: View {
 }
 
 struct Stripes: Shape {
-    
+
     func path(in rect: CGRect) -> Path {
         var path = Path()
         let width = rect.size.width
         let height = rect.size.height
-        
+
         for xPosition in stride(from: 0, through: width, by: width / 4) {
             path.move(to: CGPoint(x: xPosition, y: 0))
             path.addLine(to: CGPoint(x: xPosition, y: height))
         }
-        
+
         return path
     }
 }

@@ -8,13 +8,13 @@
 import SwiftUI
 
 struct HintView: View {
-    
+
     var description: String
     @Binding var shakes: Int
-    
+
     var dismissHintTapped: () -> Void
     var showMeTapped: () -> Void
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             HStack {
@@ -33,13 +33,13 @@ struct HintView: View {
                 }
             }
             .padding(.bottom, 5)
-            
+
             HStack {
                 Text(description)
                     .multilineTextAlignment(.leading)
                 Spacer()
             }
-            
+
             Button {
                 showMeTapped()
             } label: {
@@ -61,4 +61,3 @@ struct HintView: View {
 #Preview {
     HintView(description: "This is description", shakes: .constant(0)) { } showMeTapped: {}
 }
-

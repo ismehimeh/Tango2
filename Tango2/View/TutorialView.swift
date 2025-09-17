@@ -10,7 +10,7 @@ import SwiftUI
 struct TutorialView: View {
 
     private let buttonColor = Color(red: 55/255.0, green: 110/255.0, blue: 191/255.0)
-    
+
     @State private var stage = TutorialStage.intro
     @State private var game = Game(tutorialLevel)
     @Environment(\.dismiss) var dismiss
@@ -44,11 +44,11 @@ struct TutorialView: View {
                         nextStage()
                     }
                 }
-                
+
                 MistakesListView(mistakes: game.mistakes.map({$0.type.tutorialDescription}))
-                
+
                 informationView
-                
+
                 if stage == .doItYourself {
                     HowToPlayView(title: "Reminder of how to play")
                         .padding(.horizontal, 20)
@@ -64,7 +64,7 @@ struct TutorialView: View {
         }
         Spacer()
     }
-    
+
     private var informationView: some View {
         VStack {
             VStack(alignment: .leading) {
@@ -81,7 +81,7 @@ struct TutorialView: View {
                 .fill(.gray.opacity(0.1))
         )
     }
-    
+
     @ViewBuilder
     private var supplementViewForStage: some View {
         switch stage {
@@ -93,7 +93,7 @@ struct TutorialView: View {
             EmptyView()
         }
     }
-    
+
     private var playTutorialButton: some View {
         Button {
             nextStage()
@@ -109,7 +109,7 @@ struct TutorialView: View {
                 .stroke(buttonColor)
         )
     }
-    
+
     private var playGameButton: some View {
         Button {
             dismiss()
@@ -125,7 +125,7 @@ struct TutorialView: View {
                 .stroke(buttonColor)
         )
     }
-    
+
     private func nextStage() {
         if let next = stage.next {
             stage = next

@@ -13,7 +13,7 @@ struct ProgressButton: View {
     var action: (Bool) -> Void
     var body: some View {
         Button {
-            
+
         } label: {
             Text("Hint")
                 .padding(.horizontal, 40)

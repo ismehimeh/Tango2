@@ -75,15 +75,13 @@ struct LevelsView: View {
     let container = try! ModelContainer(for: GameResult.self, configurations: config)
     var appState = AppState(container.mainContext)
     let level4 = level4
-    
+
     let result = GameResult(solvedLevel: level4, secondsSpent: 10, hintsUsed: 3, undosUsed: 4)
-    
+
     container.mainContext.insert(result)
-    
+
     var levels = [level1, level2, level3, level4, level5]
     return LevelsView(levels: levels)
         .environment(appState)
         .modelContainer(container)
 }
-
-

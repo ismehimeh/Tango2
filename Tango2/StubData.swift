@@ -5,7 +5,7 @@
 //  Created by Sergei Vasilenko on 10.03.2025.
 //
 
-//MARK: - Tutorial Level
+// MARK: - Tutorial Level
 let tutorialLevel = Level.create(
     title: "Tutorial",
     lineLength: 4,
@@ -13,7 +13,7 @@ let tutorialLevel = Level.create(
         [nil, nil, nil, .zero],
         [nil, .one, nil, .one],
         [nil, nil, nil, nil],
-        [nil, nil, nil, nil],
+        [nil, nil, nil, nil]
     ],
     conditions: [
         (.opposite, (0, 0), (0, 1)),
@@ -23,7 +23,7 @@ let tutorialLevel = Level.create(
         [.zero, .one, .one, .zero],
         [.zero, .one, .zero, .one],
         [.one, .zero, .one, .zero],
-        [.one, .zero, .zero, .one],
+        [.one, .zero, .zero, .one]
     ])
 
 // MARK: - Level 1
@@ -49,7 +49,7 @@ let level1 = Level.create(
         [.one, .one, .zero, .one, .zero, .zero],
         [.one, .zero, .one, .zero, .one, .zero],
         [.zero, .one, .zero, .one, .zero, .one],
-        [.zero, .zero, .one, .zero, .one, .one],
+        [.zero, .zero, .one, .zero, .one, .one]
     ]
 )
 
@@ -72,7 +72,7 @@ let level1WithMistake = Level.create(
     ]
 )
 
-// MARK:  - Level 2
+// MARK: - Level 2
 let level2 = Level.create(
     title: "2",
     boardDefinition: [
@@ -97,13 +97,12 @@ let level2 = Level.create(
         [.zero, .zero, .one, .zero, .one, .one],
         [.one, .one, .zero, .one, .zero, .zero],
         [.one, .one, .zero, .one, .zero, .zero],
-        [.zero, .zero, .one, .zero, .one, .one],
+        [.zero, .zero, .one, .zero, .one, .one]
     ]
 )
 
-
 // MARK: - Level 3
-//basically, it is almost solved level 1
+// basically, it is almost solved level 1
 let level3 = Level.create(
     title: "3",
     boardDefinition: [
@@ -126,7 +125,7 @@ let level3 = Level.create(
         [.one, .one, .zero, .one, .zero, .zero],
         [.one, .zero, .one, .zero, .one, .zero],
         [.zero, .one, .zero, .one, .zero, .one],
-        [.zero, .zero, .one, .zero, .one, .one],
+        [.zero, .zero, .one, .zero, .one, .one]
     ])
 
 // Difficulty: HARD
@@ -151,7 +150,7 @@ let level4 = Level.create(
         [.one, .zero, .one, .zero, .one, .zero],
         [.zero, .one, .zero, .one, .one, .zero],
         [.zero, .zero, .one, .one, .zero, .one],
-        [.one, .one, .zero, .zero, .one, .zero],
+        [.one, .one, .zero, .zero, .one, .zero]
     ])
 
 let level5 = Level.create(
@@ -162,12 +161,12 @@ let level5 = Level.create(
         [nil, nil, nil, nil, nil, nil],
         [nil, nil, nil, nil, nil, nil],
         [nil, nil, nil, nil, .one, .zero],
-        [nil, nil, nil, nil, .zero, .zero],
+        [nil, nil, nil, nil, .zero, .zero]
     ], conditions: [
         (.opposite, (0, 2), (0, 3)),
         (.equal, (1, 2), (1, 3)),
         (.equal, (4, 2), (4, 3)),
-        (.opposite, (5, 2), (5, 3)),
+        (.opposite, (5, 2), (5, 3))
     ],
     solvedCells: [
         [.zero, .zero, .one, .zero, .one, .one],
@@ -175,7 +174,7 @@ let level5 = Level.create(
         [.zero, .zero, .one, .one, .zero, .one],
         [.zero, .zero, .one, .one, .zero, .one],
         [.one, .one, .zero, .zero, .one, .zero],
-        [.one, .one, .zero, .one, .zero, .zero],
+        [.one, .one, .zero, .one, .zero, .zero]
     ])
 
 // Difficulty: HARD
@@ -187,7 +186,7 @@ let level6 = Level.create(
         [nil, nil, nil, .zero, .one, nil],
         [nil, .zero, .one, nil, nil, nil],
         [nil, nil, nil, nil, nil, nil],
-        [nil, nil, nil, nil, .one, .one],
+        [nil, nil, nil, nil, .one, .one]
     ],
     conditions: [
         (.opposite, (0, 4), (0, 5)),
@@ -195,7 +194,7 @@ let level6 = Level.create(
         (.opposite, (1, 1), (2, 1)),
         (.equal, (1, 5), (2, 5)),
         (.equal, (3, 0), (4, 0)),
-        (.equal, (3, 4), (4, 4)),
+        (.equal, (3, 4), (4, 4))
     ],
     solvedCells: [
         [.zero, .zero, .one, .one, .zero, .one],
@@ -203,7 +202,7 @@ let level6 = Level.create(
         [.zero, .one, .one, .zero, .one, .zero],
         [.one, .zero, .one, .zero, .zero, .one],
         [.one, .one, .zero, .one, .zero, .zero],
-        [.zero, .one, .zero, .zero, .one, .one],
+        [.zero, .one, .zero, .zero, .one, .one]
     ])
 
 // Difficulty: HARD
@@ -215,7 +214,7 @@ let level7 = Level.create(
         [nil, .one, nil, nil, nil, nil],
         [nil, nil, nil, nil, .zero, nil],
         [nil, nil, nil, nil, .zero, nil],
-        [nil, nil, nil, .zero, .one, .zero],
+        [nil, nil, nil, .zero, .one, .zero]
     ],
     conditions: [
         (.opposite, (1, 3), (1, 4)),
@@ -224,7 +223,7 @@ let level7 = Level.create(
         (.opposite, (4, 1), (4, 2)),
         (.equal, (3, 0), (4, 0)),
         (.opposite, (4, 0), (5, 0)),
-        (.opposite, (1, 5), (2, 5)),
+        (.opposite, (1, 5), (2, 5))
     ],
     solvedCells: [
         [.zero, .one, .one, .zero, .one, .zero],
@@ -232,7 +231,7 @@ let level7 = Level.create(
         [.one, .one, .zero, .zero, .one, .zero],
         [.zero, .zero, .one, .one, .zero, .one],
         [.zero, .one, .zero, .one, .zero, .one],
-        [.one, .zero, .one, .zero, .one, .zero],
+        [.one, .zero, .one, .zero, .one, .zero]
     ])
 
 let level8 = Level.create(
@@ -243,7 +242,7 @@ let level8 = Level.create(
         [nil, nil, .one, .zero, nil, nil],
         [.zero, nil, nil, nil, nil, .one],
         [nil, .one, nil, nil, .zero, nil],
-        [nil, nil, .zero, .one, nil, nil],
+        [nil, nil, .zero, .one, nil, nil]
     ],
     conditions: [
         (.opposite, (3, 2), (4, 2)),
@@ -255,7 +254,7 @@ let level8 = Level.create(
         [.one, .zero, .one, .zero, .one, .zero],
         [.zero, .one, .zero, .one, .zero, .one],
         [.zero, .one, .one, .zero, .zero, .one],
-        [.one, .zero, .zero, .one, .one, .zero],
+        [.one, .zero, .zero, .one, .one, .zero]
     ])
 
 // Difficulty: Hard
@@ -267,7 +266,7 @@ let level9 = Level.create(
         [nil, nil, nil, nil, nil, nil],
         [nil, nil, nil, nil, nil, nil],
         [nil, .one, nil, nil, .one, nil],
-        [nil, nil, nil, nil, nil, nil],
+        [nil, nil, nil, nil, nil, nil]
     ],
     conditions: [
         (.opposite, (0, 4), (0, 5)),
@@ -297,20 +296,20 @@ let level10 = Level.create(
         [nil, nil, nil, nil, nil, nil],
         [nil, nil, nil, nil, nil, nil],
         [nil, .zero, nil, nil, .zero, nil],
-        [.zero, nil, nil, nil, nil, .one],
+        [.zero, nil, nil, nil, nil, .one]
     ],
     conditions: [
         (.opposite, (2, 2), (2, 3)),
         (.opposite, (3, 2), (3, 3)),
         (.equal, (2, 2), (3, 2)),
-        (.equal, (2, 3), (3, 3)),
+        (.equal, (2, 3), (3, 3))
     ], solvedCells: [
         [.zero, .one, .zero, .one, .one, .zero],
         [.one, .one, .zero, .one, .zero, .zero],
         [.one, .zero, .one, .zero, .zero, .one],
         [.zero, .one, .one, .zero, .one, .zero],
         [.one, .zero, .zero, .one, .zero, .one],
-        [.zero, .zero, .one, .zero, .one, .one],
+        [.zero, .zero, .one, .zero, .one, .one]
     ])
 
 let level11 = Level.create(
@@ -321,7 +320,7 @@ let level11 = Level.create(
         [.zero, .one, .zero, nil, nil, nil],
         [nil, nil, nil, .zero, nil, .one],
         [nil, nil, nil, .one, .zero, nil],
-        [nil, nil, nil, .zero, nil, .one],
+        [nil, nil, nil, .zero, nil, .one]
     ],
     conditions: [
         (.opposite, (0, 3), (0, 4)),
@@ -346,7 +345,7 @@ let level11 = Level.create(
         [.zero, .one, .zero, .one, .one, .zero],
         [.one, .zero, .one, .zero, .zero, .one],
         [.one, .one, .zero, .one, .zero, .zero],
-        [.zero, .zero, .one, .zero, .one, .one],
+        [.zero, .zero, .one, .zero, .one, .one]
     ])
 
 let testLevel1 = Level.create(
@@ -412,7 +411,7 @@ let testTutorial = Level.create(
         [.zero, .one, .zero, .zero],
         [.zero, .one, .zero, .one],
         [.one, .zero, .one, .zero],
-        [.one, .zero, .zero, .one],
+        [.one, .zero, .zero, .one]
     ],
     conditions: [
         (.opposite, (0, 0), (0, 1)),

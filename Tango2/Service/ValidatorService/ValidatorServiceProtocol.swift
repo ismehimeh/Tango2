@@ -6,8 +6,8 @@
 //
 
 protocol ValidatorServiceProtocol: AnyObject {
-    
+
     var dataSource: ValidatorServiceDataSource? { get set }
-    
+
     func isFieldValid() -> Bool
 }

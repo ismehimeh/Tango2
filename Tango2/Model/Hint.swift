@@ -15,7 +15,7 @@ enum HintType: Equatable {
     case sign(sign: String, value: CellValue)
     case noMoreThan2(value: CellValue)
     case tripleOpposite(lineName: String, value: CellValue)
-    
+
     var description: String {
         switch self {
         case .incorrectCell:
@@ -34,13 +34,13 @@ enum HintType: Equatable {
             // N=NN010 - tripple opposite? Yes, exactly
             // TODO: then we need other naming
             // I consider it special case, because saw it only once
-            //NxNxN101
-            //NxNxN010
+            // NxNxN101
+            // NxNxN010
             // All other variations should be already covered with other hints
             return "Each \(lineName) must contain the same number of \(zeroSymbol) and \(oneSymbol)./n/nThe final \(value.symbol) in this \(lineName) must be elsewhere due to the remaining \(Condition.Sign.opposite.symbol).\n\nTherefore the highlighted cell must be a \(value.symbol)."
         }
     }
-    
+
     var value: CellValue {
         switch self {
         case .incorrectCell(let value):
@@ -61,18 +61,17 @@ enum HintType: Equatable {
     }
 }
 
-
 /// A structure representing a hint in the game that provides guidance to the player.
 struct Hint: Equatable {
     /// The type of hint, describing the rule being applied
     let type: HintType
-    
+
     /// The position of the cell that the hint is targeting
     let targetCell: CellPosition
-    
+
     /// An array of related cell positions that are relevant to this hint
     let relatedCells: [CellPosition]
-    
+
     init(type: HintType, targetCell: CellPosition, relatedCells: [CellPosition] = []) {
         self.type = type
         self.targetCell = targetCell

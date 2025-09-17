@@ -10,11 +10,11 @@ import SwiftUI
 @Observable
 class Router {
     var path: NavigationPath
-    
+
     init(path: NavigationPath) {
         self.path = path
     }
-    
+
     func open(_ level: Level) {
         path.append(level)
     }

@@ -13,7 +13,7 @@ struct Tango2App: App {
     @State private var appState: AppState
     private let isLevelsPersistedKey = "isLevelsPersisted"
     private let modelContainer: ModelContainer?
-    
+
     init() {
         let configuration = ModelConfiguration(for: Level.self, GameResult.self)
         do {
@@ -24,7 +24,7 @@ struct Tango2App: App {
         }
 
         GameSettings.registerDefaults()
-        
+
         if
             !UserDefaults.standard.bool(forKey: isLevelsPersistedKey),
             let modelContainer = modelContainer
@@ -42,7 +42,7 @@ struct Tango2App: App {
 
         appState = AppState(modelContainer?.mainContext)
     }
-    
+
     var body: some Scene {
         WindowGroup {
             if let modelContainer = modelContainer {

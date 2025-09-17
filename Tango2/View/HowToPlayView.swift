@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct HowToPlayView: View {
-    
+
     var title: String?
     var body: some View {
         DisclosureGroup(title ?? "How to play") {

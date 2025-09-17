@@ -13,7 +13,7 @@ let oneSymbol = CellValue.one.symbol
 enum CellValue: Int, Hashable, Codable {
     case zero = 0
     case one = 1
-    
+
     init?(rawValue: Int) {
         switch rawValue {
         case 0: self = .zero
@@ -21,7 +21,7 @@ enum CellValue: Int, Hashable, Codable {
         default: return nil
         }
     }
-    
+
     var symbol: String {
         switch self {
         case .zero:
@@ -30,11 +30,11 @@ enum CellValue: Int, Hashable, Codable {
             return "🌚"
         }
     }
-    
+
     var opposite: CellValue {
         self == .zero ? .one : .zero
     }
-    
+
     func signed(_ sign: Condition.Sign) -> CellValue {
         if sign == .equal {
             return self
@@ -64,7 +64,7 @@ class GameCell: Hashable {
         self.predefinedValue = predefinedValue
         self._value = value
     }
-    
+
     func hasMistake() -> Bool {
         return false
     }
@@ -84,7 +84,7 @@ extension GameCell {
 }
 
 extension Array where Element == GameCell {
-    
+
     /// Returns array of GameCells which where reset to predefinedValue
     func cleared() -> Self {
         self.map { GameCell(predefinedValue: $0.predefinedValue) }

@@ -7,52 +7,52 @@
 
 final class MistakeService {
     weak var dataSource: MistakeServiceDataSource?
-    
+
     init() { }
 }
 
 // MARK: - MistakeServiceProtocol
 extension MistakeService: MistakeServiceProtocol {
-    
+
     func getMistakes() -> [Mistake] {
         guard let level = dataSource?.level() else {
             assertionFailure("Level is not provided for MistakeService!")
             return []
         }
         var allMistakes = [Mistake]()
-        
+
         // Check all rows
         for rowIndex in 0..<level.levelCells.count {
             allMistakes.append(contentsOf: getMistakes(forRowWithIndex: rowIndex))
         }
-        
+
         // Check all columns
         for columnIndex in 0..<level.levelCells[0].count {
             allMistakes.append(contentsOf: getMistakes(forColumnWithIndex: columnIndex))
         }
-        
+
         return allMistakes
     }
-    
+
     func getMistakes(forRowWithIndex rowIndex: Int) -> [Mistake] {
         guard let dataSource else {
             assertionFailure("DataSource is not provided for MistakeService!")
             return []
         }
-        
+
         var mistakes = [Mistake]()
         mistakes.append(contentsOf: checkSignViolation(cells: dataSource.row(rowIndex), isRow: true, index: rowIndex))
         mistakes.append(contentsOf: checkSameNumberValues(cells: dataSource.row(rowIndex), isRow: true, index: rowIndex))
         mistakes.append(contentsOf: checkNoMoreThan2(cells: dataSource.row(rowIndex), isRow: true, index: rowIndex))
         return mistakes
     }
-    
+
     func getMistakes(forColumnWithIndex columnIndex: Int) -> [Mistake] {
         guard let dataSource else {
             assertionFailure("DataSource is not provided for MistakeService!")
             return []
         }
-        
+
         var mistakes = [Mistake]()
         mistakes.append(contentsOf: checkSignViolation(cells: dataSource.column(columnIndex), isRow: false, index: columnIndex))
         mistakes.append(contentsOf: checkSameNumberValues(cells: dataSource.column(columnIndex), isRow: false, index: columnIndex))
@@ -78,9 +78,9 @@ extension MistakeService {
             assertionFailure("Conditions are not provided for MistakeService!")
             return []
         }
-        
+
         var mistakes = [Mistake]()
-        
+
         // Filter conditions that apply to this row/column
         let relatedConditions = conditions.filter {
             if isRow {
@@ -89,16 +89,16 @@ extension MistakeService {
                 return $0.cellA.column == index && $0.cellB.column == index
             }
         }
-        
+
         relatedConditions.forEach { condition in
             let positionA = isRow ? condition.cellA.column : condition.cellA.row
             let positionB = isRow ? condition.cellB.column : condition.cellB.row
-            
+
             let cellAValue = cells[positionA].value
             let cellBValue = cells[positionB].value
-            
+
             guard cellAValue != nil && cellBValue != nil else { return }
-            
+
             switch condition.condition {
             case .equal:
                 if cellAValue != cellBValue {
@@ -112,10 +112,10 @@ extension MistakeService {
                 }
             }
         }
-        
+
         return mistakes
     }
-    
+
     /**
      Checks for more than 2 consecutive identical values in a line of cells.
      
@@ -130,7 +130,7 @@ extension MistakeService {
             }
             mistakes.append(.init(cells: positions, type: .noMoreThan2))
         }
-        
+
         if let onesMistakePosition = MistakeService.checkNoMoreThan2(of: .one, in: cells.map { $0.value }) {
             let positions = (onesMistakePosition.0...onesMistakePosition.1).map {
                 CellPosition(row: isRow ? index : $0, column: isRow ? $0 : index)
@@ -139,7 +139,7 @@ extension MistakeService {
         }
         return mistakes
     }
-    
+
     // we have line of length 6
     // so there could be only 2 mistaked sequence of different symbols (000111 where 000 and 111 are mistakes) per line
     // or just one sequence per line (010111, 001111, 111111)
@@ -190,16 +190,16 @@ extension MistakeService {
                 }
             }
         }
-        
+
         if startIndex >= 0 {
             if sequenceLength > 2 {
                 return (startIndex, startIndex + sequenceLength - 1)
             }
         }
-        
+
         return nil
     }
-    
+
     /**
      Checks if a completely filled line has an equal number of zeros and ones.
      
@@ -208,12 +208,12 @@ extension MistakeService {
      */
     private func checkSameNumberValues(cells: [GameCell], isRow: Bool, index: Int) -> [Mistake] {
         var mistakes = [Mistake]()
-        
+
         // Count zeroes, ones, and nil values
         let zeroCount = cells.filter { $0.value == .zero }.count
         let oneCount = cells.filter { $0.value == .one }.count
         let nilCount = cells.filter { $0.value == nil }.count
-        
+
         // Only check for balance in completely filled lines (no nil values)
         if nilCount == 0 {
             // Check if number of zeros equals number of ones
@@ -224,7 +224,7 @@ extension MistakeService {
                 mistakes.append(.init(cells: cells, type: .sameNumberValues))
             }
         }
-        
+
         return mistakes
     }
 }

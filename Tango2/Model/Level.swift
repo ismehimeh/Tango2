@@ -16,7 +16,7 @@ class Level: Identifiable {
     var levelCells: [[LevelCell]]
     var gameConditions: [Condition]
     var solvedCells: [[CellValue]]
-    
+
     init(title: String,
          lineLength: Int,
          levelCells: [[LevelCell]],
@@ -29,7 +29,7 @@ class Level: Identifiable {
         self.gameConditions = gameConditions
         self.solvedCells = solvedCells
     }
-    
+
     /// Factory method to create a Level with a more concise syntax
     /// - Parameters:
     ///   - title: Level title
@@ -54,7 +54,7 @@ class Level: Identifiable {
                 }
             }
         }
-        
+
         // Convert simple conditions to GameCellConditions
         let gameConditions = conditions.map { cond in
             Condition(condition: cond.condition,
@@ -63,7 +63,7 @@ class Level: Identifiable {
                               cellB: CellPosition(row: cond.position2.row,
                                                   column: cond.position2.col))
         }
-        
+
         return Level(title: title,
                      lineLength: lineLength,
                      levelCells: levelCells,
@@ -75,7 +75,7 @@ class Level: Identifiable {
 extension Level: Equatable {
     static func == (lhs: Level, rhs: Level) -> Bool {
         lhs.id == rhs.id
-    }   
+    }
 }
 
 extension Level: Hashable {

@@ -17,7 +17,7 @@ enum MistakeType: Hashable {
 }
 
 extension MistakeType {
-    
+
     var description: String {
         switch self {
         case .noMoreThan2:
@@ -33,7 +33,7 @@ extension MistakeType {
             return "Each row (and column) must contain the same number of \(zeroSymbol) and \(oneSymbol)"
         }
     }
-    
+
     var tutorialDescription: String {
         switch self {
         case .signViolation(let condition):

@@ -13,7 +13,7 @@ struct LevelGridCellView: View {
     let spentTime: String?
     let hints: Int?
     let undos: Int?
-    
+
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 10)
@@ -46,5 +46,5 @@ struct LevelGridCellView: View {
         LevelGridCellView(title: "1", isSolved: false, spentTime: nil, hints: nil, undos: nil)
         LevelGridCellView(title: "2", isSolved: true, spentTime: "3:40", hints: 2, undos: 5)
     }
-    
+
 }

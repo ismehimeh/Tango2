@@ -11,22 +11,22 @@ import SwiftUI
 
 @Observable
 class GameViewModel {
-    
+
     var timeString = "0:00"
     private var lastActionTime = Date.now
-    
+
     private(set) var idleTimeoutPassed = false
     var gameResult: GameResult?
-    
+
     var secondsPassed = 0 {
         didSet {
             timeString = String(format: "%01d:%02d", secondsPassed / 60, secondsPassed % 60)
         }
     }
-    
+
     private let totalTimer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     private var timerCancellable: AnyCancellable?
-    
+
     func startTimer() {
         timerCancellable = Timer.publish(every: 1, on: .main, in: .common)
             .autoconnect()
@@ -36,16 +36,16 @@ class GameViewModel {
                 idleTimeoutPassed = abs(lastActionTime.timeIntervalSinceNow) > 60
             }
     }
-    
+
     func stopStimer() {
         timerCancellable = nil
     }
-    
+
     func cellTapped() {
         lastActionTime = Date.now
         idleTimeoutPassed = false
     }
-    
+
     func saveResult(_ modelContext: ModelContext, level: Level) {
         let result = GameResult(solvedLevel: level, secondsSpent: secondsPassed, hintsUsed: 5, undosUsed: 6)
         modelContext.insert(result)

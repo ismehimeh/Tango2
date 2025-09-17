@@ -14,23 +14,23 @@ final class AppState {
     var games: [Level.ID: Game] = [:]
     private var levelIndex: Int = 0
     private let modelContext: ModelContext?
-    
+
     init(_ context: ModelContext? = nil) {
         self.modelContext = context
-        
+
         let fetchDescriptor = FetchDescriptor<Level>(sortBy: [.init(\.title)])
         levels = (try? modelContext?.fetch(fetchDescriptor)) ?? []
     }
-    
+
     func resetAllGames() {
         games = [:]
     }
-    
+
     func setCurrentLevel(_ index: Int) {
         guard index >= 0 && index < levels.count else { return }
         levelIndex = index
     }
-    
+
     func moveToNextLevel() -> Bool {
         let nextIndex = levelIndex + 1
         if nextIndex < levels.count {
@@ -39,15 +39,15 @@ final class AppState {
         }
         return false
     }
-    
+
     var isNextLevelAvailable: Bool {
         levelIndex + 1 < levels.count
     }
-    
+
     var currentLevel: Level {
         levels[levelIndex]
     }
-    
+
     func updateIndex(accordingTo level: Level) {
         if let index = levels.firstIndex(of: level) {
             levelIndex = index

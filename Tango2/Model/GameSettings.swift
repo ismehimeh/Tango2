@@ -13,13 +13,13 @@ enum GameSettings {
     static let mistakeHighlightKey = "isMistakeHighlightEnabled"
     static let redoVisibilityKey = "isRedoVisible"
     static let hintDelayKey = "hintDelay"
-    
+
     // Default values
     static let defaultClockVisible = true
     static let defaultMistakeHighlight = true
     static let defaultRedoVisibility = false
     static let defaultHintDelay = 10.0
-    
+
     // Register defaults on app launch
     static func registerDefaults() {
         UserDefaults.standard.register(defaults: [

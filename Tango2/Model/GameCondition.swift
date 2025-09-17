@@ -10,11 +10,11 @@ import SwiftData
 
 @Model
 class Condition: Identifiable {
-    
+
     enum Sign: Hashable, Codable {
         case equal
         case opposite
-        
+
         var symbol: String {
             switch self {
             case .equal:
@@ -29,7 +29,7 @@ class Condition: Identifiable {
     var condition: Sign
     var cellA: CellPosition
     var cellB: CellPosition
-    
+
     init(condition: Sign,
          cellA: CellPosition,
          cellB: CellPosition)
@@ -41,7 +41,7 @@ class Condition: Identifiable {
 }
 
 extension Condition: Equatable {
-    
+
     static func == (lhs: Condition, rhs: Condition) -> Bool {
         lhs.condition == rhs.condition &&
         lhs.cellA == rhs.cellA &&
@@ -50,7 +50,7 @@ extension Condition: Equatable {
 }
 
 extension Condition: Hashable {
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }

@@ -5,7 +5,6 @@
 //  Created by Sergei Vasilenko on 19.07.2025.
 //
 
-
 enum TutorialStage: CaseIterable {
     case intro
     case noMoreThan2First
@@ -15,7 +14,7 @@ enum TutorialStage: CaseIterable {
     case noMoreThan2Second
     case doItYourself
     case congrats
-    
+
     var next: TutorialStage? {
         let allCases = TutorialStage.allCases
         guard let currentIndex = allCases.firstIndex(of: self),
@@ -24,7 +23,7 @@ enum TutorialStage: CaseIterable {
         }
         return allCases[currentIndex + 1]
     }
-    
+
     var highligthedCell: CellPosition? {
         switch self {
         case .noMoreThan2First:
@@ -41,7 +40,7 @@ enum TutorialStage: CaseIterable {
             return nil
         }
     }
-    
+
     var notDimmedCells: [CellPosition]? {
         switch self {
         case .noMoreThan2First:
@@ -72,7 +71,7 @@ enum TutorialStage: CaseIterable {
             return nil
         }
     }
-    
+
     var expectedCellValue: CellValue? {
         switch self {
         case .noMoreThan2First, .sameNumber, .equalSign, .noMoreThan2Second:
@@ -83,7 +82,7 @@ enum TutorialStage: CaseIterable {
             return nil
         }
     }
-    
+
     var text: String {
         switch self {
         case .intro:

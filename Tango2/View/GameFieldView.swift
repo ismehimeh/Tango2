@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct GameFieldView: View {
-    
+
     // As I remember, idea behind all of this
     // is to get frames of cells to properly position ConditionViews
     @State var cellEntries: [CellFramePreferenceKeyEntry] = [] // what the fuck is that?
@@ -20,13 +20,13 @@ struct GameFieldView: View {
     @Binding var shakes: Int
     var onTargetCellTapped: ((CellValue?) -> Void)?
     var onCellTapped: (() -> Void)?
-    
+
     enum Constants {
         static let cellPrefilledBackgroundColor = Color.init(red: 238 / 255.0, green: 234 / 255.0, blue: 232 / 255.0)
         static let cellBackgroundColor = Color.white
         static let fieldBackgroundColor = Color.init(red: 234 / 255.0, green: 227 / 255.0, blue: 217 / 255.0)
     }
-    
+
     var body: some View {
         ZStack {
             Rectangle()
@@ -87,7 +87,7 @@ struct GameFieldView: View {
                     }
                 }
             }
-            
+
             if highlightedCell != nil || !notDimmedCells.isEmpty {
                 cellHighlightMask
             }
@@ -99,12 +99,12 @@ struct GameFieldView: View {
             }
         }
     }
-    
+
     func isCellHighlighted(_ row: Int, _ column: Int) -> Bool {
         guard let position = highlightedCell else { return false }
         return position.row == row && position.column == column
     }
-        
+
     // MARK: - Functions
     func cellBackgroundColor(_ row: Int, _ column: Int) -> Color {
         let cell = game.cell(at: row, column: column)
@@ -119,15 +119,15 @@ struct GameFieldView: View {
         let cell = game.cell(at: row, column: column)
         return cell.predefinedValue?.symbol ?? cell.value?.symbol
     }
-    
+
     func isCellWithMistake(_ row: Int, _ column: Int) -> Bool {
         return game.isMistakeCell(row: row, column: column)
     }
-    
+
     func tapCell(_ row: Int, _ column: Int) {
         game.toggleCell(row, column)
     }
-    
+
     var cellHighlightMask: some View {
         ZStack {
             Rectangle()
@@ -136,12 +136,12 @@ struct GameFieldView: View {
                 .mask {
                     ZStack {
                         Rectangle()
-                        
+
                         // Create a Group to cut out all non-dimmed cells
                         Group {
                             // Cut out the highlighted cell if present
                             if let highlightedCell = highlightedCell,
-                               let cellEntry = cellEntries.last(where: { 
+                               let cellEntry = cellEntries.last(where: {
                                    $0.row == highlightedCell.row && $0.column == highlightedCell.column
                                }) {
                                 Rectangle()
@@ -149,7 +149,7 @@ struct GameFieldView: View {
                                     .position(x: cellEntry.rect.midX, y: cellEntry.rect.midY)
                                     .blendMode(.destinationOut)
                             }
-                            
+
                             // Cut out all cells from notDimmedCells array
                             ForEach(notDimmedCells, id: \.self) { position in
                                 if let cellEntry = cellEntries.last(where: {

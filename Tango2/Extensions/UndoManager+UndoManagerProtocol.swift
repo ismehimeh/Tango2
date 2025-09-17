@@ -11,7 +11,7 @@ protocol UndoManagerProtocol {
     func registerUndo<TargetType>(
         withTarget target: TargetType,
         handler: @escaping @MainActor (TargetType) -> Void
-    ) where TargetType : AnyObject
+    ) where TargetType: AnyObject
 }
 
 extension UndoManager: UndoManagerProtocol { }

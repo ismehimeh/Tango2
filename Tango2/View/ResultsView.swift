@@ -8,23 +8,23 @@
 import SwiftUI
 
 struct ResultView: View {
-    
+
     @Environment(\.dismiss) var dismiss
     @Environment(Router.self) var router
     @Environment(AppState.self) var state
-    
+
     var gameResult: GameResult
     var showButtons: Bool = true
-    
+
     var body: some View {
         VStack {
-            
+
             Text("You're crushing it!")
                 .font(.largeTitle)
                 .bold()
                 .padding(.bottom, 40)
                 .padding(.top, 50)
-            
+
             VStack {
                 Text(gameResult.solvedLevel.title)
                     .font(.largeTitle)
@@ -36,7 +36,7 @@ struct ResultView: View {
             .padding(30)
             .background(.white)
             .clipShape(RoundedRectangle(cornerRadius: 10))
-            
+
             if showButtons {
                 if state.isNextLevelAvailable {
                     Button {
@@ -69,7 +69,7 @@ struct ResultView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(.gray)
     }
-    
+
     private func tapNextLevel() {
         if state.moveToNextLevel() {
             dismiss()
@@ -81,7 +81,7 @@ struct ResultView: View {
             print("This is last level!")
         }
     }
-    
+
     private func tapGoToLevels() {
         dismiss()
         router.path.removeLast()

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GameView: View {
     @Environment(\.undoManager) var undoManager
-        
+
     @State private var showingSettings = false
     @State private var showingResult = false
     @State private var showingClearAlert = false
@@ -28,18 +28,18 @@ struct GameView: View {
     @State private var hintNotificationTask: Task<Void, Error>?
     @State private var showHintHint = false
     @Environment(\.modelContext) var modelContext
-    
+
     private let winningDelay = 0.1
     private let notificationDuration = 5.0
-    
+
     var game: Game
-    
+
     // MARK: - Views
     var body: some View {
         ScrollView {
             VStack {
                 topView
-                
+
                 GameFieldView(game: game,
                               showMistake: $showMistake,
                               showSolved: $showingResult,
@@ -54,14 +54,14 @@ struct GameView: View {
                 } onCellTapped: {
                     viewModel.cellTapped()
                 }
-                
+
                 undoAndHintView
                 MistakesListView(mistakes: game.mistakes.map({$0.type.description}))
-                
+
                 if showNotReadyHint {
                     hintNotReadyView
                 }
-                
+
                 if hint != nil {
                     HintView(description: hint?.type.description ?? "",
                               shakes: $shakes)
@@ -137,7 +137,7 @@ struct GameView: View {
             Button("No", role: .cancel) { }
         }
         .onChange(of: game.isSolved, initial: false) { oldValue, newValue in
-            
+
             if oldValue && !newValue {
                 viewModel.startTimer()
                 isControlsDisabled = false
@@ -147,7 +147,7 @@ struct GameView: View {
                 viewModel.stopStimer()
                 isControlsDisabled = true
                 viewModel.saveResult(modelContext, level: game.currentLevel)
-                
+
                 Task {
                     try? await Task.sleep(for: .seconds(winningDelay))
                     await MainActor.run {
@@ -155,7 +155,7 @@ struct GameView: View {
                     }
                 }
             }
-            
+
             // run glimmer animations
             // scale a littble bit every cell?
             // show result screen after everything happend
@@ -193,7 +193,7 @@ struct GameView: View {
                         .frame(maxWidth: .infinity)
                 }
                 .disabled(!(undoManager?.canUndo ?? false))
-                
+
                 if isRedoVisible {
                     Button {
                         undoManager?.redo()
@@ -224,11 +224,11 @@ struct GameView: View {
                         hint = nil
                     }
                 }
-                
+
             }
         }
     }
-    
+
     var hintHintView: some View {
         Text("Feeling stuck? Tap \"Hint\" to get a nudge in the right direction.")
             .padding(.horizontal, 20)
@@ -239,7 +239,7 @@ struct GameView: View {
                     .fill(.gray.opacity(0.1))
             )
     }
-    
+
     var hintNotReadyView: some View {
         HStack {
             Text("Hint not ready yet. Think harder!")
@@ -254,7 +254,7 @@ struct GameView: View {
         .transition(.opacity)
         .id(showNotReadyHint) // Force view recreation when state changes
     }
-    
+
     private func processMistake(_ newValue: Bool) {
         if newValue {
             let mistakeId = UUID()
@@ -268,20 +268,20 @@ struct GameView: View {
             showMistake = false
         }
     }
-    
+
     @MainActor
     private func validateMistake(_ id: UUID) {
         guard id == mistakeValidationID else { return }
         showMistake = game.isMistake && isMistakeVisible
     }
-    
+
     private func showHintNotification() {
         // Cancel any existing task
         hintNotificationTask?.cancel()
-        
+
         // Show the notification
         showNotReadyHint = true
-        
+
         // Create a new task to hide the notification after the duration
         hintNotificationTask = Task { @MainActor in
             do {
@@ -298,7 +298,7 @@ struct GameView: View {
 
 struct MistakesListView: View {
     var mistakes: [String]
-    
+
     var body: some View {
         ForEach(Array(Set(mistakes)), id: \.self) { mistake in
             HStack {
@@ -338,4 +338,3 @@ struct MistakesListView: View {
     GameView(game: game)
         .environment(Router(path: .init()))
 }
-

@@ -6,9 +6,9 @@
 //
 
 protocol MistakeServiceProtocol: AnyObject {
-    
+
     var dataSource: MistakeServiceDataSource? { get set }
-    
+
     func getMistakes() -> [Mistake]
     func getMistakes(forRowWithIndex rowIndex: Int) -> [Mistake]
     func getMistakes(forColumnWithIndex columnIndex: Int) -> [Mistake]

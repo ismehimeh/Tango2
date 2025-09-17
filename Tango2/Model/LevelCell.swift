@@ -12,11 +12,11 @@ import SwiftData
 @Model
 class LevelCell: Hashable, Equatable, Codable {
     var predefinedValue: CellValue?
-    
+
     init(predefinedValue: CellValue? = nil) {
         self.predefinedValue = predefinedValue
     }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(predefinedValue)
     }
@@ -28,7 +28,7 @@ class LevelCell: Hashable, Equatable, Codable {
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         predefinedValue = try container.decodeIfPresent(CellValue.self, forKey: .predefinedValue)
-    }   
+    }
 
     enum CodingKeys: String, CodingKey {
         case predefinedValue

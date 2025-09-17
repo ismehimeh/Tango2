@@ -6,7 +6,7 @@
 //
 
 protocol HintServiceDataSource: AnyObject {
-    
+
     func level() -> Level
     func conditions() -> [Condition]
     func row(_ rowIndex: Int) -> [GameCell]
