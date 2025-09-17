@@ -1,5 +1,5 @@
 name: main_workflow.yml
-on: push
+on: [push, pull_request]
 jobs:
   build:
     name: Build
