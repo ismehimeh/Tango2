@@ -1,0 +1,9 @@
+name: main_workflow.yml
+on: push
+jobs:
+  swiftlint:
+    name: SwiftLint
+    runs-on: MacOS
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v5.0.0
