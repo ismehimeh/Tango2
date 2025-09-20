@@ -21,4 +21,8 @@ platform :ios do
     xcode_select("/Applications/Xcode 26 beta.app")
     scan(device: 'iPhone 16 (ios 26)')
   end
+
+  lane :do_slather do
+    slather(scheme: "Tango2", proj: "Tango2.xcodeproj")
+  end
 end
