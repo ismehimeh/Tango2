@@ -15,6 +15,13 @@
     {
       "target" : {
         "containerPath" : "container:Tango2.xcodeproj",
+        "identifier" : "BA8632EE2E8068B100D83844",
+        "name" : "Tango2SnapshotTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Tango2.xcodeproj",
         "identifier" : "BAFF9A262E1BF61600D83D69",
         "name" : "Tango2Tests"
       }

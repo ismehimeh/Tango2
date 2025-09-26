@@ -33,6 +33,9 @@
             reference = "container:TestPlan.xctestplan"
             default = "YES">
          </TestPlanReference>
+         <TestPlanReference
+            reference = "container:TestPlan2.xctestplan">
+         </TestPlanReference>
       </TestPlans>
       <Testables>
          <TestableReference
@@ -43,6 +46,17 @@
                BlueprintIdentifier = "BAFF9A262E1BF61600D83D69"
                BuildableName = "Tango2Tests.xctest"
                BlueprintName = "Tango2Tests"
+               ReferencedContainer = "container:Tango2.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "BA8632EE2E8068B100D83844"
+               BuildableName = "Tango2SnapshotTests.xctest"
+               BlueprintName = "Tango2SnapshotTests"
                ReferencedContainer = "container:Tango2.xcodeproj">
             </BuildableReference>
          </TestableReference>
